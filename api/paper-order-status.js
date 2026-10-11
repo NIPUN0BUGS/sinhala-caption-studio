@@ -1,4 +1,4 @@
-const { json, readJson, envSupabase, originAllowed, getOrder, accessTokenMatches } = require("./_paper-shared");
+const { json, readJson, envSupabase, originAllowed, getOrder, accessTokenMatches } = require("../lib/gurupaper-paper-shared");
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") return json(res, 405, { error: "method_not_allowed" });
   if (!originAllowed(req)) return json(res, 403, { error: "origin_not_allowed", message: "Please use GuruPaper from its configured website domain." });
