@@ -287,7 +287,7 @@ async function loadPaperServiceConfig() {
     const data = await readApiJson(response);
     paperServiceReady = Boolean(response.ok && data.readyToAcceptPayment === true);
     if (paperServiceReady) {
-      setGeneratorStatus("paperBackendStatus", "Configuration checks pass (" + String(data.paymentMode || "sandbox").toUpperCase() + "). Still test PayHere sandbox checkout and a real AI request before enabling live sales.", "good");
+      setGeneratorStatus("paperBackendStatus", "Required services are configured and checkout activation is enabled (" + String(data.paymentMode || "sandbox").toUpperCase() + "). Verify sandbox callbacks and generated outputs before accepting live payments.", "good");
       button.disabled = false;
     } else {
       setGeneratorStatus("paperBackendStatus", data.message || "Backend setup තවම complete නැහැ. Database, private storage, PayHere, OpenAI සහ APP_URL configure කරන තුරු payments disable.", "offline");
@@ -368,12 +368,11 @@ async function startPaperOrder(event) {
     if (!createResponse.ok) throw new Error(createData.message || "Order එක create කරන්න බැරි වුණා.");
     createdOrder = { orderId: createData.orderId, accessToken: createData.accessToken };
     storeActivePaperOrder(createdOrder);
-    const uploadBody = new FormData();
-    uploadBody.append("cacheControl", "3600");
-    uploadBody.append("", file);
     setGeneratorStatus("paperOrderStatus", "2/3 — Lesson file එක private storage එකට upload කරනවා…", "waiting");
     const uploadResponse = await fetch(createData.uploadUrl, {
-      method: "PUT", headers: { "x-upsert": "false" }, body: uploadBody
+      method: "PUT",
+      headers: { "Content-Type": options.contentType, "x-upsert": "false", "cache-control": "3600" },
+      body: file
     });
     if (!uploadResponse.ok) throw new Error("File upload failed. Check file type / size and try again. Payment එකක් තවම ගත්තේ නැහැ.");
     setGeneratorStatus("paperOrderStatus", "3/3 — Checkout request එක initialize කරනවා…", "waiting");
