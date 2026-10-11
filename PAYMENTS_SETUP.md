@@ -60,6 +60,7 @@ Once the Vercel URL is stable:
 - Use this notification URL: https://YOUR-PRODUCTION-DOMAIN/api/payhere-notify
 - The checkout return and cancel URLs are built from APP_URL.
 - The PayHere API-key app used for receipt verification/cancellation must whitelist the production domain.
+- **Live API network check:** PayHere's Subscription Manager documentation also describes IP-based allowlisting for live Merchant API requests. Before switching `PAYHERE_MODE=live`, ask PayHere how to whitelist the fixed outbound IP for your Vercel deployment. Do not assume a normal serverless deployment has a static outbound IP; if it does not, keep sandbox mode until you arrange a supported fixed-egress option with an approved IP.
 
 The site uses PayHere's recurring form POST endpoint; the server creates the hash. The browser never receives the Merchant Secret or App Secret. A return URL is not treated as proof of payment: the server requires the valid callback checksum and independently confirms the payment record through PayHere's authenticated API.
 
