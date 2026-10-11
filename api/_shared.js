@@ -136,6 +136,18 @@ async function getPayHereSubscription(subscriptionId) {
   const rows = Array.isArray(data.data) ? data.data : [];
   return rows.find(sub => String(sub.subscription_id) === String(subscriptionId)) || null;
 }
+async function cancelPayHereSubscription(subscriptionId) {
+  if (!/^\d+$/.test(String(subscriptionId || ""))) throw new Error("INVALID_PAYHERE_SUBSCRIPTION_ID");
+  const token = await payhereAccessToken();
+  const response = await fetch(payhereBase() + "/merchant/v1/subscription/cancel", {
+    method: "POST",
+    headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
+    body: JSON.stringify({ subscription_id: String(subscriptionId) })
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || Number(data.status) !== 1) throw new Error("PAYHERE_SUBSCRIPTION_CANCEL_FAILED");
+  return true;
+}
 function nextBillingDate(dateString, previousEnd) {
   const previousMs = previousEnd ? Date.parse(previousEnd) : NaN;
   const baseMs = Number.isFinite(previousMs) && previousMs > Date.now() ? previousMs : Date.now();
@@ -157,7 +169,7 @@ async function getUserSubscription(cfg, userId) {
 module.exports = {
   PLANS, json, text, getBearer, envSupabase, authenticate, db, readBody, appUrl, originAllowed,
   md5Hex, secureEqual, paymentHash, verifyNotification, isConfiguredForCheckout, payhereAction,
-  payhereBase, payhereAccessToken, verifyPayHereSubscriptionPayment, getPayHereSubscription,
+  payhereBase, payhereAccessToken, verifyPayHereSubscriptionPayment, getPayHereSubscription, cancelPayHereSubscription,
   nextBillingDate, cleanString, getUserSubscription
 };
 
