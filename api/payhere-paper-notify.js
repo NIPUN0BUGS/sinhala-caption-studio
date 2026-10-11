@@ -1,7 +1,7 @@
 const {
   text, readForm, envSupabase, getOrder, notificationHash, secureEqual,
   PRICE_LKR, CURRENCY, patchOrder
-} = require("./_paper-shared");
+} = require("../lib/gurupaper-paper-shared");
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") return text(res, 405, "Method not allowed");
   try {
