@@ -5,11 +5,11 @@ module.exports = function handler(req, res) {
   const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || "";
   const supabaseReady = Boolean(supabaseUrl && supabaseAnonKey && process.env.SUPABASE_SERVICE_ROLE_KEY);
   const payhereReady = Boolean(process.env.PAYHERE_MERCHANT_ID && process.env.PAYHERE_MERCHANT_SECRET &&
-    process.env.PAYHERE_APP_ID && process.env.PAYHERE_APP_SECRET && process.env.APP_URL &&
-    ["sandbox", "live"].includes(process.env.PAYHERE_MODE));
+    process.env.APP_URL && ["sandbox", "live"].includes(process.env.PAYHERE_MODE));
   const paymentsReady = Boolean(supabaseReady && payhereReady);
   return json(res, 200, {
     supabaseUrl, supabaseAnonKey, authReady: supabaseReady, paymentsReady,
+    cancellationReady: Boolean(process.env.PAYHERE_APP_ID && process.env.PAYHERE_APP_SECRET),
     payhereMode: process.env.PAYHERE_MODE === "live" ? "live" : "sandbox",
     plans: [
       { id: "pro", name: "Creator Pro", amount: 490, currency: "LKR", interval: "month" },
