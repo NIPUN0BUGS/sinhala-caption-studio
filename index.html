@@ -219,7 +219,7 @@ body.dark .checkout-consent{background:#2a253b}
 <div><label for="billAddress">Address</label><input id="billAddress" autocomplete="street-address" placeholder="Street and house number" required maxlength="120"></div>
 <div><label for="billCity">City</label><input id="billCity" autocomplete="address-level2" placeholder="Kandy" required maxlength="70"></div>
 <div class="auth-status warn" id="checkoutWarning">Payment setup is incomplete. You can prepare your account, but live checkout is disabled until the backend and PayHere credentials are ready.</div>
-<div class="checkout-consent"><label for="billingConsent"><input id="billingConsent" type="checkbox" required> <span>I authorize recurring billing at <strong id="checkoutConsentAmount">Rs. 490/month</strong> until cancelled. I understand the current plan, monthly price and cancellation terms.</span></label></div>
+<div class="checkout-consent"><label for="billingConsent"><input id="billingConsent" type="checkbox" required> <span>I authorize PayHere to charge <strong id="checkoutConsentAmount">Rs. 490/month</strong> every month until I cancel. Cancellation stops future renewals; my premium access continues through the paid period.</span></label><p class="billing-note">Please read the <a href="/terms/">Terms</a> and <a href="/billing/">Billing &amp; Refund Policy</a> before confirming recurring billing.</p></div>
 <button type="submit" class="primary-btn" id="startCheckout">Continue to secure checkout</button>
 </form>
 </div>
