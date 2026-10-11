@@ -2,7 +2,7 @@ const crypto = require("node:crypto");
 const { PLANS, json, authenticate, db, readBody, appUrl, originAllowed, paymentHash, isConfiguredForCheckout, payhereAction, cleanString, getUserSubscription } = require("./_shared");
 
 const CONSENT_TERMS_VERSION = "2026-10-v1";
-const PENDING_CHECKOUT_MAX_AGE_MS = 30 * 60 * 1000;
+const PENDING_CHECKOUT_MAX_AGE_MS = 2 * 60 * 60 * 1000;
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") return json(res, 405, { error: "method_not_allowed" });
@@ -57,7 +57,7 @@ module.exports = async function handler(req, res) {
       "pending_checkouts?select=order_id&user_id=eq." + encodeURIComponent(auth.user.id) +
       "&status=eq.pending&limit=1");
     if (Array.isArray(openCheckouts) && openCheckouts.length) {
-      return json(res, 409, { error: "checkout_already_pending", message: "A checkout is already waiting for a payment result. Wait a few minutes, or try again after 30 minutes if you abandoned it." });
+      return json(res, 409, { error: "checkout_already_pending", message: "A checkout is already waiting for a payment result. Wait for PayHere to report the outcome, or retry after 2 hours if you abandoned the checkout." });
     }
 
     await db(auth.cfg, "pending_checkouts", "POST", {
