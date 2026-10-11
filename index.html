@@ -588,7 +588,8 @@ document.getElementById("checkoutDetails").addEventListener("submit", async e =>
         lastName: document.getElementById("billLast").value.trim(),
         phone: document.getElementById("billPhone").value.trim(),
         address: document.getElementById("billAddress").value.trim(),
-        city: document.getElementById("billCity").value.trim()
+        city: document.getElementById("billCity").value.trim(),
+        recurringConsent: document.getElementById("billingConsent").checked
       })
     });
     const payload = await resp.json().catch(() => ({}));
