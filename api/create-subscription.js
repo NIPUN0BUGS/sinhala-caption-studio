@@ -12,9 +12,12 @@ module.exports = async function handler(req, res) {
   if (!auth) return json(res, 401, { error: "sign_in_required" });
   try {
     const current = await getUserSubscription(auth.cfg, auth.user.id);
-    if (current && (current.status === "past_due" ||
-      (current.status === "active" && (!current.current_period_end || Date.parse(current.current_period_end) > Date.now())))) {
-      return json(res, 409, { error: "subscription_already_exists", message: "You already have a subscription. Refresh membership or cancel it before changing plans." });
+    const paidPeriod = Boolean(current && current.current_period_end && Date.parse(current.current_period_end) > Date.now());
+    if (current && (
+      current.status === "past_due" ||
+      (["active", "cancelled"].includes(current.status) && (paidPeriod || !current.current_period_end))
+    )) {
+      return json(res, 409, { error: "subscription_already_exists", message: "You already have a paid subscription or remaining paid time. Refresh membership or wait until the current period ends before subscribing again." });
     }
   } catch (e) {
     console.error("Could not verify existing subscription:", e.message);
@@ -27,7 +30,7 @@ module.exports = async function handler(req, res) {
   const first = cleanString(input.firstName, 60), last = cleanString(input.lastName, 60);
   const phone = cleanString(input.phone, 30), address = cleanString(input.address, 120), city = cleanString(input.city, 70);
   const email = cleanString(auth.user.email, 160);
-  if (!first || !last || !address || !city || !/^[+0-9()\s-]{9,25}$/.test(phone))
+  if (!first || !last || !address || !city || !/^[+0-9()\s-]{9,25}$/.test(phone) || phone.replace(/\D/g, "").length < 9)
     return json(res, 400, { error: "customer_details_required", message: "Provide first name, last name, a valid phone number, address and city." });
 
   const merchantId = process.env.PAYHERE_MERCHANT_ID, secret = process.env.PAYHERE_MERCHANT_SECRET;
@@ -36,14 +39,14 @@ module.exports = async function handler(req, res) {
   try {
     await db(auth.cfg, "pending_checkouts", "POST", {
       order_id: orderId, user_id: auth.user.id, plan_id: plan.id, amount, currency: plan.currency,
-      status: "pending", customer_email: email
+      status: "pending", customer_email: email, created_at: new Date().toISOString()
     }, "return=minimal");
   } catch (e) {
     console.error("Could not create pending checkout:", e.message, e.status || "");
     return json(res, 500, { error: "checkout_initialization_failed", message: "Could not initialize checkout. Please try again." });
   }
   const params = {
-    merchant_id: merchantId, return_url: origin + "/?payment=return", cancel_url: origin + "/?payment=cancelled",
+    merchant_id: merchantId, return_url: origin + "/?payment=return#account", cancel_url: origin + "/?payment=cancelled#plans",
     notify_url: origin + "/api/payhere-notify", first_name: first, last_name: last, email, phone, address, city,
     country: "Sri Lanka", order_id: orderId, items: "Sinhala Caption Studio - " + plan.name + " Monthly Subscription",
     currency: plan.currency, recurrence: plan.recurrence, duration: plan.duration, amount,
