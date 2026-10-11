@@ -1,43 +1,47 @@
 # Sinhala Caption Studio 🇱🇰
 
-A free, mobile-friendly Sinhala captions and status website. Built as a static single-page site with HTML, CSS and vanilla JavaScript — no npm install, backend, database, API key, or paid service required.
+A mobile-friendly Sinhala captions and status website with public caption collections, a caption-template maker, and an optional subscription foundation.
 
-## Features
+## What's included
 
-- Sinhala captions across love, sad, attitude, friendship, life and funny categories
-- Search captions and browse category filters
-- One-tap copy and native share support
-- Save favourites locally in your browser
+- 102 public captions across love, sad, attitude, friendship, life, funny and WhatsApp status categories
+- Responsive home page, category filters, live search, one-tap copy/share and browser-saved favourites
+- Caption idea maker with Sinhala, Singlish and English templates (built-in templates, not a real AI model)
 - Dark mode
-- Built-in caption idea maker with Sinhala, Singlish and English choices
-- Responsive layout for mobile, tablet and desktop
-- Basic SEO and social-sharing metadata
+- Seven dedicated, crawlable SEO landing pages:
+  - `/love/`
+  - `/sad/`
+  - `/attitude/`
+  - `/friendship/`
+  - `/life/`
+  - `/funny/`
+  - `/whatsapp-status/`
+- An informational caption-writing guide at `/how-to-write-sinhala-captions/`
+- Sitemap and robots endpoints exposed at `/sitemap.xml` and `/robots.txt`
+- Free, Creator Pro (Rs. 490/month) and Creator Plus (Rs. 990/month) plan UI
+- Supabase account integration and server-side PayHere recurring subscription endpoints, kept disabled until configuration is complete
+- Privacy, terms and billing-policy starter pages
 
-## Run locally
+## Develop locally
 
-Simply download the repository and open `index.html` in your browser. No build command is needed.
+The public website is static HTML/CSS/JavaScript and can be opened directly by opening `index.html`. API routes under `api/` run as Vercel Node.js functions and require their environment variables for account/payment functions.
 
-## Publish on GitHub Pages for free
+## Deploy to Vercel
 
-1. Open this repository's **Settings → Pages**.
-2. Under **Build and deployment → Source**, choose **Deploy from a branch**.
-3. Set the branch to `main` and the folder to `/(root)`, then click **Save**.
-4. Wait a few minutes. The live URL should be:
-   `https://nipun0bugs.github.io/sinhala-caption-studio/`
+1. Import `NIPUN0BUGS/sinhala-caption-studio` into Vercel.
+2. Use Framework Preset **Other**, Root Directory `./`, Build Command empty, and Output Directory `.`.
+3. Deploy. Pushes to the connected `main` branch should create new deployments.
 
-GitHub Pages setup must be enabled by an account administrator in Settings. If the page shows 404, check that the source is saved as `main` + `/(root)` and allow a few minutes for the first deployment.
+## Subscription setup
 
+Read [PAYMENTS_SETUP.md](./PAYMENTS_SETUP.md) before enabling payments. It covers PayHere merchant approval, Supabase auth/database setup, Vercel environment variables, callback configuration and sandbox testing.
 
-## Subscription plans and payments
+Important: prices in the page are proposed plan values. Payment acceptance is **not live** until you have an approved PayHere merchant account, valid production credentials, a configured Supabase project, successful sandbox tests, and accurate business support/policy details. Never put PayHere secrets or the Supabase service-role key in browser code or Git.
 
-The site includes a subscription UI for Free, Creator Pro (Rs. 490/month) and Creator Plus (Rs. 990/month), plus a Supabase auth integration and PayHere recurring-payment backend routes. Payments stay unavailable until the required services and merchant credentials are configured.
+Run [supabase/schema.sql](./supabase/schema.sql) in the Supabase SQL Editor after creating the project. Keep all server keys in Vercel environment variables. App ID/App Secret for the PayHere Subscription Manager API are needed for automated cancellation; they are separate from the payment merchant credentials.
 
-**Setup instructions:** see [PAYMENTS_SETUP.md](./PAYMENTS_SETUP.md). Run [supabase/schema.sql](./supabase/schema.sql) in your Supabase SQL Editor and configure the required server-only variables in Vercel. Never commit PayHere or Supabase service-role secrets.
+## SEO and growth
 
-The PayHere callback verifies the provider signature on the server before changing subscription status; the premium caption endpoint checks the authenticated user's database subscription before returning premium content. This starter implementation must be sandbox-tested before enabling live billing.
+Read [SEO_AND_GROWTH.md](./SEO_AND_GROWTH.md) for a practical launch checklist covering Google Search Console, sitemap submission, internal links, social sharing and content publishing.
 
-## Notes
-
-- Favourites and the selected theme are saved in the current browser only, using local storage. There are no accounts or shared cloud profiles.
-- The caption maker uses built-in templates; it is **not a real AI model**.
-- This is a starter MVP. Review the content and add original captions as the project grows.
+Before launch, replace or review the policy-page starter text and add real business/support contact details. Favourites and theme preference are browser-local; there are no shared cloud favourites. Review caption content for originality and accuracy as the site grows.
