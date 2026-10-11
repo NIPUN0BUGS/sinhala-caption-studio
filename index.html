@@ -354,6 +354,7 @@ function updateAccountUI(session) {
   authFormsEl.hidden = loggedIn;
   memberSignedInEl.hidden = !loggedIn;
   checkoutFormEl.hidden = !loggedIn || !selectedPlanId;
+  document.getElementById("checkoutConsentAmount").textContent = selectedPlanId === "plus" ? "Rs. 990/month" : "Rs. 490/month";
   if (loggedIn) {
     document.getElementById("signedInAs").textContent = "Signed in as " + (session.user.email || "");
     setAccountMessage("You're signed in. Subscription access is checked securely with the server.", "ok");
