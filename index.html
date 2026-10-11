@@ -70,6 +70,14 @@ body.dark .premium-box p{color:#c1b8d8}
 @media(max-width:900px){.pricing-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pricing-grid .price-card:last-child{grid-column:1/-1}.membership-grid{grid-template-columns:1fr}}
 @media(max-width:650px){.pricing-grid{grid-template-columns:1fr}.pricing-grid .price-card:last-child{grid-column:auto}.price-card{padding:21px}.member-card{padding:19px}.membership-grid{gap:12px}}
 
+
+.checkout-consent{border:1px solid var(--line);background:#faf9ff;padding:12px;border-radius:12px}
+.checkout-consent label{display:flex;gap:9px;align-items:flex-start;font-size:11px;line-height:1.65;color:var(--muted);cursor:pointer}
+.checkout-consent input{width:auto!important;flex:0 0 auto;margin:4px 0 0;padding:0!important;accent-color:var(--purple)}
+.checkout-consent strong{color:var(--ink)}
+body.dark .checkout-consent{background:#2a253b}
+#cancelSubscriptionBtn[hidden]{display:none!important}
+
 </style>
 </head>
 <body>
@@ -157,7 +165,7 @@ body.dark .premium-box p{color:#c1b8d8}
 <div id="memberSignedIn" hidden>
 <p class="member-help" id="signedInAs"></p>
 <div class="auth-status" id="subscriptionStatus">Checking membership…</div>
-<div class="member-actions"><button class="small-btn" type="button" id="refreshMembership">↻ Refresh status</button><button class="small-btn" type="button" id="signOutBtn">Sign out</button></div>
+<div class="member-actions"><button class="small-btn" type="button" id="refreshMembership">↻ Refresh status</button><button class="small-btn" type="button" id="cancelSubscriptionBtn" hidden>Cancel recurring subscription</button><button class="small-btn" type="button" id="signOutBtn">Sign out</button></div>
 </div>
 <form id="checkoutDetails" class="checkout-form" hidden>
 <h4>Billing details</h4>
@@ -167,6 +175,7 @@ body.dark .premium-box p{color:#c1b8d8}
 <div><label for="billAddress">Address</label><input id="billAddress" autocomplete="street-address" placeholder="Street and house number" required maxlength="120"></div>
 <div><label for="billCity">City</label><input id="billCity" autocomplete="address-level2" placeholder="Kandy" required maxlength="70"></div>
 <div class="auth-status warn" id="checkoutWarning">Payment setup is incomplete. You can prepare your account, but live checkout is disabled until the backend and PayHere credentials are ready.</div>
+<div class="checkout-consent"><label for="billingConsent"><input id="billingConsent" type="checkbox" required> <span>I authorize recurring billing at <strong id="checkoutConsentAmount">Rs. 490/month</strong> until cancelled. I understand the current plan, monthly price and cancellation terms.</span></label></div>
 <button type="submit" class="primary-btn" id="startCheckout">Continue to secure checkout</button>
 </form>
 </div>
@@ -303,6 +312,8 @@ async function refreshMembership() {
       return;
     }
     const pill = document.getElementById("accountPill");
+    const canCancel = Boolean(data.subscription && ["active", "past_due"].includes(data.subscription.status));
+    document.getElementById("cancelSubscriptionBtn").hidden = !canCancel;
     if (data.isPremium) {
       const planName = data.subscription.planId === "plus" ? "CREATOR PLUS" : "CREATOR PRO";
       pill.textContent = planName;
@@ -351,6 +362,7 @@ function updateAccountUI(session) {
     document.getElementById("accountPill").textContent = "FREE PLAN";
     setAccountMessage(appConfig && appConfig.authReady ? "Sign in or create an account to manage a membership." : "Account signup is not enabled yet. Supabase setup is required before accounts and subscriptions can work.", appConfig && appConfig.authReady ? "" : "warn");
     checkoutFormEl.hidden = true;
+    document.getElementById("cancelSubscriptionBtn").hidden = true;
     document.getElementById("premiumCaptions").hidden = true;
     document.getElementById("premiumLocked").hidden = false;
   }
@@ -431,6 +443,8 @@ document.querySelectorAll("[data-plan]").forEach(btn => btn.addEventListener("cl
     showAuthForm("signup"); toast("Create an account or sign in to continue.");
   } else {
     checkoutFormEl.hidden = false;
+    document.getElementById("billingConsent").checked = false;
+    document.getElementById("checkoutConsentAmount").textContent = selectedPlanId === "plus" ? "Rs. 990/month" : "Rs. 490/month";
     showCheckoutWarning(!appConfig || !appConfig.paymentsReady
       ? "Checkout is disabled until Supabase and PayHere credentials are configured in Vercel."
       : "Selected: " + (selectedPlanId === "plus" ? "Creator Plus — Rs. 990/month" : "Creator Pro — Rs. 490/month") + ". Continue to PayHere to authorize monthly billing.", !appConfig || !appConfig.paymentsReady ? "warn" : "ok");
@@ -467,6 +481,27 @@ document.getElementById("checkoutDetails").addEventListener("submit", async e =>
   } catch (err) { showCheckoutWarning(err.message || "Checkout could not be started.", "warn"); toast("Checkout couldn't start."); }
   finally { submitBtn.disabled = false; submitBtn.textContent = "Continue to secure checkout"; }
 });
+
+document.getElementById("cancelSubscriptionBtn").addEventListener("click", async () => {
+  if (!authToken()) return toast("Sign in first.");
+  const confirmed = window.confirm("Cancel your recurring PayHere subscription? This stops future recurring charges when PayHere confirms the cancellation.");
+  if (!confirmed) return;
+  const btn = document.getElementById("cancelSubscriptionBtn");
+  btn.disabled = true; btn.textContent = "Cancelling…";
+  try {
+    const r = await fetch("/api/cancel-subscription", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + authToken(), "Content-Type": "application/json" },
+      body: "{}"
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.message || data.error || "Cancellation failed.");
+    toast("Recurring subscription cancelled.");
+    await refreshMembership();
+  } catch (err) { toast(err.message || "Could not cancel subscription."); }
+  finally { btn.disabled = false; btn.textContent = "Cancel recurring subscription"; }
+});
+
 initMembership();
 
 </script>
