@@ -150,19 +150,27 @@ module.exports = async function handler(req, res) {
     const source = await storageDownload(cfg, order.source_path);
     if (!verifyFileBytes(order.source_filename, order.source_content_type, source.buffer)) throw new Error("SOURCE_FILE_INVALID");
     const generated = await callOpenAI(source, order, order.paper_options || {});
-    let sourceDeletedAt = null;
-    try {
-      await storageDelete(cfg, order.source_path);
-      sourceDeletedAt = new Date().toISOString();
-    } catch (e) {
-      console.error("GuruPaper source cleanup failed; private file needs cleanup review:", e.message, orderId);
-    }
+    const generatedAt = new Date().toISOString();
     const readyRows = await patchOrder(cfg, orderId, {
       status: "ready", generated_paper: generated,
-      generated_at: new Date().toISOString(), source_deleted_at: sourceDeletedAt,
-      updated_at: new Date().toISOString(), generation_error: null
+      generated_at: generatedAt, source_deleted_at: null,
+      updated_at: generatedAt, generation_error: null
     }, "status=eq.generating");
     if (!Array.isArray(readyRows) || !readyRows.length) throw new Error("ORDER_FINALIZE_FAILED");
+    // Finalize the paid order before deleting its source, so a database write
+    // failure can never strand a paid customer without the uploaded lesson file.
+    try {
+      await storageDelete(cfg, order.source_path);
+      try {
+        await patchOrder(cfg, orderId, {
+          source_deleted_at: new Date().toISOString(), updated_at: new Date().toISOString()
+        }, "status=eq.ready");
+      } catch (markError) {
+        console.error("GuruPaper source was deleted but deletion timestamp could not be saved:", markError.message, orderId);
+      }
+    } catch (cleanupError) {
+      console.error("GuruPaper source cleanup failed; private file needs cleanup review:", cleanupError.message, orderId);
+    }
     return json(res, 200, { status: "ready", paper: generated, options: order.paper_options, reused: false });
   } catch (e) {
     console.error("GuruPaper generation failed:", e.message, e.status || "");
