@@ -1,5 +1,5 @@
 const crypto = require("node:crypto");
-const { PLANS, json, authenticate, db, readBody, appUrl, originAllowed, paymentHash, isConfiguredForCheckout, payhereAction, cleanString } = require("./_shared");
+const { PLANS, json, authenticate, db, readBody, appUrl, originAllowed, paymentHash, isConfiguredForCheckout, payhereAction, cleanString, getUserSubscription } = require("./_shared");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") return json(res, 405, { error: "method_not_allowed" });
@@ -10,6 +10,16 @@ module.exports = async function handler(req, res) {
     return json(res, 502, { error: "auth_service_unavailable" });
   }
   if (!auth) return json(res, 401, { error: "sign_in_required" });
+  try {
+    const current = await getUserSubscription(auth.cfg, auth.user.id);
+    if (current && (current.status === "past_due" ||
+      (current.status === "active" && (!current.current_period_end || Date.parse(current.current_period_end) > Date.now())))) {
+      return json(res, 409, { error: "subscription_already_exists", message: "You already have a subscription. Refresh membership or cancel it before changing plans." });
+    }
+  } catch (e) {
+    console.error("Could not verify existing subscription:", e.message);
+    return json(res, 500, { error: "subscription_lookup_failed" });
+  }
   if (!isConfiguredForCheckout()) return json(res, 503, { error: "payments_not_configured", message: "Payments are not enabled yet. Finish PayHere and Supabase setup first." });
 
   const input = readBody(req); const plan = PLANS[String(input.planId || "")];
