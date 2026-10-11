@@ -70,7 +70,7 @@ function verifyNotification(body, merchantId, secret) {
   if (String(body.merchant_id || "") !== String(merchantId)) return false;
   const local = md5Hex(String(body.merchant_id || "") + String(body.order_id || "") +
     String(body.payhere_amount || "") + String(body.payhere_currency || "") +
-    String(body.status_code || "") + md5Hex(secret));
+    String(body.status_code ?? "") + md5Hex(secret));
   return secureEqual(local, body.md5sig);
 }
 function payhereBase() {
