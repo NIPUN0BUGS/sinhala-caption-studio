@@ -47,7 +47,7 @@ module.exports = async function handler(req, res) {
   const cutoff = new Date(Date.now() - PENDING_CHECKOUT_MAX_AGE_MS).toISOString();
 
   try {
-    // Release abandoned checkout locks after 30 minutes so a customer can retry.
+    // Release abandoned checkout locks after two hours so a customer can retry.
     await db(auth.cfg,
       "pending_checkouts?user_id=eq." + encodeURIComponent(auth.user.id) +
       "&status=eq.pending&created_at=lt." + encodeURIComponent(cutoff),
