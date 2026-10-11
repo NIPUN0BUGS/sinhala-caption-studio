@@ -28,7 +28,7 @@ References:
 ## 2. Create a Supabase project
 
 1. Create a project at https://supabase.com/dashboard.
-2. In **SQL Editor**, open the file supabase/schema.sql from this repository, paste it and run it once.
+2. For a brand-new billing database, open supabase/schema.sql from this repository in **SQL Editor** and run it once. If you already installed the previous billing schema, run supabase/migrations/20261011_payment_hardening.sql instead to add consent audit fields, clear duplicate pending checkouts and tighten table privileges.
 3. In **Project Settings → API** (or API Keys), copy the Project URL and public anon/publishable key.
 4. Copy the server-side service_role key. It is privileged and must only be stored as a Vercel environment variable; never put it in HTML or share it.
 5. In **Authentication → URL Configuration**, set the Site URL to the production Vercel URL (example https://your-project.vercel.app) and add the same URL to Redirect URLs. If email confirmation is enabled, users must confirm the email before signing in.
