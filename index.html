@@ -15,6 +15,61 @@ body.dark{--bg:#171522;--paper:#211e30;--ink:#f2effd;--muted:#aaa3c0;--line:#393
 @media(max-width:900px){.hero{padding:49px 35px}.hero-art{right:18px;transform:scale(.82);transform-origin:bottom right}.hero-copy{max-width:580px}.category-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.caption-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nav{gap:13px}}
 @media(max-width:650px){.shell{width:min(100% - 26px,1120px)}.topbar{height:68px}.brand{font-size:16px}.brand-mark{width:38px;height:38px}.nav{display:none}.nav.open{display:flex;position:absolute;top:64px;left:13px;right:13px;z-index:5;background:var(--paper);padding:17px;border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow);flex-direction:column;align-items:stretch}.menu-btn{display:grid}.topbar .primary-btn{display:none}.hero{padding:34px 22px 29px;min-height:auto;border-radius:24px;margin-top:8px}.hero h1{font-size:37px;letter-spacing:-1.7px;margin-top:17px}.hero p{font-size:13px}.hero-art{opacity:.18;right:-7px;bottom:-5px;transform:scale(.68)}.hero-copy{max-width:100%}.search-wrap{position:relative;z-index:2}.search-wrap button{padding:11px 12px}.hero-meta{gap:9px 13px}.section-head{margin-top:32px}.section-head h2{font-size:21px}.category-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.category{padding:12px 5px 10px;border-radius:15px}.category .emoji{width:36px;height:36px;font-size:19px}.category strong{font-size:10px}.category small{font-size:9px}.filters{align-items:flex-start;flex-direction:column}.caption-grid{grid-template-columns:1fr}.caption-card{min-height:175px}.caption-text{font-size:16px}.generator{grid-template-columns:1fr}.generator-left,.generator-right{padding:22px}.output-box{min-height:145px}.cta-strip{padding:23px;align-items:flex-start;flex-direction:column}.footer{align-items:flex-start;flex-direction:column}.fields-row{grid-template-columns:1fr 1fr}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* Membership, subscription plans and account UI */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.price-card{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:23px;position:relative;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.price-card.featured{border:2px solid #a997f5;box-shadow:0 16px 36px #7655e818}
+.price-card .plan-kicker{font-size:10px;letter-spacing:1.4px;color:var(--purple);font-weight:900}
+.price-card h3{font-size:19px;margin:9px 0 4px;letter-spacing:-.5px}
+.price{font-size:32px;font-weight:900;letter-spacing:-1.2px;margin:8px 0}
+.price small{font-size:12px;letter-spacing:0;color:var(--muted);font-weight:600}
+.price-card p{color:var(--muted);font-size:12px;min-height:40px;margin:0 0 13px}
+.plan-features{list-style:none;padding:0;margin:0 0 22px;display:grid;gap:10px;flex:1}
+.plan-features li{font-size:12px;display:flex;gap:8px;align-items:flex-start}
+.plan-features li span{color:#20a47c;font-weight:900}
+.plan-card-btn{width:100%;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:12px;border-radius:12px;font-size:12px;font-weight:850}
+.plan-card-btn.primary{border-color:var(--purple);background:var(--purple);color:#fff}
+.plan-card-btn:hover{filter:brightness(.97);transform:translateY(-1px)}
+.billing-note{color:var(--muted);font-size:10px;line-height:1.7;margin-top:13px}
+.membership-grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:15px}
+.member-card{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:24px;min-width:0;box-shadow:var(--shadow)}
+.member-card h3{margin:0 0 6px;font-size:19px;letter-spacing:-.4px}
+.member-help{color:var(--muted);font-size:12px;margin:0 0 17px}
+.auth-status{padding:11px 13px;border-radius:12px;background:#f2efff;color:#6948d7;font-size:11px;line-height:1.6;margin:12px 0}
+.auth-status.warn{background:#fff3df;color:#805416}
+.auth-status.ok{background:#e3f8ef;color:#167650}
+.auth-form{display:grid;gap:11px;margin-top:14px}
+.auth-form .field{margin:0}
+.auth-form label,.checkout-form label{font-size:11px;font-weight:850;display:block;margin-bottom:6px}
+.auth-form input,.checkout-form input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:#fcfbff;color:var(--ink);outline:none}
+.auth-form input:focus,.checkout-form input:focus{border-color:#b5a4ff;box-shadow:0 0 0 3px #7655e815}
+.auth-form button{width:100%}
+.auth-switch{display:flex;gap:8px;margin:13px 0 0}
+.auth-switch button{flex:1}
+.account-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.account-pill{font-size:10px;font-weight:850;padding:6px 10px;border-radius:99px;background:#eee9ff;color:#6747d2}
+.checkout-form{display:grid;gap:11px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.checkout-form[hidden],.auth-form[hidden],#memberSignedIn[hidden],#premiumCaptions[hidden],#premiumLocked[hidden]{display:none!important}
+.checkout-form h4{font-size:13px;margin:0}
+.checkout-form .fields-row{gap:10px}
+.member-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
+.premium-box{border-radius:16px;background:linear-gradient(130deg,#f0ecff,#fff0f6);padding:16px;margin-top:12px}
+.premium-box h4{margin:0 0 5px;font-size:14px}
+.premium-box p{margin:0;color:#79718f;font-size:11px}
+.premium-caption{border:1px solid var(--line);background:var(--paper);border-radius:13px;padding:13px;margin-top:9px}
+.premium-caption strong{display:block;color:var(--purple);font-size:10px;margin-bottom:5px}
+.premium-caption p{font-size:13px;line-height:1.7;color:var(--ink);margin:0 0 9px}
+.premium-caption button{font-size:10px}
+body.dark .auth-status{background:#33284f;color:#d7caff}
+body.dark .auth-status.warn{background:#403424;color:#ffe0a7}
+body.dark .auth-status.ok{background:#203b34;color:#a8f0d3}
+body.dark .auth-form input,body.dark .checkout-form input{background:#2a253b;color:var(--ink)}
+body.dark .premium-box{background:linear-gradient(130deg,#302746,#352632)}
+body.dark .premium-box p{color:#c1b8d8}
+@media(max-width:900px){.pricing-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pricing-grid .price-card:last-child{grid-column:1/-1}.membership-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.pricing-grid{grid-template-columns:1fr}.pricing-grid .price-card:last-child{grid-column:auto}.price-card{padding:21px}.member-card{padding:19px}.membership-grid{gap:12px}}
+
 </style>
 </head>
 <body>
@@ -67,10 +122,67 @@ body.dark{--bg:#171522;--paper:#211e30;--ink:#f2effd;--muted:#aaa3c0;--line:#393
 <div class="generator-right"><div class="output-label">YOUR CAPTION IDEA</div><div class="output-box" id="output">ඔයාගේ topic එක ඉහළින් ලියලා “Generate caption idea” click කරන්න. ✨</div><div class="output-actions"><button class="small-btn" id="againBtn">↻ Try another</button><button class="primary-btn" id="copyGenerated">Copy caption ↗</button></div></div>
 </div>
 </section>
+
+<section id="plans">
+<div class="section-head"><div><h2>Choose your creator plan 💜</h2><p>Start free. Upgrade when the premium packs are useful to you.</p></div></div>
+<div class="pricing-grid">
+<article class="price-card"><div class="plan-kicker">STARTER</div><h3>Free</h3><div class="price">Rs. 0 <small>/ forever</small></div><p>Explore captions and create quick ideas for everyday posts.</p><ul class="plan-features"><li><span>✓</span> Public captions and categories</li><li><span>✓</span> Search, copy and share</li><li><span>✓</span> Built-in caption idea maker</li><li><span>✓</span> Save favourites in your browser</li></ul><button class="plan-card-btn" data-free-plan>Continue with Free</button></article>
+<article class="price-card featured"><div class="plan-kicker">MOST POPULAR</div><h3>Creator Pro</h3><div class="price">Rs. 490 <small>/ month</small></div><p>For creators who want an exclusive set of captions ready to post.</p><ul class="plan-features"><li><span>✓</span> Everything in Free</li><li><span>✓</span> Premium caption collection</li><li><span>✓</span> Member-only content access</li><li><span>✓</span> Monthly recurring billing</li></ul><button class="plan-card-btn primary" data-plan="pro">Choose Pro — Rs. 490</button></article>
+<article class="price-card"><div class="plan-kicker">EXTRA INSPIRATION</div><h3>Creator Plus</h3><div class="price">Rs. 990 <small>/ month</small></div><p>For creators who want the Pro collection plus additional exclusive packs.</p><ul class="plan-features"><li><span>✓</span> Everything in Creator Pro</li><li><span>✓</span> Extended premium collection</li><li><span>✓</span> Extra aesthetic and motivation captions</li><li><span>✓</span> Monthly recurring billing</li></ul><button class="plan-card-btn" data-plan="plus">Choose Plus — Rs. 990</button></article>
+</div>
+<p class="billing-note">Subscription billing is not active until your PayHere merchant account is approved and credentials are configured. Price and features are shown upfront. Customers should only proceed after reviewing the plan and recurring charge terms.</p>
+</section>
+
+<section id="account">
+<div class="section-head"><div><h2>Your account & membership 👤</h2><p>Sign in to manage your subscription and access member-only caption packs.</p></div></div>
+<div class="membership-grid">
+<div class="member-card">
+<div class="account-top"><h3>Account</h3><span class="account-pill" id="accountPill">FREE PLAN</span></div>
+<p class="member-help">Create an account or sign in to check your membership on any browser.</p>
+<div id="accountStatus" class="auth-status">Loading account setup…</div>
+<div id="authForms">
+<form id="signupForm" class="auth-form">
+<div class="field"><label for="signupName">Full name</label><input id="signupName" autocomplete="name" maxlength="100" placeholder="Your name" required></div>
+<div class="field"><label for="signupEmail">Email address</label><input id="signupEmail" type="email" autocomplete="email" placeholder="you@example.com" required></div>
+<div class="field"><label for="signupPassword">Password (8+ characters)</label><input id="signupPassword" type="password" minlength="8" autocomplete="new-password" required></div>
+<button type="submit" class="primary-btn">Create account</button>
+</form>
+<form id="loginForm" class="auth-form" hidden>
+<div class="field"><label for="loginEmail">Email address</label><input id="loginEmail" type="email" autocomplete="email" placeholder="you@example.com" required></div>
+<div class="field"><label for="loginPassword">Password</label><input id="loginPassword" type="password" autocomplete="current-password" required></div>
+<button type="submit" class="primary-btn">Sign in</button>
+</form>
+<div class="auth-switch"><button class="small-btn" type="button" id="showSignup">Create account</button><button class="small-btn" type="button" id="showLogin">Already registered? Sign in</button></div>
+</div>
+<div id="memberSignedIn" hidden>
+<p class="member-help" id="signedInAs"></p>
+<div class="auth-status" id="subscriptionStatus">Checking membership…</div>
+<div class="member-actions"><button class="small-btn" type="button" id="refreshMembership">↻ Refresh status</button><button class="small-btn" type="button" id="signOutBtn">Sign out</button></div>
+</div>
+<form id="checkoutDetails" class="checkout-form" hidden>
+<h4>Billing details</h4>
+<p class="member-help">PayHere requires your billing details to start a recurring subscription. Your card details are entered only on PayHere's secure checkout page.</p>
+<div class="fields-row"><div><label for="billFirst">First name</label><input id="billFirst" autocomplete="given-name" required maxlength="60"></div><div><label for="billLast">Last name</label><input id="billLast" autocomplete="family-name" required maxlength="60"></div></div>
+<div><label for="billPhone">Phone number</label><input id="billPhone" autocomplete="tel" placeholder="0771234567" required maxlength="25"></div>
+<div><label for="billAddress">Address</label><input id="billAddress" autocomplete="street-address" placeholder="Street and house number" required maxlength="120"></div>
+<div><label for="billCity">City</label><input id="billCity" autocomplete="address-level2" placeholder="Kandy" required maxlength="70"></div>
+<div class="auth-status warn" id="checkoutWarning">Payment setup is incomplete. You can prepare your account, but live checkout is disabled until the backend and PayHere credentials are ready.</div>
+<button type="submit" class="primary-btn" id="startCheckout">Continue to secure checkout</button>
+</form>
+</div>
+<div class="member-card">
+<h3>Premium caption packs ✨</h3><p class="member-help">These captions are delivered by the server only to members with a verified active subscription.</p>
+<div id="premiumLocked" class="premium-box"><h4>Unlock member-only captions</h4><p>Choose Creator Pro or Creator Plus to unlock the matching collection once recurring payment setup is complete.</p><div class="member-actions"><button class="small-btn" type="button" onclick="document.querySelector('#plans').scrollIntoView({behavior:'smooth'})">Compare plans ↑</button><button class="small-btn" type="button" id="loadPremiumBtn">Check my access</button></div></div>
+<div id="premiumCaptions" hidden></div>
+</div>
+</div>
+</section>
+
 <section id="about" class="cta-strip"><div><h3>ඔයාගේ words, ඔයාගේ story. 💜</h3><p>Caption එකක් save කරලා පස්සේ use කරන්න. අලුත් ideas එක්ක ඔයාගේ posts ලස්සන කරගන්න.</p></div><button class="primary-btn" onclick="document.querySelector('#captions').scrollIntoView({behavior:'smooth'})">Explore captions ↓</button></section>
 </main>
 <footer class="shell footer"><a href="#" class="brand"><span class="brand-mark">✦</span><span>Caption Studio<small>MAKE EVERY WORD COUNT</small></span></a><span>Made with 💜 for the Sinhala community · Free starter edition</span><span>© <span id="year"></span> Caption Studio</span></footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const captions = [
 {id:1,category:"love",emoji:"💗",caption:"ඔයා ළඟ ඉද්දි හිතට දැනෙන සැනසීම, වෙන කොහේවත් නෑ. 🌷",tags:["love","ආදරය","romantic"],popular:true},
@@ -151,6 +263,212 @@ function makeCaption(){
 document.getElementById("generateBtn").addEventListener("click",makeCaption);document.getElementById("againBtn").addEventListener("click",makeCaption);document.getElementById("copyGenerated").addEventListener("click",()=>{if(!generated){toast("මුලින් caption එකක් generate කරන්න ✨");return}copyText(generated)});
 document.getElementById("year").textContent=new Date().getFullYear();
 render();
+
+/* Auth, subscription checkout and protected premium content. The client never marks a payment as paid:
+   premium status is read from the server after a verified PayHere notification. */
+let supabaseClient = null;
+let appConfig = null;
+let selectedPlanId = null;
+let currentSession = null;
+const accountStatusEl = document.getElementById("accountStatus");
+const subscriptionStatusEl = document.getElementById("subscriptionStatus");
+const checkoutFormEl = document.getElementById("checkoutDetails");
+const authFormsEl = document.getElementById("authForms");
+const memberSignedInEl = document.getElementById("memberSignedIn");
+function setAccountMessage(message, type = "") {
+  accountStatusEl.textContent = message;
+  accountStatusEl.className = "auth-status" + (type ? " " + type : "");
+}
+function showAuthForm(which) {
+  document.getElementById("signupForm").hidden = which !== "signup";
+  document.getElementById("loginForm").hidden = which !== "login";
+}
+function authToken() { return currentSession && currentSession.access_token || ""; }
+function subscriptionMessage(message, type = "") {
+  subscriptionStatusEl.textContent = message;
+  subscriptionStatusEl.className = "auth-status" + (type ? " " + type : "");
+}
+function showCheckoutWarning(message, type = "warn") {
+  const el = document.getElementById("checkoutWarning");
+  el.textContent = message; el.className = "auth-status " + type;
+}
+async function refreshMembership() {
+  if (!authToken()) return;
+  try {
+    const r = await fetch("/api/me", { headers: { Authorization: "Bearer " + authToken() }, cache: "no-store" });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) {
+      if (r.status === 503) subscriptionMessage("Subscription database setup is not complete yet.", "warn");
+      else subscriptionMessage("Could not check membership. Please try again.", "warn");
+      return;
+    }
+    const pill = document.getElementById("accountPill");
+    if (data.isPremium) {
+      const planName = data.subscription.planId === "plus" ? "CREATOR PLUS" : "CREATOR PRO";
+      pill.textContent = planName;
+      subscriptionMessage(planName + " is active" + (data.subscription.currentPeriodEnd ? " until " + new Date(data.subscription.currentPeriodEnd).toLocaleDateString() : "") + ".", "ok");
+      await loadPremiumContent();
+    } else {
+      pill.textContent = "FREE PLAN";
+      subscriptionMessage(data.subscription ? "Your subscription status is " + data.subscription.status + ". Premium access requires an active, verified payment." : "You are on the Free plan. Choose a paid plan to unlock premium captions.", "");
+      document.getElementById("premiumCaptions").hidden = true;
+      document.getElementById("premiumLocked").hidden = false;
+    }
+  } catch (_) { subscriptionMessage("Unable to check membership right now.", "warn"); }
+}
+async function loadPremiumContent() {
+  if (!authToken()) { toast("Sign in first to check premium access."); return; }
+  try {
+    const r = await fetch("/api/premium-content", { headers: { Authorization: "Bearer " + authToken() }, cache: "no-store" });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) {
+      document.getElementById("premiumCaptions").hidden = true;
+      document.getElementById("premiumLocked").hidden = false;
+      if (r.status === 403) subscriptionMessage("No active paid subscription was found.", "");
+      return;
+    }
+    const target = document.getElementById("premiumCaptions");
+    target.innerHTML = '<div class="premium-box"><h4>Unlocked for you ✨</h4><p>Your membership has been verified on the server.</p></div>' +
+      (data.captions || []).map((item, i) => '<article class="premium-caption"><strong>' + escapeHtml(item.category) + ' · PREMIUM</strong><p>' + escapeHtml(item.caption) + '</p><button class="small-btn copy" data-premium-copy="' + i + '">▢ Copy caption</button></article>').join("");
+    target.hidden = false; document.getElementById("premiumLocked").hidden = true;
+    target.querySelectorAll("[data-premium-copy]").forEach(btn => btn.addEventListener("click", () => {
+      const item = data.captions[Number(btn.dataset.premiumCopy)];
+      if (item) copyText(item.caption);
+    }));
+  } catch (_) { toast("Couldn't load premium captions right now."); }
+}
+function updateAccountUI(session) {
+  currentSession = session;
+  const loggedIn = Boolean(session && session.user);
+  authFormsEl.hidden = loggedIn;
+  memberSignedInEl.hidden = !loggedIn;
+  checkoutFormEl.hidden = !loggedIn || !selectedPlanId;
+  if (loggedIn) {
+    document.getElementById("signedInAs").textContent = "Signed in as " + (session.user.email || "");
+    setAccountMessage("You're signed in. Subscription access is checked securely with the server.", "ok");
+    refreshMembership();
+  } else {
+    document.getElementById("accountPill").textContent = "FREE PLAN";
+    setAccountMessage(appConfig && appConfig.authReady ? "Sign in or create an account to manage a membership." : "Account signup is not enabled yet. Supabase setup is required before accounts and subscriptions can work.", appConfig && appConfig.authReady ? "" : "warn");
+    checkoutFormEl.hidden = true;
+    document.getElementById("premiumCaptions").hidden = true;
+    document.getElementById("premiumLocked").hidden = false;
+  }
+  if (!appConfig || !appConfig.paymentsReady) {
+    showCheckoutWarning("Payments are not configured yet. Apply for PayHere, create the Supabase project, add the server-only environment variables in Vercel, then redeploy.", "warn");
+  } else {
+    showCheckoutWarning("Recurring checkout will open on PayHere's secure payment page. Your plan is activated only after the verified server callback.", "ok");
+  }
+}
+async function initMembership() {
+  const paymentReturn = new URLSearchParams(location.search).get("payment");
+  if (paymentReturn === "return") toast("Payment returned. Refresh membership to confirm server-verified status.");
+  else if (paymentReturn === "cancelled") toast("Checkout cancelled. No premium access was granted.");
+  try {
+    const r = await fetch("/api/config", { cache: "no-store" });
+    appConfig = await r.json();
+  } catch (_) { appConfig = null; }
+  if (appConfig && appConfig.authReady && window.supabase && window.supabase.createClient) {
+    supabaseClient = window.supabase.createClient(appConfig.supabaseUrl, appConfig.supabaseAnonKey, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    });
+    const result = await supabaseClient.auth.getSession();
+    updateAccountUI(result.data && result.data.session || null);
+    supabaseClient.auth.onAuthStateChange((_event, session) => updateAccountUI(session));
+  } else {
+    updateAccountUI(null);
+    if (appConfig && !appConfig.authReady) setAccountMessage("Supabase isn't configured in Vercel yet. Public captions work, but account/payment features are unavailable.", "warn");
+  }
+}
+document.getElementById("showSignup").addEventListener("click", () => showAuthForm("signup"));
+document.getElementById("showLogin").addEventListener("click", () => showAuthForm("login"));
+document.getElementById("signupForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!supabaseClient) return setAccountMessage("Supabase setup is missing. Follow PAYMENTS_SETUP.md in the GitHub repository.", "warn");
+  const fullName = document.getElementById("signupName").value.trim();
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value;
+  if (password.length < 8) return setAccountMessage("Use a password with at least 8 characters.", "warn");
+  const btn = e.submitter; if (btn) { btn.disabled = true; btn.textContent = "Creating account…"; }
+  try {
+    const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { data: { full_name: fullName } } });
+    if (error) throw error;
+    if (data.session) { updateAccountUI(data.session); toast("Account created!"); }
+    else setAccountMessage("Account created. Check your email for the verification link, then sign in.", "ok");
+  } catch (err) { setAccountMessage(err.message || "Could not create account. Try again.", "warn"); }
+  finally { if (btn) { btn.disabled = false; btn.textContent = "Create account"; } }
+});
+document.getElementById("loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!supabaseClient) return setAccountMessage("Supabase setup is missing. Follow PAYMENTS_SETUP.md in the GitHub repository.", "warn");
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  const btn = e.submitter; if (btn) { btn.disabled = true; btn.textContent = "Signing in…"; }
+  try {
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    updateAccountUI(data.session); toast("Signed in successfully.");
+  } catch (err) { setAccountMessage(err.message || "Sign in failed. Check your details.", "warn"); }
+  finally { if (btn) { btn.disabled = false; btn.textContent = "Sign in"; } }
+});
+document.getElementById("signOutBtn").addEventListener("click", async () => {
+  if (supabaseClient) await supabaseClient.auth.signOut();
+  updateAccountUI(null); toast("Signed out.");
+});
+document.getElementById("refreshMembership").addEventListener("click", refreshMembership);
+document.getElementById("loadPremiumBtn").addEventListener("click", async () => {
+  if (!authToken()) { document.querySelector("#account").scrollIntoView({behavior:"smooth"}); showAuthForm("login"); toast("Sign in to check your membership."); return; }
+  await refreshMembership();
+});
+document.querySelectorAll("[data-free-plan]").forEach(btn => btn.addEventListener("click", () => {
+  selectedPlanId = null; checkoutFormEl.hidden = true;
+  document.querySelector("#captions").scrollIntoView({behavior:"smooth",block:"start"});
+}));
+document.querySelectorAll("[data-plan]").forEach(btn => btn.addEventListener("click", () => {
+  selectedPlanId = btn.dataset.plan;
+  if (!authToken()) {
+    checkoutFormEl.hidden = true; document.querySelector("#account").scrollIntoView({behavior:"smooth"});
+    showAuthForm("signup"); toast("Create an account or sign in to continue.");
+  } else {
+    checkoutFormEl.hidden = false;
+    showCheckoutWarning(!appConfig || !appConfig.paymentsReady
+      ? "Checkout is disabled until Supabase and PayHere credentials are configured in Vercel."
+      : "Selected: " + (selectedPlanId === "plus" ? "Creator Plus — Rs. 990/month" : "Creator Pro — Rs. 490/month") + ". Continue to PayHere to authorize monthly billing.", !appConfig || !appConfig.paymentsReady ? "warn" : "ok");
+    checkoutFormEl.scrollIntoView({behavior:"smooth",block:"nearest"});
+  }
+}));
+document.getElementById("checkoutDetails").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!supabaseClient || !authToken()) return toast("Please sign in again.");
+  if (!selectedPlanId) return toast("Choose a paid plan first.");
+  if (!appConfig || !appConfig.paymentsReady) return toast("Payments are not configured yet. Follow PAYMENTS_SETUP.md first.");
+  const submitBtn = document.getElementById("startCheckout");
+  submitBtn.disabled = true; submitBtn.textContent = "Preparing secure checkout…";
+  try {
+    const resp = await fetch("/api/create-subscription", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + authToken() },
+      body: JSON.stringify({
+        planId: selectedPlanId,
+        firstName: document.getElementById("billFirst").value.trim(),
+        lastName: document.getElementById("billLast").value.trim(),
+        phone: document.getElementById("billPhone").value.trim(),
+        address: document.getElementById("billAddress").value.trim(),
+        city: document.getElementById("billCity").value.trim()
+      })
+    });
+    const payload = await resp.json().catch(() => ({}));
+    if (!resp.ok) throw new Error(payload.message || payload.error || "Could not start payment.");
+    const form = document.createElement("form"); form.method = "POST"; form.action = payload.action;
+    Object.entries(payload.params || {}).forEach(([key, value]) => {
+      const input = document.createElement("input"); input.type = "hidden"; input.name = key; input.value = String(value); form.appendChild(input);
+    });
+    document.body.appendChild(form); form.submit();
+  } catch (err) { showCheckoutWarning(err.message || "Checkout could not be started.", "warn"); toast("Checkout couldn't start."); }
+  finally { submitBtn.disabled = false; submitBtn.textContent = "Continue to secure checkout"; }
+});
+initMembership();
+
 </script>
 </body>
 </html>
