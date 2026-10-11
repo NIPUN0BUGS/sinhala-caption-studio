@@ -322,7 +322,8 @@ function collectPaperOptions(file) {
     totalMarks: marks,
     difficulty: $("paperSourceDifficulty").value,
     questionTypes: types,
-    includeAnswers: $("paperIncludeAnswers").checked
+    includeAnswers: $("paperIncludeAnswers").checked,
+    sourceConsent: $("paperSourceConsent").checked
   };
 }
 function storeActivePaperOrder(order) {
