@@ -1,15 +1,19 @@
 const crypto = require("node:crypto");
+
 const PLANS = Object.freeze({
   pro: { id: "pro", name: "Creator Pro", amount: 490, currency: "LKR", recurrence: "1 Month", duration: "Forever" },
   plus: { id: "plus", name: "Creator Plus", amount: 990, currency: "LKR", recurrence: "1 Month", duration: "Forever" }
 });
+let payHereTokenCache = { token: "", expiresAt: 0, pending: null };
+
 function json(res, status, payload) {
   res.statusCode = status; res.setHeader("Content-Type", "application/json; charset=utf-8");
-  res.setHeader("Cache-Control", "no-store"); res.end(JSON.stringify(payload));
+  res.setHeader("Cache-Control", "no-store, max-age=0"); res.setHeader("X-Content-Type-Options", "nosniff");
+  res.end(JSON.stringify(payload));
 }
 function text(res, status, value) {
   res.statusCode = status; res.setHeader("Content-Type", "text/plain; charset=utf-8");
-  res.setHeader("Cache-Control", "no-store"); res.end(value);
+  res.setHeader("Cache-Control", "no-store, max-age=0"); res.setHeader("X-Content-Type-Options", "nosniff"); res.end(value);
 }
 function getBearer(req) {
   const m = /^Bearer\s+(.+)$/i.exec(req.headers.authorization || ""); return m ? m[1] : "";
@@ -69,21 +73,79 @@ function verifyNotification(body, merchantId, secret) {
     String(body.status_code || "") + md5Hex(secret));
   return secureEqual(local, body.md5sig);
 }
+function payhereBase() {
+  return process.env.PAYHERE_MODE === "live" ? "https://www.payhere.lk" : "https://sandbox.payhere.lk";
+}
 function isConfiguredForCheckout() {
-  // Merchant credentials enable checkout; the separate App ID/Secret are only
-  // needed for self-service cancellation through the Subscription Manager API.
+  // The App ID/Secret are required to independently verify received payments
+  // through PayHere's API, not only to cancel a subscription.
   return Boolean(process.env.PAYHERE_MERCHANT_ID && process.env.PAYHERE_MERCHANT_SECRET &&
+    process.env.PAYHERE_APP_ID && process.env.PAYHERE_APP_SECRET &&
     appUrl() && ["sandbox", "live"].includes(process.env.PAYHERE_MODE));
 }
 function payhereAction() {
   return process.env.PAYHERE_MODE === "live" ? "https://www.payhere.lk/pay/checkout" : "https://sandbox.payhere.lk/pay/checkout";
 }
-function nextBillingDate(dateString) {
-  // PayHere sends this as a date-only value. Keep access through the full stated date.
+async function payhereAccessToken() {
+  const appId = process.env.PAYHERE_APP_ID || "", appSecret = process.env.PAYHERE_APP_SECRET || "";
+  if (!appId || !appSecret) throw new Error("PAYHERE_API_NOT_CONFIGURED");
+  if (payHereTokenCache.token && payHereTokenCache.expiresAt > Date.now() + 30000) return payHereTokenCache.token;
+  if (payHereTokenCache.pending) return payHereTokenCache.pending;
+  payHereTokenCache.pending = (async () => {
+    const response = await fetch(payhereBase() + "/merchant/v1/oauth/token", {
+      method: "POST",
+      headers: {
+        Authorization: "Basic " + Buffer.from(appId + ":" + appSecret).toString("base64"),
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: new URLSearchParams({ grant_type: "client_credentials" }).toString()
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || !data.access_token) throw new Error("PAYHERE_API_AUTH_FAILED");
+    payHereTokenCache.token = String(data.access_token);
+    payHereTokenCache.expiresAt = Date.now() + Math.max(60, Number(data.expires_in) || 600) * 1000;
+    return payHereTokenCache.token;
+  })();
+  try { return await payHereTokenCache.pending; }
+  finally { payHereTokenCache.pending = null; }
+}
+async function payhereGet(path) {
+  const token = await payhereAccessToken();
+  const response = await fetch(payhereBase() + path, {
+    method: "GET", headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" }
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || Number(data.status) !== 1) throw new Error("PAYHERE_API_LOOKUP_FAILED");
+  return data;
+}
+async function verifyPayHereSubscriptionPayment({ subscriptionId, paymentId, orderId, amount, currency }) {
+  if (!/^\d+$/.test(String(subscriptionId || "")) || !/^\d+$/.test(String(paymentId || ""))) return false;
+  const data = await payhereGet("/merchant/v1/subscription/" + encodeURIComponent(String(subscriptionId)) + "/payments");
+  const rows = Array.isArray(data.data) ? data.data : [];
+  return rows.some(payment =>
+    String(payment.payment_id) === String(paymentId) &&
+    String(payment.order_id || "") === String(orderId) &&
+    String(payment.currency || "") === String(currency) &&
+    Math.abs(Number(payment.amount) - Number(amount)) < 0.005 &&
+    String(payment.status || "").toUpperCase() === "RECEIVED"
+  );
+}
+async function getPayHereSubscription(subscriptionId) {
+  if (!/^\d+$/.test(String(subscriptionId || ""))) return null;
+  const data = await payhereGet("/merchant/v1/subscription");
+  const rows = Array.isArray(data.data) ? data.data : [];
+  return rows.find(sub => String(sub.subscription_id) === String(subscriptionId)) || null;
+}
+function nextBillingDate(dateString, previousEnd) {
+  const previousMs = previousEnd ? Date.parse(previousEnd) : NaN;
+  const baseMs = Number.isFinite(previousMs) && previousMs > Date.now() ? previousMs : Date.now();
   if (dateString && /^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-    const d = new Date(dateString + "T23:59:59.999Z"); if (!Number.isNaN(d.getTime())) return d.toISOString();
+    const candidate = new Date(dateString + "T23:59:59.999Z");
+    const limit = baseMs + 45 * 24 * 60 * 60 * 1000;
+    if (!Number.isNaN(candidate.getTime()) && candidate.getTime() > baseMs && candidate.getTime() <= limit)
+      return candidate.toISOString();
   }
-  const d = new Date(); d.setUTCMonth(d.getUTCMonth() + 1);
+  const d = new Date(baseMs); d.setUTCMonth(d.getUTCMonth() + 1);
   return d.toISOString();
 }
 function cleanString(v, max = 140) { return String(v || "").trim().replace(/[\u0000-\u001f\u007f]/g, "").slice(0, max); }
@@ -92,8 +154,12 @@ async function getUserSubscription(cfg, userId) {
     encodeURIComponent(userId) + "&limit=1");
   return Array.isArray(rows) && rows.length ? rows[0] : null;
 }
-module.exports = { PLANS, json, text, getBearer, envSupabase, authenticate, db, readBody, appUrl, originAllowed,
-  md5Hex, secureEqual, paymentHash, verifyNotification, isConfiguredForCheckout, payhereAction, nextBillingDate, cleanString, getUserSubscription };
+module.exports = {
+  PLANS, json, text, getBearer, envSupabase, authenticate, db, readBody, appUrl, originAllowed,
+  md5Hex, secureEqual, paymentHash, verifyNotification, isConfiguredForCheckout, payhereAction,
+  payhereBase, payhereAccessToken, verifyPayHereSubscriptionPayment, getPayHereSubscription,
+  nextBillingDate, cleanString, getUserSubscription
+};
 
 module.exports.default = function handler(req, res) {
   res.statusCode = 404;
