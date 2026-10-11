@@ -1,7 +1,7 @@
 const {
   json, readJson, envSupabase, originAllowed, getOrder, accessTokenMatches,
   storageDownload, verifyFileBytes, patchOrder, storageDelete
-} = require("./_paper-shared");
+} = require("../lib/gurupaper-paper-shared");
 function fail(res, status, error, message) { return json(res, status, { error, message }); }
 const questionSchema = {
   type: "object", additionalProperties: false,
