@@ -253,3 +253,7 @@ module.exports = {
   allowedFileType, encodeStoragePath, db, getOrder, patchOrder, accessTokenMatches,
   createSignedUploadUrl, storageDownload, verifyFileBytes, storageDelete, runtimeStatus
 };
+// Prevent Vercel from treating this shared helper module as a missing API entrypoint.
+module.exports.default = function handler(req, res) {
+  return json(res, 404, { error: "not_found" });
+};
