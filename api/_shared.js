@@ -70,8 +70,9 @@ function verifyNotification(body, merchantId, secret) {
   return secureEqual(local, body.md5sig);
 }
 function isConfiguredForCheckout() {
+  // Merchant credentials enable checkout; the separate App ID/Secret are only
+  // needed for self-service cancellation through the Subscription Manager API.
   return Boolean(process.env.PAYHERE_MERCHANT_ID && process.env.PAYHERE_MERCHANT_SECRET &&
-    process.env.PAYHERE_APP_ID && process.env.PAYHERE_APP_SECRET &&
     appUrl() && ["sandbox", "live"].includes(process.env.PAYHERE_MODE));
 }
 function payhereAction() {
