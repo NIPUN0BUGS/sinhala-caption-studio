@@ -23,8 +23,8 @@ module.exports = async function handler(req, res) {
   if (!auth) return json(res, 401, { error: "sign_in_required" });
   try {
     const sub = await getUserSubscription(auth.cfg, auth.user.id);
-    const withinPeriod = sub && (!sub.current_period_end || Date.parse(sub.current_period_end) > Date.now());
-    const accessAllowed = Boolean(sub && (sub.status === "active" && withinPeriod || sub.status === "cancelled" && sub.current_period_end && Date.parse(sub.current_period_end) > Date.now()));
+    const periodValid = Boolean(sub && sub.current_period_end && Date.parse(sub.current_period_end) > Date.now());
+    const accessAllowed = Boolean(sub && periodValid && ["active", "past_due", "cancelled"].includes(sub.status));
     if (!accessAllowed) return json(res, 403, { error: "premium_required", message: "An active paid period is required." });
     res.setHeader("Cache-Control", "private, no-store");
     const captions = sub.plan_id === "plus" ? PREMIUM_CAPTIONS : PREMIUM_CAPTIONS.slice(0, 6);
