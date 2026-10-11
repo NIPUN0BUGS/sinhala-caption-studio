@@ -317,7 +317,7 @@ async function refreshMembership() {
     if (data.isPremium) {
       const planName = data.subscription.planId === "plus" ? "CREATOR PLUS" : "CREATOR PRO";
       pill.textContent = planName;
-      subscriptionMessage(planName + " is active" + (data.subscription.currentPeriodEnd ? " until " + new Date(data.subscription.currentPeriodEnd).toLocaleDateString() : "") + ".", "ok");
+      subscriptionMessage(data.subscription.status === "cancelled" ? planName + " renewal is cancelled; paid access remains until " + (data.subscription.currentPeriodEnd ? new Date(data.subscription.currentPeriodEnd).toLocaleDateString() : "the period end") + "." : planName + " is active" + (data.subscription.currentPeriodEnd ? " until " + new Date(data.subscription.currentPeriodEnd).toLocaleDateString() : "") + ".", "ok");
       await loadPremiumContent();
     } else {
       pill.textContent = "FREE PLAN";
