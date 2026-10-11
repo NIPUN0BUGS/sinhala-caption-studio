@@ -17,7 +17,7 @@ module.exports = async function handler(req, res) {
       readyToAcceptPayment: status.readyToAcceptPayment,
       message: status.readyToAcceptPayment
         ? "Configuration gates are open. Test sandbox payment callbacks and AI output before live use."
-        : "Payments are disabled. Complete database, private storage, PayHere, OpenAI and APP_URL setup, test the flow in sandbox, then explicitly set GURUPAPER_ENABLE_CHECKOUT=true."
+        : "Payments are disabled. Configure database, private storage, PayHere, OpenAI and APP_URL first. Set GURUPAPER_ENABLE_CHECKOUT=true to run sandbox tests while PAYHERE_MODE=sandbox; switch to live only after testing and merchant approval."
     });
   } catch (_) {
     return json(res, 200, { product: "GuruPaper", price: 100, currency: "LKR", readyToAcceptPayment: false, message: "Configuration could not be verified. Payments remain disabled." });
