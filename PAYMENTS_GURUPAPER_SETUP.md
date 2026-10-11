@@ -48,6 +48,7 @@ In Vercel → project → Settings → Environment Variables, add these for the 
 | PAYHERE_MERCHANT_ID | PayHere merchant ID |
 | PAYHERE_MERCHANT_SECRET | Merchant Secret for the exact domain |
 | OPENAI_API_KEY | Server-side API key for lesson-to-paper generation |
+| GURUPAPER_ENABLE_CHECKOUT | Keep `false` or omitted until end-to-end sandbox checkout, callback verification and AI output have been tested. Set to `true` only to deliberately enable the flow. |
 | OPENAI_MODEL | Optional; defaults to gpt-4.1-mini |
 
 After changing environment variables, redeploy. Do not commit real credentials or put any secret in index.html. Do not use the original Caption Studio production URL as APP_URL for GuruPaper. Use the stable feature-branch preview alias while testing, or a dedicated GuruPaper production domain later. The configured hostname must be the one teachers visit; otherwise same-origin checks keep the flow disabled.
@@ -56,7 +57,7 @@ After changing environment variables, redeploy. Do not commit real credentials o
 
 Open /api/paper-config on the GuruPaper deployment. It should report databaseReady, privateStorageReady, payhereCredentialsConfigured, aiCredentialConfigured, domainConfigured, and readyToAcceptPayment as true.
 
-If any check is false, the UI disables the payment flow and displays that setup is incomplete. These checks confirm configuration presence and Supabase table/bucket reachability; they cannot validate that a payment succeeds or that an AI API key has quota. Complete sandbox tests before live use.
+If any check is false, the UI disables the payment flow. The additional `GURUPAPER_ENABLE_CHECKOUT` switch must be explicitly set to `true`; keep it false/omitted until you have completed the sandbox tests below. The readiness endpoint verifies credential presence and table/bucket reachability, but cannot validate PayHere account approval, a successful charge, or AI quota. Even after the switch is enabled, keep `PAYHERE_MODE=sandbox` until all tests pass. Set `PAYHERE_MODE=live` only after PayHere approves the merchant/domain and you are ready to accept real payments.
 
 ## 5. Expected customer journey
 
