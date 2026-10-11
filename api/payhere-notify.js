@@ -1,6 +1,6 @@
 const {
   PLANS, text, envSupabase, db, readBody, verifyNotification, nextBillingDate,
-  verifyPayHereSubscriptionPayment, getPayHereSubscription
+  verifyPayHereSubscriptionPayment, getPayHereSubscription, cancelPayHereSubscription
 } = require("./_shared");
 
 async function selectRows(cfg, path) {
@@ -99,15 +99,31 @@ module.exports = async function handler(req, res) {
       if (initialAuthorization) {
         // The initial authorization is the only event that may create a subscription.
         // Do not replay it to revive a previously cancelled/completed subscription.
-        if (!matchedPending || pending.status !== "pending") return text(res, 200, "Notification ignored");
+        if (!matchedPending || pending.status === "paid") return text(res, 200, "Notification ignored");
         const existingForUser = await selectRows(cfg, "subscriptions?select=plan_id,status,payhere_subscription_id,current_period_end&user_id=eq." +
           encodeURIComponent(pending.user_id) + "&limit=1");
         const priorSub = existingForUser[0] || null;
         if (priorSub && String(priorSub.payhere_subscription_id || "") !== subscriptionId &&
             (["active", "past_due"].includes(priorSub.status) ||
              (priorSub.status === "cancelled" && (!priorSub.current_period_end || Date.parse(priorSub.current_period_end) > Date.now())))) {
-          console.error("Verified checkout arrived while another subscription may still be chargeable for user", pending.user_id);
-          return text(res, 200, "Verified payment received; existing subscription requires review");
+          // A customer may finish a checkout that was abandoned in another tab. Do not
+          // overwrite their existing subscription. Record the verified charge and try
+          // to stop future renewals on the duplicate PayHere subscription.
+          await patchRow(cfg, "pending_checkouts?order_id=eq." + encodeURIComponent(orderId), {
+            status: "paid", processed_at: new Date().toISOString()
+          });
+          await db(cfg, "payments?on_conflict=payment_id", "POST", {
+            payment_id: paymentId, order_id: orderId, user_id: pending.user_id,
+            payhere_subscription_id: subscriptionId, amount: amount.toFixed(2), currency,
+            status_code: statusCode, message_type: messageType
+          }, "resolution=merge-duplicates,return=minimal");
+          try {
+            await cancelPayHereSubscription(subscriptionId);
+            console.error("A verified late checkout created a duplicate subscription; future renewals were cancelled. Review whether the customer needs a refund.", pending.user_id);
+          } catch (cancelError) {
+            console.error("A verified late checkout created a duplicate subscription and automatic cancellation failed. Manual review is required.", pending.user_id, cancelError.message);
+          }
+          return text(res, 200, "Verified payment recorded; duplicate subscription reviewed");
         }
 
         await db(cfg, "subscriptions?on_conflict=user_id", "POST", {
