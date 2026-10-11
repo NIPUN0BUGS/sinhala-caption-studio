@@ -19,11 +19,13 @@ Simply download the repository and open `index.html` in your browser. No build c
 
 ## Publish on GitHub Pages for free
 
-1. Open **Settings → Pages** in this repository.
-2. Under **Build and deployment**, set the source to **GitHub Actions**.
-3. Go to the **Actions** tab and allow workflows if prompted. The included Pages workflow deploys the site when changes are pushed to `main`.
-4. When the workflow completes, open the published Pages URL shown in **Settings → Pages**. The expected project URL is:
+1. Open this repository's **Settings → Pages**.
+2. Under **Build and deployment → Source**, choose **Deploy from a branch**.
+3. Set the branch to `main` and the folder to `/(root)`, then click **Save**.
+4. Wait a few minutes. The live URL should be:
    `https://nipun0bugs.github.io/sinhala-caption-studio/`
+
+GitHub Pages setup must be enabled by an account administrator in Settings. If the page shows 404, check that the source is saved as `main` + `/(root)` and allow a few minutes for the first deployment.
 
 ## Notes
 
