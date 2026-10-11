@@ -27,6 +27,15 @@ Simply download the repository and open `index.html` in your browser. No build c
 
 GitHub Pages setup must be enabled by an account administrator in Settings. If the page shows 404, check that the source is saved as `main` + `/(root)` and allow a few minutes for the first deployment.
 
+
+## Subscription plans and payments
+
+The site includes a subscription UI for Free, Creator Pro (Rs. 490/month) and Creator Plus (Rs. 990/month), plus a Supabase auth integration and PayHere recurring-payment backend routes. Payments stay unavailable until the required services and merchant credentials are configured.
+
+**Setup instructions:** see [PAYMENTS_SETUP.md](./PAYMENTS_SETUP.md). Run [supabase/schema.sql](./supabase/schema.sql) in your Supabase SQL Editor and configure the required server-only variables in Vercel. Never commit PayHere or Supabase service-role secrets.
+
+The PayHere callback verifies the provider signature on the server before changing subscription status; the premium caption endpoint checks the authenticated user's database subscription before returning premium content. This starter implementation must be sandbox-tested before enabling live billing.
+
 ## Notes
 
 - Favourites and the selected theme are saved in the current browser only, using local storage. There are no accounts or shared cloud profiles.
