@@ -71,16 +71,19 @@ function verifyNotification(body, merchantId, secret) {
 }
 function isConfiguredForCheckout() {
   return Boolean(process.env.PAYHERE_MERCHANT_ID && process.env.PAYHERE_MERCHANT_SECRET &&
+    process.env.PAYHERE_APP_ID && process.env.PAYHERE_APP_SECRET &&
     appUrl() && ["sandbox", "live"].includes(process.env.PAYHERE_MODE));
 }
 function payhereAction() {
   return process.env.PAYHERE_MODE === "live" ? "https://www.payhere.lk/pay/checkout" : "https://sandbox.payhere.lk/pay/checkout";
 }
 function nextBillingDate(dateString) {
+  // PayHere sends this as a date-only value. Keep access through the full stated date.
   if (dateString && /^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-    const d = new Date(dateString + "T00:00:00.000Z"); if (!Number.isNaN(d.getTime())) return d.toISOString();
+    const d = new Date(dateString + "T23:59:59.999Z"); if (!Number.isNaN(d.getTime())) return d.toISOString();
   }
-  return new Date(Date.now() + 31 * 86400000).toISOString();
+  const d = new Date(); d.setUTCMonth(d.getUTCMonth() + 1);
+  return d.toISOString();
 }
 function cleanString(v, max = 140) { return String(v || "").trim().replace(/[\u0000-\u001f\u007f]/g, "").slice(0, max); }
 async function getUserSubscription(cfg, userId) {
