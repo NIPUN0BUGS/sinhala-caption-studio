@@ -24,7 +24,8 @@ module.exports = async function handler(req, res) {
   try {
     const sub = await getUserSubscription(auth.cfg, auth.user.id);
     const withinPeriod = sub && (!sub.current_period_end || Date.parse(sub.current_period_end) > Date.now());
-    if (!sub || sub.status !== "active" || !withinPeriod) return json(res, 403, { error: "premium_required", message: "An active paid subscription is required." });
+    const accessAllowed = Boolean(sub && (sub.status === "active" && withinPeriod || sub.status === "cancelled" && sub.current_period_end && Date.parse(sub.current_period_end) > Date.now()));
+    if (!accessAllowed) return json(res, 403, { error: "premium_required", message: "An active paid period is required." });
     res.setHeader("Cache-Control", "private, no-store");
     const captions = sub.plan_id === "plus" ? PREMIUM_CAPTIONS : PREMIUM_CAPTIONS.slice(0, 6);
     return json(res, 200, { planId: sub.plan_id, captions });
