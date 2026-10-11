@@ -13,10 +13,11 @@ module.exports = async function handler(req, res) {
       payhereCredentialsConfigured: status.payhereReady,
       aiCredentialConfigured: status.aiReady,
       domainConfigured: status.hostReady,
+      checkoutManuallyEnabled: status.checkoutManuallyEnabled,
       readyToAcceptPayment: status.readyToAcceptPayment,
       message: status.readyToAcceptPayment
-        ? "Configuration checks passed. Provider credentials and sandbox checkout still need to be tested before live use."
-        : "Payment and AI paper generation are not enabled. Complete the private storage, database, PayHere, OpenAI and APP_URL setup first."
+        ? "Configuration gates are open. Test sandbox payment callbacks and AI output before live use."
+        : "Payments are disabled. Complete database, private storage, PayHere, OpenAI and APP_URL setup, test the flow in sandbox, then explicitly set GURUPAPER_ENABLE_CHECKOUT=true."
     });
   } catch (_) {
     return json(res, 200, { product: "GuruPaper", price: 100, currency: "LKR", readyToAcceptPayment: false, message: "Configuration could not be verified. Payments remain disabled." });
