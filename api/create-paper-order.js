@@ -32,6 +32,7 @@ module.exports = async function handler(req, res) {
   if (!originAllowed(req)) return fail(res, 403, "origin_not_allowed", "Please use GuruPaper from its configured website domain.");
   if (!allGenerationServicesConfigured()) return fail(res, 503, "services_not_configured", "Paper generation and payments are not live yet. Required services must be configured and tested before taking a payment.");
   const input = readJson(req);
+  if (input.sourceConsent !== true) return fail(res, 400, "source_consent_required", "Confirm that you have permission to upload and process these lesson notes.");
   let options;
   try { options = cleanOptions(input); }
   catch (_) { return fail(res, 400, "invalid_paper_options", "Check the grade, subject, language, question count, total marks and question types."); }
@@ -56,7 +57,10 @@ module.exports = async function handler(req, res) {
       order_id: orderId, access_token_hash: sha256(accessToken), status: "created",
       amount: PRICE_LKR, currency: CURRENCY, source_path: path,
       source_filename: fileName, source_content_type: type, source_size: size,
-      paper_options: options, created_at: now, updated_at: now
+      paper_options: options,
+      source_consent_at: now,
+      source_consent_version: "2026-10-v1",
+      created_at: now, updated_at: now
     }, "return=representation");
     if (!Array.isArray(inserted) || !inserted.length) throw new Error("ORDER_CREATE_FAILED");
     return json(res, 201, {
