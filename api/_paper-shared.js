@@ -82,7 +82,10 @@ function paymentEnvironmentReady() {
   );
 }
 function allGenerationServicesConfigured() {
-  return paymentEnvironmentReady() && Boolean(process.env.OPENAI_API_KEY);
+  // Deliberate operator switch: configuration presence alone must not accept money.
+  // Enable only after sandbox checkout + callback + AI output have been tested.
+  return String(process.env.GURUPAPER_ENABLE_CHECKOUT || "").toLowerCase() === "true" &&
+    paymentEnvironmentReady() && Boolean(process.env.OPENAI_API_KEY);
 }
 function payhereAction() {
   return String(process.env.PAYHERE_MODE || "").toLowerCase() === "live"
@@ -173,7 +176,13 @@ async function createSignedUploadUrl(cfg, path) {
     else if (uploadUrl.startsWith("/")) uploadUrl = storageBase + uploadUrl;
     else uploadUrl = storageBase + "/" + uploadUrl;
   }
-  return { uploadUrl, token: data.token || new URL(uploadUrl).searchParams.get("token") || "" };
+  const parsed = new URL(uploadUrl);
+  if (parsed.origin !== new URL(cfg.url).origin) throw new Error("SUPABASE_BAD_UPLOAD_RESPONSE");
+  const token = String(data.token || parsed.searchParams.get("token") || "");
+  if (!token) throw new Error("SUPABASE_BAD_UPLOAD_RESPONSE");
+  // Some Supabase Storage versions return the path and token as separate fields.
+  if (!parsed.searchParams.has("token")) parsed.searchParams.set("token", token);
+  return { uploadUrl: parsed.toString(), token };
 }
 async function storageDownload(cfg, path) {
   const url = cfg.url + "/storage/v1/object/" + BUCKET + "/" + encodeStoragePath(path);
@@ -229,9 +238,10 @@ async function runtimeStatus(req) {
   const payhereReady = paymentEnvironmentReady();
   const aiReady = Boolean(process.env.OPENAI_API_KEY);
   const hostReady = sameAppOrigin(req);
+  const checkoutManuallyEnabled = String(process.env.GURUPAPER_ENABLE_CHECKOUT || "").toLowerCase() === "true";
   return {
-    databaseReady, storageReady, payhereReady, aiReady, hostReady,
-    readyToAcceptPayment: databaseReady && storageReady && payhereReady && aiReady && hostReady,
+    databaseReady, storageReady, payhereReady, aiReady, hostReady, checkoutManuallyEnabled,
+    readyToAcceptPayment: databaseReady && storageReady && payhereReady && aiReady && hostReady && checkoutManuallyEnabled,
     paymentMode: String(process.env.PAYHERE_MODE || "").toLowerCase() === "live" ? "live" : "sandbox"
   };
 }
