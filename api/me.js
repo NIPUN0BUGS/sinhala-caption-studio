@@ -10,7 +10,7 @@ module.exports = async function handler(req, res) {
   try {
     const subscription = await getUserSubscription(auth.cfg, auth.user.id);
     const withinPeriod = subscription && (!subscription.current_period_end || Date.parse(subscription.current_period_end) > Date.now());
-    const isPremium = Boolean(subscription && subscription.status === "active" && withinPeriod);
+    const isPremium = Boolean(subscription && (subscription.status === "active" && withinPeriod || subscription.status === "cancelled" && subscription.current_period_end && Date.parse(subscription.current_period_end) > Date.now()));
     return json(res, 200, {
       user: { id: auth.user.id, email: auth.user.email, name: auth.user.user_metadata && auth.user.user_metadata.full_name || "" },
       subscription: subscription ? { planId: subscription.plan_id, status: subscription.status, currentPeriodEnd: subscription.current_period_end, isPremium } : null,
