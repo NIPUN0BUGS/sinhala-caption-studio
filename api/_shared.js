@@ -90,3 +90,9 @@ async function getUserSubscription(cfg, userId) {
 }
 module.exports = { PLANS, json, text, getBearer, envSupabase, authenticate, db, readBody, appUrl, originAllowed,
   md5Hex, secureEqual, paymentHash, verifyNotification, isConfiguredForCheckout, payhereAction, nextBillingDate, cleanString, getUserSubscription };
+
+module.exports.default = function handler(req, res) {
+  res.statusCode = 404;
+  res.setHeader("Content-Type", "text/plain; charset=utf-8");
+  res.end("Not found");
+};
