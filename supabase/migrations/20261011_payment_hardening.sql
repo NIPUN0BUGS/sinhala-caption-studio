@@ -6,18 +6,9 @@ alter table public.pending_checkouts
 alter table public.pending_checkouts
   add column if not exists consent_terms_version text;
 
--- Keep existing historic rows valid without inventing consent for them.
-update public.pending_checkouts
-set recurring_consent_at = created_at
-where recurring_consent_at is null;
-update public.pending_checkouts
-set consent_terms_version = 'legacy-v0'
-where consent_terms_version is null;
-
-alter table public.pending_checkouts
-  alter column recurring_consent_at set not null;
-alter table public.pending_checkouts
-  alter column consent_terms_version set not null;
+-- Leave existing checkout rows with NULL consent metadata. Never backfill a
+-- historical timestamp as though the customer explicitly consented. New checkout
+-- API requests write both values before a PayHere form is returned.
 
 -- Clear duplicate abandoned locks before enforcing one pending checkout per user.
 with ranked_pending as (
