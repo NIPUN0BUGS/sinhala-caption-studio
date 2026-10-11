@@ -2,7 +2,7 @@ const {
   PRICE_LKR, CURRENCY, json, readJson, envSupabase, originAllowed, allGenerationServicesConfigured,
   emailValid, cleanString, getOrder, accessTokenMatches, storageDownload, verifyFileBytes,
   paymentHash, payhereAction, patchOrder
-} = require("./_paper-shared");
+} = require("../lib/gurupaper-paper-shared");
 function fail(res, status, error, message) { return json(res, status, { error, message }); }
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") return fail(res, 405, "method_not_allowed", "Use POST.");
