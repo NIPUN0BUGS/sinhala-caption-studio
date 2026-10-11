@@ -16,6 +16,8 @@ create table if not exists public.paper_orders (
   source_content_type text not null check (source_content_type in ('application/pdf','image/png','image/jpeg')),
   source_size integer not null check (source_size between 1 and 15728640),
   paper_options jsonb not null,
+  source_consent_at timestamptz not null,
+  source_consent_version text not null default '2026-10-v1',
   customer jsonb,
   payhere_payment_id text unique,
   generated_paper jsonb,
@@ -26,6 +28,9 @@ create table if not exists public.paper_orders (
   generated_at timestamptz,
   source_deleted_at timestamptz
 );
+
+alter table public.paper_orders add column if not exists source_consent_at timestamptz;
+alter table public.paper_orders add column if not exists source_consent_version text not null default '2026-10-v1';
 
 create index if not exists paper_orders_status_created_idx
   on public.paper_orders(status, created_at);
