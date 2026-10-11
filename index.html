@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#113a57">
-<meta name="description" content="Sri Lankan teachers-la ta question papers lesiyen hadanna. Sinhala, Tamil, English medium papers build karala marks check karanna, PDF print karanna saha Word-compatible files download karanna.">
+<meta name="description" content="ගුරු Paper: Upload PDF or lesson images, then generate a Sri Lankan school question paper after verified Rs.100 payment.">
 <meta name="robots" content="index,follow">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
 <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml">
@@ -16,6 +16,32 @@
 @media(max-width:980px){.builder-layout{grid-template-columns:1fr}.preview-panel{order:2}.paper-preview{min-height:500px}.benefit-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){.shell{width:calc(100% - 22px)}.topbar{height:66px}.nav{gap:10px;font-size:11px}.nav a:not(:last-child){display:none}.brand{font-size:16px}.brand-icon{width:37px;height:37px}.hero{padding:32px 22px;border-radius:22px}.hero h1{font-size:37px;letter-spacing:-1.4px}.hero p{font-size:13px}.section{padding-top:34px}.section-heading h2{font-size:22px}.benefit-grid{gap:9px}.benefit{padding:14px}.benefit h3{font-size:12px}.benefit p{font-size:11px}.panel-head,.panel-body{padding:15px}.fields{gap:10px}.question-editor-body .fields{grid-template-columns:minmax(0,1fr) 75px}.paper-preview{padding:25px 19px;font-size:11px;min-height:450px}.paper-school{font-size:15px}.paper-details{grid-template-columns:1fr 1fr;gap:6px}.paper-choices{grid-template-columns:1fr}.plan-grid,.roadmap{grid-template-columns:1fr}.plan>p{min-height:0}.footer{flex-direction:column}.section-heading{align-items:flex-start;flex-direction:column}}
 @media print{@page{size:A4;margin:16mm 14mm}body{background:#fff!important;color:#000}.shell{width:100%;margin:0}.topbar,.hero,.benefits-section,.builder-intro,.editor-panel,.pricing-section,.roadmap-section,.footer,.toast,.preview-head,.preview-tip{display:none!important}.section{padding:0!important}.builder-layout{display:block!important}.preview-panel{border:0!important;box-shadow:none!important;overflow:visible!important}.panel-body{padding:0!important}.paper-preview{padding:0!important;box-shadow:none!important;min-height:0!important}.paper-question{break-inside:avoid}.answer-page.show{display:block!important;break-before:page;page-break-before:always}.paper-footer{margin-bottom:0}}
+
+/* Lesson-to-paper checkout flow */
+.generator-layout{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(300px,.92fr);gap:18px;align-items:start}
+.generator-status{padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#f5f9fa;color:#46606d;font-size:12px;line-height:1.65;margin-bottom:16px;overflow-wrap:anywhere}
+.generator-status.is-offline{background:#fff7e8;border-color:#f0d7a8;color:#725318}
+.generator-status.is-good{background:#e8f8f1;border-color:#b4e1cd;color:#145943}
+.generator-status.is-error{background:#fff0ef;border-color:#efc6c2;color:#8a2b24}
+.generator-status.is-waiting{background:#eef6fb;border-color:#c8e0ee;color:#275a77}
+.generator-flow-list{padding-left:20px;margin:12px 0 20px;display:grid;gap:12px;font-size:12px}
+.generator-flow-list strong{display:block;color:var(--ink);font-size:12px}
+.generator-flow-list span{display:block;color:var(--muted);font-size:11px}
+.generator-price{font-size:25px;font-weight:950;color:var(--navy);letter-spacing:-.5px}
+.generator-price small{font-size:11px;letter-spacing:0;color:var(--muted);font-weight:700}
+.generator-disclaimer{border-top:1px solid var(--line);padding-top:12px;margin-top:14px;color:var(--muted);font-size:10px;line-height:1.7}
+.generator-type-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.generator-type{display:flex;gap:8px;align-items:flex-start;padding:10px;border:1px solid var(--line);border-radius:10px;font-size:11px;font-weight:750}
+.generator-type input{margin-top:3px;accent-color:var(--blue)}
+.generator-result{display:none;margin-top:14px;padding:13px;border-radius:12px;background:#e8f8f1;border:1px solid #b4e1cd;color:#145943;font-size:12px;line-height:1.65}
+.generator-result.show{display:block}
+.generator-action-stack{display:grid;gap:9px;margin-top:14px}
+.generator-action-stack button{width:100%}
+.generator-small{font-size:10px;color:var(--muted);line-height:1.7}
+button:disabled{opacity:.48;cursor:not-allowed;transform:none!important}
+@media(max-width:980px){.generator-layout{grid-template-columns:1fr}}
+@media(max-width:640px){.generator-type-grid{grid-template-columns:1fr 1fr}.generator-price{font-size:22px}}
+
 </style>
 </head>
 <body>
@@ -41,6 +67,75 @@
     <article class="benefit"><div class="icon">🌏</div><h3>Languages 3k</h3><p>Sinhala, Tamil, English walin questions liyanna saha edit karanna.</p></article>
     <article class="benefit"><div class="icon">✅</div><h3>Answer Key ekath ekka</h3><p>Teacher-ta review karanna puluwan suggested answers saha marking scheme ekak venama hadaganna.</p></article>
     <article class="benefit"><div class="icon">🖨️</div><h3>Print karanna &amp; share karanna</h3><p>Paper eka print karanna, PDF widihata save karanna, nathnam Word-compatible file ekak download karanna.</p></article>
+  </div>
+</section>
+
+
+<section id="paper-generator" class="section">
+  <div class="section-heading"><div><span class="mini-kicker">Upload → Pay → Generate</span><h2>පාඩම් Notes upload කරලා Question Paper එකක් හදමු</h2><p>PDF එකක් හෝ lesson photo එකක් upload කරන්න. Full paper එක generate වෙන්නේ Rs.100 payment එක server එකෙන් confirm කළාට පස්සෙයි.</p></div></div>
+  <div class="generator-layout">
+    <section class="panel">
+      <div class="panel-head"><div><h3>1. Lesson file &amp; paper settings</h3><p>PDF, PNG හෝ JPG/JPEG · Maximum 15 MB</p></div><span class="generator-price">Rs.100 <small>/ paper</small></span></div>
+      <div class="panel-body">
+        <div id="paperBackendStatus" class="generator-status is-offline" role="status" aria-live="polite">Backend setup තවම complete කරලා නැහැ. PayHere සහ AI configuration verify කරන තුරු payments disable කරලා තියෙනවා.</div>
+        <form id="aiPaperForm" novalidate>
+          <div class="fields">
+            <div class="field full"><label for="paperSourceFile">Lesson Notes / පාඩමේ file එක</label><input id="paperSourceFile" type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" required><span class="generator-small">පැහැදිලි scans/photos upload කරන්න. පුද්ගලික student data තියෙන documents upload නොකරන්න.</span></div>
+            <div class="field full"><label for="paperSourceTitle">Question Paper title</label><input id="paperSourceTitle" maxlength="120" value="Lesson-based Question Paper" required></div>
+            <div class="field"><label for="paperSourceSchool">School / Institute (optional)</label><input id="paperSourceSchool" maxlength="120" placeholder="School name"></div>
+            <div class="field"><label for="paperSourceTeacher">Teacher name (optional)</label><input id="paperSourceTeacher" maxlength="100" placeholder="Teacher name"></div>
+            <div class="field"><label for="paperSourceGrade">Grade එක</label><select id="paperSourceGrade"><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option><option>Grade 11</option><option>G.C.E. O/L</option><option>Grade 12</option><option>Grade 13</option><option>G.C.E. A/L</option></select></div>
+            <div class="field"><label for="paperSourceSubject">Subject එක</label><select id="paperSourceSubject"><option>ICT</option><option>Mathematics</option><option>Science</option><option>English</option><option>Sinhala</option><option>Tamil</option><option>History</option><option>Geography</option><option>Buddhism</option><option>Commerce</option><option>Physics</option><option>Chemistry</option><option>Biology</option><option>Other</option></select></div>
+            <div class="field"><label for="paperSourceMedium">Question language / Medium</label><select id="paperSourceMedium"><option>Sinhala Medium</option><option>Tamil Medium</option><option selected>English Medium</option><option>Sinhala &amp; English</option><option>Tamil &amp; English</option></select></div>
+            <div class="field"><label for="paperSourceTerm">Assessment</label><select id="paperSourceTerm"><option>Term 1</option><option>Term 2</option><option>Term 3</option><option selected>Revision Paper</option><option>Unit Test</option><option>Model Paper</option><option>Monthly Test</option></select></div>
+            <div class="field"><label for="paperSourceDuration">Time duration</label><select id="paperSourceDuration"><option>30 minutes</option><option>45 minutes</option><option selected>1 hour</option><option>1 hour 30 minutes</option><option>2 hours</option><option>2 hours 30 minutes</option><option>3 hours</option></select></div>
+            <div class="field"><label for="paperSourceQuestionCount">Question count</label><select id="paperSourceQuestionCount"><option value="5">5 questions</option><option value="10" selected>10 questions</option><option value="15">15 questions</option><option value="20">20 questions</option></select></div>
+            <div class="field"><label for="paperSourceMarks">Total marks</label><input id="paperSourceMarks" type="number" min="10" max="1000" step="1" value="100" required></div>
+            <div class="field"><label for="paperSourceDifficulty">Difficulty</label><select id="paperSourceDifficulty"><option value="easy">Easy</option><option value="standard" selected>Standard</option><option value="challenging">Challenging</option></select></div>
+            <div class="field full"><label>Question types</label><div class="generator-type-grid">
+              <label class="generator-type"><input type="checkbox" name="paperQuestionType" value="mcq" checked> MCQ / Multiple choice</label>
+              <label class="generator-type"><input type="checkbox" name="paperQuestionType" value="short" checked> Short answers</label>
+              <label class="generator-type"><input type="checkbox" name="paperQuestionType" value="structured" checked> Structured questions</label>
+              <label class="generator-type"><input type="checkbox" name="paperQuestionType" value="essay"> Essay / long answers</label>
+            </div></div>
+          </div>
+          <div class="section-rule"></div>
+          <div class="panel-head" style="padding:0 0 13px;border:0"><div><h3>2. Payment contact details</h3><p>PayHere checkout form ekata</p></div></div>
+          <div class="fields">
+            <div class="field"><label for="paperCustomerFirst">First name</label><input id="paperCustomerFirst" autocomplete="given-name" maxlength="80" required></div>
+            <div class="field"><label for="paperCustomerLast">Last name</label><input id="paperCustomerLast" autocomplete="family-name" maxlength="80" required></div>
+            <div class="field"><label for="paperCustomerEmail">Email</label><input id="paperCustomerEmail" type="email" autocomplete="email" maxlength="254" required></div>
+            <div class="field"><label for="paperCustomerPhone">Phone</label><input id="paperCustomerPhone" type="tel" autocomplete="tel" minlength="7" maxlength="30" placeholder="07X XXX XXXX" required></div>
+            <div class="field full"><label for="paperCustomerAddress">Address</label><input id="paperCustomerAddress" autocomplete="street-address" maxlength="160" required></div>
+            <div class="field"><label for="paperCustomerCity">City</label><input id="paperCustomerCity" autocomplete="address-level2" maxlength="80" required></div>
+          </div>
+          <label style="display:flex;gap:9px;align-items:flex-start;font-size:11px;margin:16px 0"><input id="paperSourceConsent" type="checkbox" required><span>මට මෙම lesson notes භාවිත කිරීමට අවසර තියෙනවා; student personal data ඉවත් කරලා තියෙනවා. Payment verify වුණාට පස්සේ notes AI service එකට process කිරීමට යවන බවත් successful generation එකෙන් පසු source file එක delete කරන බවත් මට තේරෙනවා.</span></label>
+          <label style="display:flex;gap:9px;align-items:flex-start;font-size:11px;margin:12px 0"><input id="paperIncludeAnswers" type="checkbox" checked><span>Suggested answers / marking guide එකත් include කරන්න.</span></label>
+          <button id="paperPayButton" class="btn primary" type="submit" disabled>Rs.100 ගෙවා Question Paper එක හදමු</button>
+          <p class="generator-small">Payment කරන්නේ PayHere secure checkout page එකේ. Browser return එක පමණක් payment proof එකක් නෙවෙයි. Server confirmation නැතුව full paper generation unlock වෙන්නේ නැහැ.</p>
+        </form>
+      </div>
+    </section>
+    <aside class="panel">
+      <div class="panel-head"><div><h3>Paper එක ලබාගන්නේ මෙහෙමයි</h3><p>Payment verified flow</p></div><span class="kicker">Rs.100 one-time</span></div>
+      <div class="panel-body">
+        <div class="generator-price">Rs.100 <small>for one generated paper</small></div>
+        <ol class="generator-flow-list">
+          <li><strong>Lesson file upload</strong><span>File එක private storage එකට යනවා.</span></li>
+          <li><strong>PayHere checkout</strong><span>One-time Rs.100 LKR payment එක.</span></li>
+          <li><strong>Server payment check</strong><span>Verified PayHere notification එකෙන් පස්සේ විතරයි unlock වෙන්නේ.</span></li>
+          <li><strong>AI paper generation</strong><span>Selected grade, medium, marks සහ question types අනුව questions + answer guide හදනවා.</span></li>
+          <li><strong>Review &amp; PDF</strong><span>Paper එක editor එකේ review කරලා print / Save as PDF කරන්න.</span></li>
+        </ol>
+        <div id="paperOrderStatus" class="generator-status" role="status" aria-live="polite">Order එකක් තවම පටන් අරගෙන නැහැ.</div>
+        <div class="generator-action-stack">
+          <button id="paperCheckStatus" class="btn" type="button" hidden>Payment status check කරන්න</button>
+          <button id="paperGenerateButton" class="btn primary" type="button" hidden disabled>Payment verified — full paper generate කරන්න</button>
+        </div>
+        <div id="paperGeneratedNotice" class="generator-result" role="status"></div>
+        <p class="generator-disclaimer">Questions and suggested answers AI-generated. Teacher කෙනෙක් classroom use කිරීමට කලින් accuracy සහ syllabus alignment review කළ යුතුයි. මේ flow එක activate වෙන්නේ PayHere, Supabase සහ AI credentials configure/test කළාම පමණයි.</p>
+      </div>
+    </aside>
   </div>
 </section>
 
@@ -85,17 +180,15 @@
 </section>
 
 <section id="plans" class="section pricing-section">
-  <div class="section-heading"><div><span class="mini-kicker">ගුරුවරුන්ගෙන් feedback ගන්න proposed plans</span><h2>Free එකෙන් පටන් ගන්න. Time save වෙනවා නම් upgrade කරන්න.</h2><p>Me prices test karanna proposal ekak witharai. Payment checkout thama active naha.</p></div></div>
-  <div class="plan-grid">
-    <article class="plan"><span class="badge">Try කරලා බලන්න</span><h3>Free Teacher</h3><div class="price">Rs. 0 <small>/ month</small></div><p>Pay කරන්න කලින් paper builder එක use කරලා බලන්න.</p><ul><li>Papers hadanna &amp; edit karanna</li><li>Print / PDF save</li><li>Basic paper layouts</li><li>Draft eka browser eke save wenawa</li></ul><button class="btn" type="button" data-scroll-builder>Builder එක Try කරන්න</button></article>
-    <article class="plan featured"><span class="badge">Proposed popular plan</span><h3>Teacher Pro</h3><div class="price">Rs. 490 <small>/ month</small></div><p>For teachers preparing papers each term.</p><ul><li>PDF and editable Word exports</li><li>Save and reuse paper templates</li><li>Separate answer sheets</li><li>Planned curated question bank</li></ul><button class="btn primary" type="button" data-plan-info="Teacher Pro">Interest එක Register කරන්න</button></article>
-    <article class="plan"><span class="badge">Institutes walata</span><h3>School / Tuition</h3><div class="price">Rs. 2,490 <small>/ month</small></div><p>Teachers kihipayak ekka papers hadana schools saha tuition classes walata.</p><ul><li>Teacher accounts kihipayak</li><li>Shared paper templates</li><li>Institute name/logo branding</li><li>Shared question bank (planned)</li></ul><button class="btn" type="button" data-plan-info="School / Tuition">Interest එක Register කරන්න</button></article>
+  <div class="section-heading"><div><span class="mini-kicker">Simple pay-per-paper pricing</span><h2>එක් AI Question Paper එකක් Rs.100යි</h2><p>Monthly subscription එකක් නැහැ. Upload කරන එක් lesson එකක් අනුව full paper generate කරන්න one-time payment එකක්.</p></div></div>
+  <div class="plan-grid" style="grid-template-columns:minmax(0,520px)">
+    <article class="plan featured"><span class="badge">One-time payment</span><h3>Lesson-to-Paper</h3><div class="price">Rs.100 <small>/ generated paper</small></div><p>Paper එක generate කිරීමට කලින් PayHere server callback එකෙන් payment verify කරනවා.</p><ul><li>PDF / PNG / JPG lesson upload</li><li>Grade, subject, language සහ difficulty තෝරන්න</li><li>5–20 questions සහ total marks තෝරන්න</li><li>Suggested answer / marking guide option</li><li>Paid generation editor එකට load වෙලා Print / PDF save කරන්න</li></ul><a class="btn primary" href="#paper-generator">Lesson upload කරලා පටන් ගන්න</a></article>
   </div>
-  <p class="plan-footnote">Final price saha plan limits decide karanna kalin real teachers-lagen feedback ganna. Me prototype eke PayHere checkout connect karala naha. AI question generation, accounts, cloud save saha subscription restrictions backend eke thawa implement karanna thiyenawa.</p>
+  <p class="plan-footnote">Rs.100 is the proposed per-paper price. Payments stay disabled until PayHere, Supabase and AI service setup is complete and sandbox-tested. This is not a monthly subscription checkout.</p>
 </section>
 
 <section id="roadmap" class="section roadmap-section">
-  <div class="section-heading"><div><span class="mini-kicker">Step by step build karamu</span><h2>මුලින් useful tool එකක්. ඊළඟට smarter features.</h2><p>Muladi reliable paper builder ekak hadala, teachers feedback dunna passe paid features add karamu.</p></div></div>
+  <div class="section-heading"><div><span class="mini-kicker">Step by step build karamu</span><h2>මුලින් useful tool එකක්. ඊළඟට smarter features.</h2><p>Lesson file upload → payment verify → AI-generated question paper. Live activation requires service configuration and sandbox testing.</p></div></div>
   <div class="roadmap">
     <article><div class="number">01</div><h3>MVP: Paper Builder</h3><p>Teacher details, edit karanna puluwan questions, marks, preview, PDF print saha Word-compatible export.</p></article>
     <article><div class="number">02</div><h3>Teacher Workspace</h3><p>Accounts, cloud save drafts, school templates saha syllabus/topic filters.</p></article>
@@ -103,7 +196,7 @@
   </div>
 </section>
 </main>
-<footer class="shell footer"><a class="brand" href="#"><span class="brand-icon">ගු</span><span>ගුරු Paper<small>TEACHERS-LATA PAPER HADANA TOOL EKA</small></span></a><span>Sri Lankan teachers-lata prototype · Classroom eke use karanna kalin questions review karanna</span><span>Payments thama active naha</span></footer>
+<footer class="shell footer"><a class="brand" href="#"><span class="brand-icon">ගු</span><span>ගුරු Paper<small>TEACHERS-LATA PAPER HADANA TOOL EKA</small></span></a><span>Sri Lankan teachers-lata prototype · Classroom eke use karanna kalin questions review karanna</span><span>PayHere / AI setup required before paid generation is enabled</span></footer>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script>
 (function(){
@@ -165,6 +258,286 @@ function exportWord(){
  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=(paper.paperTitle||'question-paper').replace(/[^a-z0-9\u0D80-\u0DFF_-]+/gi,'-')+'.doc';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);notify('Word-compatible file එක download වුණා. Print කරන්න කලින් Word එකේ layout check කරන්න.');
 }
 function printPaper(){renderPreview();const old=$('answerPreview').classList.contains('show');window.print();if(!old)$('answerPreview').classList.remove('show')}
+
+let paperServiceReady = false;
+let activePaperOrder = null;
+const PAPER_ACTIVE_ORDER_KEY = "gurupaper-active-paper-order-v1";
+function setGeneratorStatus(id, message, kind) {
+  const el = $(id); if (!el) return;
+  el.textContent = message;
+  el.className = "generator-status" + (kind ? " is-" + kind : "");
+}
+function fileTypeFor(file) {
+  if (file && file.type && ["application/pdf","image/png","image/jpeg"].includes(file.type)) return file.type;
+  const name = String(file && file.name || "").toLowerCase();
+  if (name.endsWith(".pdf")) return "application/pdf";
+  if (name.endsWith(".png")) return "image/png";
+  if (name.endsWith(".jpg") || name.endsWith(".jpeg")) return "image/jpeg";
+  return "";
+}
+async function readApiJson(response) {
+  let data = {};
+  try { data = await response.json(); } catch (_) {}
+  return data;
+}
+async function loadPaperServiceConfig() {
+  const button = $("paperPayButton");
+  try {
+    const response = await fetch("/api/paper-config", { method: "GET", cache: "no-store" });
+    const data = await readApiJson(response);
+    paperServiceReady = Boolean(response.ok && data.readyToAcceptPayment === true);
+    if (paperServiceReady) {
+      setGeneratorStatus("paperBackendStatus", "Configuration checks pass (" + String(data.paymentMode || "sandbox").toUpperCase() + "). Still test PayHere sandbox checkout and a real AI request before enabling live sales.", "good");
+      button.disabled = false;
+    } else {
+      setGeneratorStatus("paperBackendStatus", data.message || "Backend setup තවම complete නැහැ. Database, private storage, PayHere, OpenAI සහ APP_URL configure කරන තුරු payments disable.", "offline");
+      button.disabled = true;
+    }
+  } catch (_) {
+    paperServiceReady = false;
+    button.disabled = true;
+    setGeneratorStatus("paperBackendStatus", "Backend status check කරන්න බැරි වුණා. Payments සහ AI generation fail-closed කරලා තියෙනවා.", "offline");
+  }
+}
+function collectPaperOptions(file) {
+  const types = Array.from(document.querySelectorAll('input[name="paperQuestionType"]:checked')).map(el => el.value);
+  const count = Number($("paperSourceQuestionCount").value);
+  const marks = Number($("paperSourceMarks").value);
+  if (!file) throw new Error("PDF එකක් හෝ image එකක් select කරන්න.");
+  if (!fileTypeFor(file)) throw new Error("PDF, PNG හෝ JPG/JPEG file එකක් upload කරන්න.");
+  if (file.size < 1 || file.size > 15 * 1024 * 1024) throw new Error("File size එක 15 MB ට අඩු විය යුතුයි.");
+  if (!types.length) throw new Error("අවම වශයෙන් එක question type එකක් select කරන්න.");
+  if (!Number.isInteger(marks) || marks < count || marks > 1000) throw new Error("Total marks ගණන question count එකට වඩා වැඩිව, 1000ට අඩු විය යුතුයි.");
+  return {
+    fileName: file.name, contentType: fileTypeFor(file), fileSize: file.size,
+    title: $("paperSourceTitle").value.trim() || "Lesson-based Question Paper",
+    schoolName: $("paperSourceSchool").value.trim(),
+    teacherName: $("paperSourceTeacher").value.trim(),
+    grade: $("paperSourceGrade").value,
+    subject: $("paperSourceSubject").value,
+    medium: $("paperSourceMedium").value,
+    term: $("paperSourceTerm").value,
+    duration: $("paperSourceDuration").value,
+    questionCount: count,
+    totalMarks: marks,
+    difficulty: $("paperSourceDifficulty").value,
+    questionTypes: types,
+    includeAnswers: $("paperIncludeAnswers").checked
+  };
+}
+function storeActivePaperOrder(order) {
+  activePaperOrder = order;
+  try {
+    sessionStorage.setItem("gurupaper-access-" + order.orderId, order.accessToken);
+    sessionStorage.setItem(PAPER_ACTIVE_ORDER_KEY, JSON.stringify({ orderId: order.orderId }));
+  } catch (_) {}
+}
+function getStoredPaperOrder(orderId) {
+  let token = "";
+  try { token = sessionStorage.getItem("gurupaper-access-" + orderId) || ""; } catch (_) {}
+  return token ? { orderId, accessToken: token } : null;
+}
+async function startPaperOrder(event) {
+  event.preventDefault();
+  const form = $("aiPaperForm");
+  if (!form.reportValidity()) return;
+  if (!paperServiceReady) {
+    setGeneratorStatus("paperBackendStatus", "PayHere, Supabase හෝ AI setup තවම ready නැහැ. Payment එකක් charge කරන්නේ නැහැ.", "offline");
+    return;
+  }
+  const file = $("paperSourceFile").files[0];
+  let options;
+  try { options = collectPaperOptions(file); }
+  catch (e) { setGeneratorStatus("paperOrderStatus", e.message, "error"); return; }
+  if (!$("paperSourceConsent").checked) {
+    setGeneratorStatus("paperOrderStatus", "Upload consent එක confirm කරන්න.", "error"); return;
+  }
+  const button = $("paperPayButton");
+  button.disabled = true;
+  $("paperCheckStatus").hidden = true;
+  $("paperGenerateButton").hidden = true;
+  $("paperGeneratedNotice").classList.remove("show");
+  setGeneratorStatus("paperOrderStatus", "1/3 — Secure order එක සහ private upload URL එක සකස් කරනවා…", "waiting");
+  let createdOrder = null;
+  try {
+    const createResponse = await fetch("/api/create-paper-order", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(options)
+    });
+    const createData = await readApiJson(createResponse);
+    if (!createResponse.ok) throw new Error(createData.message || "Order එක create කරන්න බැරි වුණා.");
+    createdOrder = { orderId: createData.orderId, accessToken: createData.accessToken };
+    storeActivePaperOrder(createdOrder);
+    const uploadBody = new FormData();
+    uploadBody.append("cacheControl", "3600");
+    uploadBody.append("", file);
+    setGeneratorStatus("paperOrderStatus", "2/3 — Lesson file එක private storage එකට upload කරනවා…", "waiting");
+    const uploadResponse = await fetch(createData.uploadUrl, {
+      method: "PUT", headers: { "x-upsert": "false" }, body: uploadBody
+    });
+    if (!uploadResponse.ok) throw new Error("File upload failed. Check file type / size and try again. Payment එකක් තවම ගත්තේ නැහැ.");
+    setGeneratorStatus("paperOrderStatus", "3/3 — Checkout request එක initialize කරනවා…", "waiting");
+    const checkoutResponse = await fetch("/api/create-paper-checkout", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        orderId: createdOrder.orderId, accessToken: createdOrder.accessToken,
+        customer: {
+          firstName: $("paperCustomerFirst").value.trim(),
+          lastName: $("paperCustomerLast").value.trim(),
+          email: $("paperCustomerEmail").value.trim(),
+          phone: $("paperCustomerPhone").value.trim(),
+          address: $("paperCustomerAddress").value.trim(),
+          city: $("paperCustomerCity").value.trim()
+        }
+      })
+    });
+    const checkoutData = await readApiJson(checkoutResponse);
+    if (!checkoutResponse.ok) throw new Error(checkoutData.message || "PayHere checkout start කරන්න බැරි වුණා. Payment එකක් ගත්තේ නැහැ.");
+    setGeneratorStatus("paperOrderStatus", "PayHere secure checkout එකට redirect කරනවා. Payment එක complete කරලා මේ tab එකට ආපහු එන්න.", "waiting");
+    const payForm = document.createElement("form");
+    payForm.method = "POST"; payForm.action = checkoutData.action; payForm.style.display = "none";
+    Object.keys(checkoutData.params || {}).forEach(key => {
+      const field = document.createElement("input"); field.type = "hidden"; field.name = key; field.value = String(checkoutData.params[key]);
+      payForm.appendChild(field);
+    });
+    document.body.appendChild(payForm);
+    payForm.submit();
+  } catch (e) {
+    setGeneratorStatus("paperOrderStatus", e.message || "Order එක initialize කරන්න බැරි වුණා. Payment එකක් ගත්තේ නැහැ.", "error");
+    button.disabled = !paperServiceReady;
+  }
+}
+async function getPaperOrderStatus(order, silent) {
+  const response = await fetch("/api/paper-order-status", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(order)
+  });
+  const data = await readApiJson(response);
+  if (!response.ok) throw new Error(data.message || "Order status check කරන්න බැරි වුණා.");
+  return data;
+}
+function showPaidPaperReady() {
+  $("paperCheckStatus").hidden = false;
+  $("paperGenerateButton").hidden = false;
+  $("paperGenerateButton").disabled = false;
+  setGeneratorStatus("paperOrderStatus", "Payment එක server එකෙන් verify වුණා. දැන් full question paper generate කරන්න පුළුවන්.", "good");
+}
+function loadGeneratedPaperIntoEditor(generated, options) {
+  const qlist = (generated && generated.questions) || [];
+  paper.schoolName = options.schoolName || "";
+  paper.teacherName = options.teacherName || "";
+  paper.paperTitle = generated.title || options.title || "Lesson-based Question Paper";
+  paper.grade = options.grade || "Grade 6";
+  paper.subject = options.subject || "ICT";
+  paper.medium = options.medium || "English Medium";
+  paper.term = options.term || "Revision Paper";
+  paper.duration = options.duration || "1 hour";
+  paper.dateLabel = "";
+  paper.instructions = generated.instructions || "Answer all questions.";
+  paper.questions = qlist.map((q, index) => ({
+    id: nextId++, type: ["mcq","short","structured","essay"].includes(q.type) ? q.type : "short",
+    prompt: String(q.prompt || ""), marks: Number(q.marks) || 1,
+    choices: String(q.choices || ""), answer: String(q.answer || "")
+  }));
+  setMetaFields(); renderQuestions(); autosave();
+  $("includeAnswers").checked = options.includeAnswers !== false;
+  renderPreview();
+  $("paperGeneratedNotice").textContent = "Paper එක generate වුණා. Question/answer accuracy සහ syllabus alignment review කරලා editor එකේ Print / PDF save කරන්න.";
+  $("paperGeneratedNotice").classList.add("show");
+  setGeneratorStatus("paperOrderStatus", "Completed — full paper + selected marking guide එක editor එකට load කළා.", "good");
+  $("paperGenerateButton").hidden = true;
+  $("paperCheckStatus").hidden = true;
+  $("builder").scrollIntoView({ behavior: "smooth", block: "start" });
+  notify("Paid question paper එක ready. Print කරන්න කලින් review කරන්න.");
+}
+async function applyPaperOrderStatus(data) {
+  if (data.status === "paid") { showPaidPaperReady(); return "paid"; }
+  if (data.status === "ready" && data.paper) {
+    loadGeneratedPaperIntoEditor(data.paper, data.options || {});
+    return "ready";
+  }
+  if (data.status === "pending_payment") {
+    setGeneratorStatus("paperOrderStatus", "Payment notification එක එනතුරු බලාගෙන ඉන්නවා. Redirect message එක පමණක් payment proof එකක් නෙවෙයි.", "waiting");
+    $("paperCheckStatus").hidden = false;
+    $("paperGenerateButton").hidden = true;
+    return "pending_payment";
+  }
+  if (data.status === "cancelled") setGeneratorStatus("paperOrderStatus", "Payment cancelled. Paper එක generate කරලා නැහැ. අලුත් order එකක් පටන් ගන්න පුළුවන්.", "error");
+  else if (data.status === "failed") setGeneratorStatus("paperOrderStatus", "Payment failed. Paper එක generate කරලා නැහැ. අලුත් order එකක් පටන් ගන්න.", "error");
+  else if (data.status === "chargeback") setGeneratorStatus("paperOrderStatus", "Payment reverse වී තිබෙනවා. Support contact කරන්න.", "error");
+  else setGeneratorStatus("paperOrderStatus", "Current order status: " + String(data.status || "unknown") + ". Payment confirm වුණාට පස්සේ generate කරන්න පුළුවන්.", "waiting");
+  $("paperCheckStatus").hidden = false;
+  $("paperGenerateButton").hidden = true;
+  return data.status;
+}
+async function refreshPaperOrderStatus(showErrors) {
+  if (!activePaperOrder) {
+    setGeneratorStatus("paperOrderStatus", "මේ browser session එකේ order token එක නැහැ. Payment කළ tab එකෙන් open කරන්න හෝ support contact කරන්න.", "error");
+    return "";
+  }
+  try {
+    const data = await getPaperOrderStatus(activePaperOrder);
+    return await applyPaperOrderStatus(data);
+  } catch (e) {
+    if (showErrors) setGeneratorStatus("paperOrderStatus", e.message || "Status check failed.", "error");
+    return "";
+  }
+}
+async function pollForPaperPayment() {
+  setGeneratorStatus("paperOrderStatus", "PayHere response එක server callback එකෙන් verify කරනවා. ටිකක් ඉන්න…", "waiting");
+  for (let i = 0; i < 12; i++) {
+    const status = await refreshPaperOrderStatus(false);
+    if (["paid","ready","cancelled","failed","chargeback"].includes(status)) return;
+    await new Promise(resolve => setTimeout(resolve, 1500));
+  }
+  setGeneratorStatus("paperOrderStatus", "Payment notification එක තවම ලැබිලා නැහැ. Payment settle වුණාද කියලා confirm කරන්න 'Payment status check කරන්න' ඔබන්න. තව payment එකක් කරන්න කලින් check කරන්න.", "waiting");
+  $("paperCheckStatus").hidden = false;
+}
+async function generatePaidPaper() {
+  if (!activePaperOrder) return;
+  const button = $("paperGenerateButton");
+  button.disabled = true;
+  setGeneratorStatus("paperOrderStatus", "Verified order එකෙන් lesson analysis සහ question paper generate කරනවා…", "waiting");
+  try {
+    const response = await fetch("/api/generate-paper", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(activePaperOrder)
+    });
+    const data = await readApiJson(response);
+    if (!response.ok) throw new Error(data.message || "Generation failed. Verified payment එක මේ order එකට attach වෙලා තියෙනවා; නැවත pay කරන්න එපා.");
+    loadGeneratedPaperIntoEditor(data.paper, data.options || {});
+  } catch (e) {
+    button.disabled = false;
+    setGeneratorStatus("paperOrderStatus", e.message || "Generation failed. නැවත payment කරන්න එපා; retry කරන්න හෝ support contact කරන්න.", "error");
+  }
+}
+function initPaperGenerator() {
+  $("aiPaperForm").addEventListener("submit", startPaperOrder);
+  $("paperGenerateButton").addEventListener("click", generatePaidPaper);
+  $("paperCheckStatus").addEventListener("click", () => refreshPaperOrderStatus(true));
+  const query = new URLSearchParams(window.location.search);
+  const returnState = query.get("payment");
+  const returnedOrderId = query.get("order_id");
+  if (returnedOrderId) {
+    activePaperOrder = getStoredPaperOrder(returnedOrderId);
+    if (activePaperOrder) {
+      try { sessionStorage.setItem(PAPER_ACTIVE_ORDER_KEY, JSON.stringify({ orderId: returnedOrderId })); } catch (_) {}
+      if (returnState === "cancelled") setGeneratorStatus("paperOrderStatus", "Checkout එක cancel වුණා. Server status එක check කරන්න පුළුවන්.", "error");
+      else if (returnState === "return") pollForPaperPayment();
+      window.history.replaceState({}, document.title, window.location.pathname + "#paper-generator");
+    } else {
+      setGeneratorStatus("paperOrderStatus", "Order access token එක මේ tab එකේ නැහැ. Security එක වෙනුවෙන් වෙනත් කෙනෙකුගේ token එක URL එකෙන් ගන්නෙ නැහැ.", "error");
+    }
+  } else {
+    try {
+      const stored = JSON.parse(sessionStorage.getItem(PAPER_ACTIVE_ORDER_KEY) || "null");
+      if (stored && stored.orderId) activePaperOrder = getStoredPaperOrder(stored.orderId);
+    } catch (_) {}
+    if (activePaperOrder) refreshPaperOrderStatus(false);
+  }
+  loadPaperServiceConfig();
+}
+
 function init(){
  let stored=null;try{stored=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null')}catch(e){}
  if(stored&&Array.isArray(stored.questions)&&typeof stored==='object'){paper=Object.assign(paper,stored);nextId=Math.max(1,...paper.questions.map(q=>Number(q.id)||0))+1}
@@ -175,7 +548,8 @@ function init(){
  $('questionList').addEventListener('change',e=>{const el=e.target.closest('[data-question][data-field="type"]');if(!el)return;const q=paper.questions.find(q=>String(q.id)===el.dataset.question);if(q){q.type=el.value;renderQuestions();autosave()}});
  $('questionList').addEventListener('click',e=>{const del=e.target.closest('[data-delete]');if(del){paper.questions=paper.questions.filter(q=>String(q.id)!==del.dataset.delete);renderQuestions();autosave();return}const move=e.target.closest('[data-move]');if(move){const i=paper.questions.findIndex(q=>String(q.id)===move.dataset.move);const j=i+Number(move.dataset.direction);if(i>=0&&j>=0&&j<paper.questions.length){[paper.questions[i],paper.questions[j]]=[paper.questions[j],paper.questions[i]];renderQuestions();autosave()}}});
  $('addQuestion').addEventListener('click',()=>addQuestion());$('saveDraft').addEventListener('click',saveNow);$('clearPaper').addEventListener('click',clearPaper);$('loadDemo').addEventListener('click',loadDemo);$('includeAnswers').addEventListener('change',renderPreview);$('printPaper').addEventListener('click',printPaper);$('downloadWord').addEventListener('click',exportWord);
- document.querySelectorAll('[data-scroll-builder]').forEach(btn=>btn.addEventListener('click',()=>$('builder').scrollIntoView({behavior:'smooth'})));
+ initPaperGenerator();
+ document.querySelectorAll('[data-scroll-builder]').forEach(btn=>btn.addEventListener('click',()=>$('paper-generator').scrollIntoView({behavior:'smooth'})));
  document.querySelectorAll('[data-plan-info]').forEach(btn=>btn.addEventListener('click',()=>notify(btn.dataset.planInfo+' proposed plan ekak witharai; payment setup thama active naha.')));
 }
 init();
