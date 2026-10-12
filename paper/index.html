@@ -377,7 +377,7 @@ body[data-page="pricing"] main.shell > section:not(#plans){display:none!importan
   </div>
 </section>
 </main>
-<footer class="shell footer"><a class="brand" href="#" aria-label="ගුරු Paper home"><img class="brand-logo" src="/assets/gurupaper-logo.svg" alt="" width="46" height="46"><span lang="si">ගුරු Paper<small>TEACHERS-LATA PAPER HADANA TOOL EKA</small></span></a><span>Sri Lankan teachers-lata prototype · Classroom eke use karanna kalin questions review karanna</span><span>PayHere / AI setup required before paid generation is enabled</span><span><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span> · <a href="/admin/">Admin</a></footer>
+<footer class="shell footer"><a class="brand" href="#" aria-label="ගුරු Paper home"><img class="brand-logo" src="/assets/gurupaper-logo.svg" alt="" width="46" height="46"><span lang="si">ගුරු Paper<small>TEACHERS-LATA PAPER HADANA TOOL EKA</small></span></a><span>Sri Lankan teachers-lata prototype · Classroom eke use karanna kalin questions review karanna</span><span>PayHere / AI setup required before paid generation is enabled</span><span><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span></footer>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script>
 (function(){
@@ -553,7 +553,14 @@ function openAuthModal(nextTarget) {
   const focus = authPendingPhone ? $("authOtpCode") : $("authPhone");
   if (focus && !(authUser && authSession)) setTimeout(() => focus.focus(), 60);
 }
-function closeAuthModal() { $("authModal").hidden = true; document.body.style.overflow = ""; }
+function closeAuthModal() {
+  if (document.body.dataset.page === "paper" && (!authUser || !authSession)) {
+    window.location.assign("/");
+    return;
+  }
+  $("authModal").hidden = true;
+  document.body.style.overflow = "";
+}
 async function requestPaperGenerator() {
   await ensureAuthInitialized();
   if (!authUser || !authSession) { openAuthModal("paper-generator"); return; }
@@ -712,7 +719,9 @@ function initAuthUi() {
   $("authSignOutButton").addEventListener("click", signOutGuruPaper);
   document.addEventListener("keydown", event => { if (event.key === "Escape" && !$("authModal").hidden) closeAuthModal(); });
   ensureAuthInitialized().then(() => {
-    if (new URLSearchParams(window.location.search).get("account") === "1") openAuthModal("paper-generator");
+    const accountRequested = new URLSearchParams(window.location.search).get("account") === "1";
+    const mustRegisterForPaper = document.body.dataset.page === "paper" && (!authUser || !authSession);
+    if (accountRequested || mustRegisterForPaper) openAuthModal("paper-generator");
   });
 }
 
