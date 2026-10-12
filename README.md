@@ -1,47 +1,33 @@
-# Sinhala Caption Studio 🇱🇰
+# GuruPaper 🇱🇰
 
-A mobile-friendly Sinhala captions and status website with public caption collections, a caption-template maker, and an optional subscription foundation.
+GuruPaper is a Sinhala-first question-paper studio for Sri Lankan teachers. This branch contains the GuruPaper app and its backend only.
 
-## What's included
+## What is included
 
-- 102 public captions across love, sad, attitude, friendship, life, funny and WhatsApp status categories
-- Responsive home page, category filters, live search, one-tap copy/share and browser-saved favourites
-- Caption idea maker with Sinhala, Singlish and English templates (built-in templates, not a real AI model)
-- Dark mode
-- Seven dedicated, crawlable SEO landing pages:
-  - `/love/`
-  - `/sad/`
-  - `/attitude/`
-  - `/friendship/`
-  - `/life/`
-  - `/funny/`
-  - `/whatsapp-status/`
-- An informational caption-writing guide at `/how-to-write-sinhala-captions/`
-- Sitemap and robots endpoints exposed at `/sitemap.xml` and `/robots.txt`
-- Free, Creator Pro (Rs. 490/month) and Creator Plus (Rs. 990/month) plan UI
-- Supabase account integration and server-side PayHere recurring subscription endpoints, kept disabled until configuration is complete
-- Privacy, terms and billing-policy starter pages
+- A browser-based paper builder with question types, marks, preview, local draft saving, and print/export support.
+- A lesson-upload flow for PDF, PNG, and JPEG files.
+- A one-time Rs. 100 paper-order flow designed for server-verified PayHere payment.
+- Server-side paper generation through OpenAI after successful payment verification.
+- Private Supabase Storage and a \`paper_orders\` table for order and generation state.
+- Sinhala-friendly typography using Noto Sans Sinhala and Abhaya Libre.
+- A Teacher Circle section with a copyable invitation message. An official community-group link has not been configured yet.
 
-## Develop locally
+## Deploying on Vercel Hobby
 
-The public website is static HTML/CSS/JavaScript and can be opened directly by opening `index.html`. API routes under `api/` run as Vercel Node.js functions and require their environment variables for account/payment functions.
+The public API paths remain separate, for example \`/api/create-paper-order\` and \`/api/payhere-paper-notify\`, but a single catch-all entry point at \`api/[...path].js\` dispatches those paths to their handler modules in \`lib/gurupaper-handlers/\`. Vercel therefore builds one Serverless Function rather than one function per endpoint, keeping the deployment under the Hobby limit.
 
-## Deploy to Vercel
+The \`vercel.json\` rewrites continue to expose \`/sitemap.xml\` and \`/robots.txt\`.
 
-1. Import `NIPUN0BUGS/sinhala-caption-studio` into Vercel.
-2. Use Framework Preset **Other**, Root Directory `./`, Build Command empty, and Output Directory `.`.
-3. Deploy. Pushes to the connected `main` branch should create new deployments.
+## Setup before enabling payments
 
-## Subscription setup
+1. Connect this branch to a dedicated Vercel project for GuruPaper. Set the project's production branch to \`feature/teacher-paper-studio-mvp\` unless you intentionally move the GuruPaper-only code to another branch.
+2. Create a Supabase project and run [\`supabase/gurupaper-paper-orders.sql\`](./supabase/gurupaper-paper-orders.sql). Create the private storage bucket named \`guru-paper-uploads\` (or set \`SUPABASE_STORAGE_BUCKET\` to your bucket name).
+3. Add the server-side environment variables from [\`.env.example\`](./.env.example) in Vercel. Never expose the Supabase service-role key, PayHere merchant secret, or OpenAI key to browser code.
+4. Read [\`PAYMENTS_GURUPAPER_SETUP.md\`](./PAYMENTS_GURUPAPER_SETUP.md). Keep \`GURUPAPER_ENABLE_CHECKOUT=false\` until the database, private storage, PayHere sandbox credentials, OpenAI key and \`APP_URL\` have been checked. Test the full sandbox callback and generation flow before enabling live payments.
+5. Replace placeholder business/support details in the Privacy Policy and Terms before public launch. These pages are starting points, not legal advice.
 
-Read [PAYMENTS_SETUP.md](./PAYMENTS_SETUP.md) before enabling payments. It covers PayHere merchant approval, Supabase auth/database setup, Vercel environment variables, callback configuration and sandbox testing.
+**Important:** The current source is not proof that live checkout or AI generation is operational. They stay disabled until the required services and environment variables are correctly configured and tested. Review generated papers for factual accuracy, curriculum alignment and suitability before using them with students.
 
-Important: prices in the page are proposed plan values. Payment acceptance is **not live** until you have an approved PayHere merchant account, valid production credentials, a configured Supabase project, successful sandbox tests, and accurate business support/policy details. Never put PayHere secrets or the Supabase service-role key in browser code or Git.
+## Local checks
 
-Run [supabase/schema.sql](./supabase/schema.sql) in the Supabase SQL Editor after creating the project. Keep all server keys in Vercel environment variables. App ID/App Secret for the PayHere Subscription Manager API are needed for automated cancellation; they are separate from the payment merchant credentials.
-
-## SEO and growth
-
-Read [SEO_AND_GROWTH.md](./SEO_AND_GROWTH.md) for a practical launch checklist covering Google Search Console, sitemap submission, internal links, social sharing and content publishing.
-
-Before launch, replace or review the policy-page starter text and add real business/support contact details. Favourites and theme preference are browser-local; there are no shared cloud favourites. Review caption content for originality and accuracy as the site grows.
+There is no build step for the static HTML. API modules use Node.js built-ins and the platform-provided \`fetch\`. You can syntax-check JavaScript with \`node --check\` and test routing with a mocked request/response locally.
