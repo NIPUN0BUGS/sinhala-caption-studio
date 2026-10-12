@@ -125,7 +125,7 @@ button:disabled{opacity:.48;cursor:not-allowed;transform:none!important}
 <body>
 <header class="topbar shell">
   <a class="brand" href="#" aria-label="ගුරු Paper home"><img class="brand-logo" src="/assets/gurupaper-logo.svg" alt="" width="46" height="46"><span lang="si">ගුරු Paper<small>TEACHERS-LATA PAPER HADANA TOOL EKA</small></span></a>
-  <nav class="nav"><a href="#paper-generator">Paper හදමු</a><a href="#how-it-works">කොහොමද වැඩ කරන්නේ?</a><a href="#teacher-circle">ගුරු එකමුතුව</a><a href="#plans">Pricing / මිල ගණන්</a><button id="authAccountButton" class="btn auth-nav-button" type="button">Sign in / Register</button><button class="btn primary" type="button" data-scroll-builder>Paper එකක් හදමු</button></nav>
+  <nav class="nav"><a href="/#paper-generator" target="_blank" rel="noopener noreferrer">Paper හදමු</a><a href="/#how-it-works" target="_blank" rel="noopener noreferrer">කොහොමද වැඩ කරන්නේ?</a><a href="/#teacher-circle" target="_blank" rel="noopener noreferrer">ගුරු එකමුතුව</a><a href="/#plans" target="_blank" rel="noopener noreferrer">Pricing / මිල ගණන්</a><a id="authAccountButton" class="btn auth-nav-button" href="/?account=1" target="_blank" rel="noopener noreferrer">Sign in / Register</a><a class="btn primary" href="/#paper-generator" target="_blank" rel="noopener noreferrer">Paper එකක් හදමු</a></nav>
 </header>
 
 <div id="authModal" class="auth-modal" hidden>
@@ -664,7 +664,7 @@ async function signOutGuruPaper() {
 }
 async function openAccountModal() { await ensureAuthInitialized(); openAuthModal("paper-generator"); updateAuthUi(); }
 function initAuthUi() {
-  $("authAccountButton").addEventListener("click", openAccountModal);
+  if ($("authAccountButton").tagName === "BUTTON") $("authAccountButton").addEventListener("click", openAccountModal);
   $("authCloseButton").addEventListener("click", closeAuthModal);
   document.querySelectorAll("[data-auth-close]").forEach(el => el.addEventListener("click", closeAuthModal));
   $("authRegisterTab").addEventListener("click", () => setAuthMode("register"));
@@ -681,7 +681,9 @@ function initAuthUi() {
   });
   $("authSignOutButton").addEventListener("click", signOutGuruPaper);
   document.addEventListener("keydown", event => { if (event.key === "Escape" && !$("authModal").hidden) closeAuthModal(); });
-  ensureAuthInitialized();
+  ensureAuthInitialized().then(() => {
+    if (new URLSearchParams(window.location.search).get("account") === "1") openAuthModal("paper-generator");
+  });
 }
 
 let paperServiceReady = false;
