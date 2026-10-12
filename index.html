@@ -8,6 +8,9 @@
 <meta name="robots" content="index,follow">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
 <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;500;600;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <meta name="application-name" content="ගුරු Paper">
 <title>ගුරු Paper | Sri Lankan Teachers-lata Question Papers ලේසියෙන්</title>
 <style>
@@ -42,12 +45,32 @@ button:disabled{opacity:.48;cursor:not-allowed;transform:none!important}
 @media(max-width:980px){.generator-layout{grid-template-columns:1fr}}
 @media(max-width:640px){.generator-type-grid{grid-template-columns:1fr 1fr}.generator-price{font-size:22px}}
 
+
+/* Unicode Sinhala typography, brand and teacher community */
+.brand-logo{width:46px;height:46px;display:block;flex:0 0 auto;object-fit:contain}
+.brand>span:last-child{font-family:Inter,"Noto Sans Sinhala",system-ui,sans-serif}
+.brand{gap:11px}
+.teacher-circle-section{padding-top:44px}
+.teacher-circle-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:center}
+.teacher-circle-visual{min-width:0;position:relative}
+.teacher-circle-visual img{display:block;width:100%;height:auto;border-radius:22px;border:1px solid #d7e4e7;box-shadow:var(--shadow)}
+.teacher-circle-copy{padding:12px 6px}
+.teacher-circle-copy h2{font-family:"Abhaya Libre","Noto Sans Sinhala",serif;font-size:clamp(28px,3vw,39px);line-height:1.18;letter-spacing:-.3px;color:var(--navy);margin:8px 0 12px}
+.teacher-circle-copy>p{font-size:13px;color:var(--muted);line-height:1.8;margin:0 0 17px}
+.teacher-circle-tags{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:16px 0 19px}
+.teacher-circle-tag{display:flex;gap:8px;align-items:flex-start;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:11px;font-weight:800;color:#304f5f}
+.teacher-circle-tag b{color:#208567;font-size:15px;line-height:1.2}
+.teacher-circle-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.teacher-circle-note{font-size:10px;color:var(--muted);line-height:1.7;margin-top:12px}
+@media(max-width:860px){.teacher-circle-grid{grid-template-columns:1fr}.teacher-circle-visual{max-width:680px;margin-inline:auto}.teacher-circle-copy{padding:0}}
+@media(max-width:640px){.brand-logo{width:37px;height:37px}.teacher-circle-tags{grid-template-columns:1fr 1fr}.teacher-circle-copy h2{font-size:30px}.teacher-circle-section{padding-top:32px}}
+
 </style>
 </head>
 <body>
 <header class="topbar shell">
-  <a class="brand" href="#"><span class="brand-icon">ගු</span><span>ගුරු Paper<small>TEACHERS-LATA PAPER HADANA TOOL EKA</small></span></a>
-  <nav class="nav"><a href="#builder">Paper හදමු</a><a href="#plans">Plans &amp; Pricing / මිල ගණන්</a><a href="#roadmap">කොහොමද වැඩ කරන්නේ?</a><button class="btn primary" type="button" data-scroll-builder>Paper එකක් හදමු</button></nav>
+  <a class="brand" href="#" aria-label="ගුරු Paper home"><img class="brand-logo" src="/assets/gurupaper-logo.svg" alt="" width="46" height="46"><span lang="si">ගුරු Paper<small>TEACHERS-LATA PAPER HADANA TOOL EKA</small></span></a>
+  <nav class="nav"><a href="#paper-generator">Paper හදමු</a><a href="#teacher-circle">ගුරු එකමුතුව</a><a href="#plans">Pricing / මිල ගණන්</a><button class="btn primary" type="button" data-scroll-builder>Paper එකක් හදමු</button></nav>
 </header>
 <main class="shell">
 <section class="hero">
@@ -67,6 +90,32 @@ button:disabled{opacity:.48;cursor:not-allowed;transform:none!important}
     <article class="benefit"><div class="icon">🌏</div><h3>Languages 3k</h3><p>Sinhala, Tamil, English walin questions liyanna saha edit karanna.</p></article>
     <article class="benefit"><div class="icon">✅</div><h3>Answer Key ekath ekka</h3><p>Teacher-ta review karanna puluwan suggested answers saha marking scheme ekak venama hadaganna.</p></article>
     <article class="benefit"><div class="icon">🖨️</div><h3>Print karanna &amp; share karanna</h3><p>Paper eka print karanna, PDF widihata save karanna, nathnam Word-compatible file ekak download karanna.</p></article>
+  </div>
+</section>
+
+
+
+<section id="teacher-circle" class="section teacher-circle-section">
+  <div class="teacher-circle-grid">
+    <div class="teacher-circle-visual">
+      <img src="/assets/teacher-community.svg" width="960" height="560" loading="lazy" decoding="async" alt="ගුරුවරුන් පිරිසක් laptop එකක් වටා එකතු වී පාඩම් සහ question papers ගැන සාකච්ඡා කරන illustration එකක්">
+    </div>
+    <div class="teacher-circle-copy">
+      <span class="mini-kicker">Made with teachers · ලංකාවේ ගුරුවරුන් වෙනුවෙන්</span>
+      <h2>ගුරු එකමුතුව<br>Teacher Circle</h2>
+      <p>Question paper එකක් හදන එක තනියම කරන්න ඕන නැහැ. ඔයාගේ teaching experience එක share කරලා, වෙනත් ගුරුවරුන්ගෙන් ideas ගන්න සහ GuruPaper එකට ඊළඟට එකතු විය යුතු features ගැන අපිට කියන්න.</p>
+      <div class="teacher-circle-tags">
+        <div class="teacher-circle-tag"><b>✓</b><span>Teaching ideas share කරමු</span></div>
+        <div class="teacher-circle-tag"><b>✓</b><span>Paper templates ගැන අදහස් දෙමු</span></div>
+        <div class="teacher-circle-tag"><b>✓</b><span>අලුත් features suggest කරමු</span></div>
+        <div class="teacher-circle-tag"><b>✓</b><span>Teachersලා එකට දියුණු වෙමු</span></div>
+      </div>
+      <div class="teacher-circle-actions">
+        <button id="copyTeacherInvite" class="btn primary" type="button">ගුරුවරයෙක්ට Invite කරන්න</button>
+        <a class="btn" href="#paper-generator">Paper එකක් try කරන්න</a>
+      </div>
+      <p class="teacher-circle-note">Community pilot එක සූදානම් කරමින් පවතී. නිල WhatsApp / Telegram group link එකක් තවම සකස් කරලා නැහැ; link එක ලැබුණු පසු මෙතැනට එකතු කළ හැකියි. Invite button එක share කරන්න පුළුවන් message එකක් copy කරයි.</p>
+    </div>
   </div>
 </section>
 
@@ -196,7 +245,7 @@ button:disabled{opacity:.48;cursor:not-allowed;transform:none!important}
   </div>
 </section>
 </main>
-<footer class="shell footer"><a class="brand" href="#"><span class="brand-icon">ගු</span><span>ගුරු Paper<small>TEACHERS-LATA PAPER HADANA TOOL EKA</small></span></a><span>Sri Lankan teachers-lata prototype · Classroom eke use karanna kalin questions review karanna</span><span>PayHere / AI setup required before paid generation is enabled</span></footer>
+<footer class="shell footer"><a class="brand" href="#" aria-label="ගුරු Paper home"><img class="brand-logo" src="/assets/gurupaper-logo.svg" alt="" width="46" height="46"><span lang="si">ගුරු Paper<small>TEACHERS-LATA PAPER HADANA TOOL EKA</small></span></a><span>Sri Lankan teachers-lata prototype · Classroom eke use karanna kalin questions review karanna</span><span>PayHere / AI setup required before paid generation is enabled</span></footer>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script>
 (function(){
@@ -511,8 +560,33 @@ async function generatePaidPaper() {
     setGeneratorStatus("paperOrderStatus", e.message || "Generation failed. නැවත payment කරන්න එපා; retry කරන්න හෝ support contact කරන්න.", "error");
   }
 }
+
+async function copyTeacherInvite() {
+  const message = "ගුරු Paper Teacher Circle එකට එකතු වෙමු! 🇱🇰\nLesson notes වලින් question papers හදන, teaching ideas share කරන සහ ගුරුවරුන්ට useful features යෝජනා කරන community එකක් අපි සූදානම් කරනවා.\n\nGuruPaper: " + window.location.origin;
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(message);
+    } else {
+      const temp = document.createElement("textarea");
+      temp.value = message;
+      temp.setAttribute("readonly", "");
+      temp.style.position = "fixed";
+      temp.style.opacity = "0";
+      document.body.appendChild(temp);
+      temp.select();
+      const copied = document.execCommand("copy");
+      temp.remove();
+      if (!copied) throw new Error("clipboard_unavailable");
+    }
+    notify("Teacher invite message එක copy වුණා. WhatsApp එකට paste කරලා share කරන්න.");
+  } catch (_) {
+    notify("Invite message එක copy කරන්න බැරි වුණා. Browser permissions check කරන්න.");
+  }
+}
+
 function initPaperGenerator() {
   $("aiPaperForm").addEventListener("submit", startPaperOrder);
+  $("copyTeacherInvite").addEventListener("click", copyTeacherInvite);
   $("paperGenerateButton").addEventListener("click", generatePaidPaper);
   $("paperCheckStatus").addEventListener("click", () => refreshPaperOrderStatus(true));
   const query = new URLSearchParams(window.location.search);
