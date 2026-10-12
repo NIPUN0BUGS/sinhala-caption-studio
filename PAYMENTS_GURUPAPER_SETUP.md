@@ -40,10 +40,9 @@ In Vercel → project → Settings → Environment Variables, add these for the 
 
 | Variable | Purpose |
 | --- | --- |
-| APP_URL | Exact HTTPS origin serving GuruPaper (no path/trailing slash); must match the stable deployment hostname |
+| APP_URL | https://gurupaper.vercel.app (or your stable HTTPS domain, no path/trailing slash); must match the origin teachers visit |
 | SUPABASE_URL | Supabase project URL |
 | SUPABASE_ANON_KEY | Public anon/publishable key for browser phone OTP authentication |
-| SUPABASE_ANON_KEY | Public anon/publishable key used for email OTP login; never use the service-role key here |
 | SUPABASE_SERVICE_ROLE_KEY | Supabase server-only service role key |
 | SUPABASE_STORAGE_BUCKET | Optional; defaults to guru-paper-uploads |
 | PAYHERE_MODE | sandbox while testing; live only after approval |
@@ -63,15 +62,23 @@ Open /api/paper-config on the GuruPaper deployment. It should report databaseRea
 
 If any check is false, the UI disables the payment flow. The `GURUPAPER_ENABLE_CHECKOUT` switch is an explicit operator gate. Leave it false/omitted until you are ready to test. Set it to true for sandbox testing while `PAYHERE_MODE=sandbox`; after the end-to-end tests pass and PayHere approves your merchant/domain, deliberately switch `PAYHERE_MODE=live` to accept real payments. The readiness endpoint verifies credential presence and table/bucket reachability but cannot validate a successful charge or AI quota.
 
-## 5. Email registration and OTP sign-in
 
-1. Add `SUPABASE_URL` and `SUPABASE_ANON_KEY` (public anon/publishable key) to the Vercel project. Do not set the service-role key as the public key.
-2. In Supabase Authentication, enable the Email provider and keep email confirmation enabled.
-3. In Authentication → Email Templates, edit the Magic Link template so it displays the one-time code using `{{ .Token }}`. Example: `<h2>GuruPaper verification code</h2><p>Enter this code on GuruPaper to confirm your email and sign in:</p><h1>{{ .Token }}</h1>`. The app verifies the six-digit code with email OTP; a template that only sends a magic link will not match the screen.
-4. Configure a trusted site URL for `https://gurupaper.vercel.app`. For production, configure a custom SMTP provider and review Supabase email rate limits before inviting teachers.
-5. Deploy the app and test both Register and Sign in, OTP confirmation, expired/incorrect codes, sign-out and order creation. Unauthenticated order creation, checkout, status and generation calls should return 401.
+## 5. Mobile registration and OTP authentication
 
-## 6. Expected customer journey
+1. Add SUPABASE_URL and SUPABASE_ANON_KEY (the public anon/publishable key) to Vercel. Do not place SUPABASE_SERVICE_ROLE_KEY in browser code.
+2. In Supabase Authentication → Sign In / Providers, enable Phone and configure a supported SMS provider such as Twilio, Vonage or MessageBird. Real SMS is not guaranteed to be free; provider rates and delivery limits apply. Configure rate limits and CAPTCHA before public launch.
+3. Test a Sri Lankan number in E.164 format (for example +94771234567). GuruPaper also normalizes a local 077... number to +94....
+4. Register with a mobile number, enter the SMS OTP, then sign in with the same verified number. Wrong or expired OTPs do not create a usable session. Order creation, checkout, generation, order status and admin data all verify the Supabase session on the server.
+5. The SQL creates public.gurupaper_admins. To make your own verified account an admin, copy its UUID from Supabase Authentication → Users and insert that UUID into the allowlist as described in the Admin dashboard section below. Do not grant admin based only on a phone number submitted by the browser.
+
+## 6. Free-tier LLM and RAG choice
+
+GuruPaper prefers Google Gemini Flash (GEMINI_API_KEY, default model gemini-2.5-flash) for PDF/photo understanding and structured question-paper generation. A Gemini free tier may be available subject to project/model quota and rate limits. Google notes free-tier content may be used to improve its products; avoid uploading student personal records, confidential documents or other sensitive information. Keep the API key server-side.
+
+RAG/vector search is intentionally not enabled in the first version: each generation request contains one source lesson, so direct source-grounded processing is simpler and avoids extra embedding/vector-database dependencies. Add RAG if teachers later need to search across many lesson files, shared syllabuses or past papers.
+
+
+## 7. Expected customer journey
 
 - Select PDF/PNG/JPG notes and set grade, subject, medium, question count, difficulty, marks and paper title.
 - Fill the customer details PayHere requires.
@@ -87,9 +94,9 @@ Visit `/admin/` and sign in using the phone number already registered in Supabas
 
 ## Privacy and limitations
 
-- The lesson file is sent to the configured OpenAI API only after payment has been verified.
+- The lesson file is sent to the configured Gemini API (preferred) or optional OpenAI API only after payment has been verified.
 - The upload is private. The source is deleted from Supabase after successful generation. On generation errors, the source stays private so a paid order can retry; abandoned and failed records/files need a future scheduled cleanup job.
-- The provider's temporary OpenAI file is deleted after the generation call.
+- For Gemini, the uploaded PDF/image is passed to the model request. For the optional OpenAI PDF fallback, its temporary file is deleted after the generation call.
 - Generated answers are suggested marking guidance and must be teacher-reviewed for correctness and syllabus fit.
 - Orders are tied to a confirmed Supabase Auth user ID as well as a random 256-bit order access token. Users must sign in to the same account to check status or generate a paper. Losing the order token may still require support to recover access.
 - No live merchant or AI credentials are provided by this code; no payments or AI generation run until you configure them. Live acceptance requires current PayHere approval and sandbox tests.

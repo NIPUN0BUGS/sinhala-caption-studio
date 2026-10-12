@@ -59,6 +59,16 @@ on conflict (id) do update set
 -- No public or anonymous storage policies are added.
 -- Vercel API routes use the server-only service-role key for signing, reading and deleting.
 
+
+-- Admin allowlist. Only the server-side service role can read or change it.
+create table if not exists public.gurupaper_admins (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  granted_at timestamptz not null default now()
+);
+alter table public.gurupaper_admins enable row level security;
+revoke all on table public.gurupaper_admins from anon, authenticated;
+grant all on table public.gurupaper_admins to service_role;
+
 -- Aggregate all records for accurate admin cards; only service_role may execute it.
 create or replace function public.gurupaper_admin_stats()
 returns jsonb
