@@ -76,13 +76,78 @@ button:disabled{opacity:.48;cursor:not-allowed;transform:none!important}
 @media(max-width:980px){.hero{grid-template-columns:minmax(0,1.12fr) minmax(245px,.88fr);gap:10px;padding:42px 32px}.hero h1{font-size:clamp(34px,4.2vw,47px)}.hero-visual{min-height:250px}.hero-visual img{max-height:315px}}
 @media(max-width:760px){.hero{grid-template-columns:1fr;min-height:0;padding:32px 22px;gap:8px}.hero-copy{max-width:none}.hero h1{font-size:clamp(34px,7vw,44px)}.hero-visual{min-height:0;margin-top:7px}.hero-visual img{max-width:390px;max-height:275px}}
 
+
+.auth-nav-button{white-space:nowrap}
+.auth-modal[hidden]{display:none!important}
+.auth-modal{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:18px}
+.auth-backdrop{position:absolute;inset:0;background:#071f30bd;backdrop-filter:blur(5px)}
+.auth-dialog{position:relative;width:min(480px,100%);max-height:min(90vh,760px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:24px;padding:clamp(22px,5vw,32px);box-shadow:0 28px 90px #061b2b55}
+.auth-close{position:absolute;right:15px;top:13px;width:36px;height:36px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-size:22px;line-height:1}
+.auth-brand{display:flex;align-items:center;gap:10px;font-weight:900;color:var(--navy);margin-bottom:20px}
+.auth-brand img{width:40px;height:40px;object-fit:contain}
+.auth-dialog h2{font-size:25px;line-height:1.25;margin:0 35px 8px 0;color:var(--navy)}
+.auth-intro{font-size:12px;color:var(--muted);line-height:1.75;margin:0 0 19px}
+.auth-mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;background:#f1f6f8;border-radius:12px;padding:5px;margin:0 0 18px}
+.auth-mode-tabs button{padding:10px;border:1px solid transparent;border-radius:9px;background:transparent;color:var(--muted);font-size:12px;font-weight:850}
+.auth-mode-tabs button.active{background:#fff;color:var(--navy);border-color:var(--line);box-shadow:0 2px 8px #14394e0c}
+.auth-fields{display:grid;gap:13px}
+.auth-field{display:grid;gap:6px;min-width:0}
+.auth-field label{font-size:11px;font-weight:850;color:#344f5e}
+.auth-field input{width:100%;min-width:0;border:1px solid var(--line);background:#fbfdfe;border-radius:11px;padding:12px;outline:0;color:var(--ink);font:inherit;font-size:14px}
+.auth-field input:focus{border-color:#72aabc;box-shadow:0 0 0 3px #176b8716}
+.auth-field input.otp-code{font-size:23px;letter-spacing:8px;text-align:center;font-weight:850}
+.auth-primary{width:100%;margin-top:4px;min-height:44px}
+.auth-secondary-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.auth-secondary-actions button{flex:1}
+.auth-status{margin:14px 0 0;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:#f5f9fa;color:#526875;font-size:11px;line-height:1.7;overflow-wrap:anywhere}
+.auth-status:empty{display:none}
+.auth-status.is-error{background:#fff0ef;border-color:#efc6c2;color:#8a2b24}
+.auth-status.is-good{background:#e8f8f1;border-color:#b4e1cd;color:#145943}
+.auth-account-panel{padding:16px;border:1px solid #b4e1cd;background:#e8f8f1;border-radius:14px}
+.auth-account-panel strong{display:block;color:#145943;font-size:13px;margin-bottom:5px}
+.auth-account-panel p{font-size:12px;overflow-wrap:anywhere;margin:0 0 14px;color:#315c4f}
+.auth-privacy-note{font-size:10px;color:var(--muted);line-height:1.65;margin:14px 0 0}
+@media(max-width:640px){.auth-modal{padding:10px;align-items:center}.auth-dialog{border-radius:19px}.auth-nav-button{font-size:10px;padding:10px}.auth-dialog h2{font-size:23px}}
+
 </style>
 </head>
 <body>
 <header class="topbar shell">
   <a class="brand" href="#" aria-label="ගුරු Paper home"><img class="brand-logo" src="/assets/gurupaper-logo.svg" alt="" width="46" height="46"><span lang="si">ගුරු Paper<small>TEACHERS-LATA PAPER HADANA TOOL EKA</small></span></a>
-  <nav class="nav"><a href="#paper-generator">Paper හදමු</a><a href="#teacher-circle">ගුරු එකමුතුව</a><a href="#plans">Pricing / මිල ගණන්</a><button class="btn primary" type="button" data-scroll-builder>Paper එකක් හදමු</button></nav>
+  <nav class="nav"><a href="#paper-generator">Paper හදමු</a><a href="#teacher-circle">ගුරු එකමුතුව</a><a href="#plans">Pricing / මිල ගණන්</a><button id="authAccountButton" class="btn auth-nav-button" type="button">Sign in / Register</button><button class="btn primary" type="button" data-scroll-builder>Paper එකක් හදමු</button></nav>
 </header>
+
+<div id="authModal" class="auth-modal" hidden>
+  <div class="auth-backdrop" data-auth-close></div>
+  <section class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <button id="authCloseButton" class="auth-close" type="button" aria-label="Close sign-in window">×</button>
+    <div class="auth-brand"><img src="/assets/gurupaper-logo.svg" alt="" width="40" height="40"><span>GuruPaper Account</span></div>
+    <h2 id="authTitle">Paper එකක් හදන්න sign in වෙන්න</h2>
+    <p class="auth-intro">Register කරන්න හෝ account එකට sign in වෙන්න. Email එකට එන OTP code එක confirm කළාට පස්සේ paper generator එකට යන්න පුළුවන්.</p>
+    <div id="authModeTabs" class="auth-mode-tabs" role="tablist" aria-label="Account mode">
+      <button id="authRegisterTab" type="button" class="active" aria-pressed="true">Register</button>
+      <button id="authSignInTab" type="button" aria-pressed="false">Sign in</button>
+    </div>
+    <div id="authAccountPanel" class="auth-account-panel" hidden>
+      <strong>ඔබ sign in වෙලා ඉන්නේ ✅</strong>
+      <p id="authAccountEmail"></p>
+      <button id="authSignOutButton" class="btn" type="button">Sign out</button>
+    </div>
+    <form id="authRequestForm" class="auth-fields" novalidate>
+      <div id="authNameField" class="auth-field"><label for="authFullName">ඔබේ නම / Full name</label><input id="authFullName" type="text" maxlength="100" autocomplete="name" placeholder="e.g. Nipun Samarakoon" required></div>
+      <div class="auth-field"><label for="authEmail">Email address</label><input id="authEmail" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com" required></div>
+      <button id="authSendOtpButton" class="btn primary auth-primary" type="submit">Email OTP code එක එවන්න</button>
+    </form>
+    <form id="authVerifyForm" class="auth-fields" hidden novalidate>
+      <div class="auth-field"><label for="authOtpCode">Email එකට ලැබුණු OTP code එක</label><input id="authOtpCode" class="otp-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" minlength="6" placeholder="000000" aria-describedby="authOtpHelp" required></div>
+      <p id="authOtpHelp" class="auth-privacy-note">Email එකේ එන digits 6 code එක ඇතුළත් කරන්න. Code එක verify වුණාට පස්සේ account එකට sign in වෙනවා.</p>
+      <button id="authVerifyOtpButton" class="btn primary auth-primary" type="submit">Confirm OTP &amp; Continue</button>
+      <div class="auth-secondary-actions"><button id="authResendOtpButton" class="btn" type="button">Resend code</button><button id="authChangeEmailButton" class="btn" type="button">Change email</button></div>
+    </form>
+    <p id="authModalStatus" class="auth-status" role="status" aria-live="polite"></p>
+    <p class="auth-privacy-note">Paper orders ඔබේ verified email account එකට බැඳෙනවා. Student personal data lesson notes වලට upload කරන්න එපා.</p>
+  </section>
+</div>
 <main class="shell">
 <section class="hero">
   <div class="hero-copy">
@@ -322,6 +387,238 @@ function exportWord(){
 }
 function printPaper(){renderPreview();const old=$('answerPreview').classList.contains('show');window.print();if(!old)$('answerPreview').classList.remove('show')}
 
+
+const AUTH_SESSION_KEY = "gurupaper-auth-session-v1";
+let authConfig = null, authSession = null, authUser = null, authInitPromise = null;
+let authMode = "register", authPendingEmail = "", authReturnTo = "paper-generator";
+let authResendTimer = null, authResendSeconds = 0;
+
+function saveAuthSession(session) {
+  if (!session || !session.access_token || !session.refresh_token) throw new Error("No active sign-in session was returned.");
+  authSession = {
+    access_token: String(session.access_token), refresh_token: String(session.refresh_token),
+    token_type: String(session.token_type || "bearer"),
+    expires_at: Number(session.expires_at || (Math.floor(Date.now()/1000) + Number(session.expires_in || 3600))),
+    user: session.user || authUser || null
+  };
+  authUser = session.user || authUser || null;
+  try { localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(authSession)); } catch (_) {}
+  updateAuthUi();
+}
+function clearAuthSession() {
+  authSession = null; authUser = null;
+  try { localStorage.removeItem(AUTH_SESSION_KEY); } catch (_) {}
+  updateAuthUi();
+}
+async function authProviderRequest(path, payload, accessToken) {
+  if (!authConfig || !authConfig.enabled) throw new Error("Email OTP sign-in is not configured. Add SUPABASE_URL and SUPABASE_ANON_KEY in Vercel.");
+  const headers = { apikey: authConfig.publicKey };
+  const init = { method: payload == null ? "GET" : "POST", headers: headers };
+  if (payload != null) { headers["Content-Type"] = "application/json"; init.body = JSON.stringify(payload); }
+  if (accessToken) headers.Authorization = "Bearer " + accessToken;
+  let response;
+  try { response = await fetch(authConfig.supabaseUrl + "/auth/v1/" + path, init); }
+  catch (_) { throw new Error("Supabase Auth වෙත connect වෙන්න බැරි වුණා. Internet connection එක පරීක්ෂා කරන්න."); }
+  let data = {};
+  try { data = await response.json(); } catch (_) {}
+  if (!response.ok) {
+    const error = new Error(String(data.msg || data.message || data.error_description || data.error || "Authentication request failed."));
+    error.status = response.status; error.providerCode = String(data.code || ""); throw error;
+  }
+  return data;
+}
+async function initializeAuthentication() {
+  try {
+    const response = await fetch("/api/auth-config", { method: "GET", cache: "no-store" });
+    const data = await readApiJson(response);
+    authConfig = {
+      enabled: Boolean(response.ok && data.authEnabled && data.supabaseUrl && data.publicKey),
+      supabaseUrl: String(data.supabaseUrl || "").replace(/\/+$/, ""),
+      publicKey: String(data.publicKey || "")
+    };
+  } catch (_) { authConfig = { enabled: false, supabaseUrl: "", publicKey: "" }; }
+  if (!authConfig.enabled) {
+    updateAuthUi();
+    if (!$("authModal").hidden) showAuthStatus("Email OTP setup සම්පූර්ණ නැහැ. Vercel එකට SUPABASE_URL සහ SUPABASE_ANON_KEY දාන්න.", "error");
+    return false;
+  }
+  let stored = null;
+  try { stored = JSON.parse(localStorage.getItem(AUTH_SESSION_KEY) || "null"); } catch (_) {}
+  if (!stored || !stored.access_token || !stored.refresh_token) { clearAuthSession(); return true; }
+  authSession = stored;
+  try {
+    if (Number(authSession.expires_at || 0) <= Math.floor(Date.now()/1000) + 60) {
+      saveAuthSession(await authProviderRequest("token?grant_type=refresh_token", { refresh_token: authSession.refresh_token }));
+    }
+    const user = await authProviderRequest("user", null, authSession.access_token);
+    if (!user || !user.id || !user.email) throw new Error("Could not verify signed-in account.");
+    authUser = user; authSession.user = user;
+    try { localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(authSession)); } catch (_) {}
+  } catch (error) {
+    if (error.status === 400 || error.status === 401 || error.status === 403) clearAuthSession();
+    else authUser = null;
+  }
+  updateAuthUi();
+  return true;
+}
+function ensureAuthInitialized() {
+  if (!authInitPromise) authInitPromise = initializeAuthentication();
+  return authInitPromise;
+}
+async function getAuthAccessToken() {
+  await ensureAuthInitialized();
+  if (!authSession || !authSession.access_token || !authUser) return "";
+  if (Number(authSession.expires_at || 0) <= Math.floor(Date.now()/1000) + 60) {
+    try { saveAuthSession(await authProviderRequest("token?grant_type=refresh_token", { refresh_token: authSession.refresh_token })); }
+    catch (_) { clearAuthSession(); return ""; }
+  }
+  return authSession && authSession.access_token ? authSession.access_token : "";
+}
+function showAuthStatus(message, kind) {
+  const el = $("authModalStatus"); if (!el) return;
+  el.textContent = message || ""; el.className = "auth-status" + (kind ? " is-" + kind : "");
+}
+function updateAuthUi() {
+  const signedIn = Boolean(authUser && authUser.email && authSession && authSession.access_token);
+  const button = $("authAccountButton"); if (button) button.textContent = signedIn ? "My account" : "Sign in / Register";
+  if ($("authModeTabs")) $("authModeTabs").hidden = signedIn || Boolean(authPendingEmail);
+  if ($("authAccountPanel")) $("authAccountPanel").hidden = !signedIn;
+  if ($("authAccountEmail")) $("authAccountEmail").textContent = signedIn ? String(authUser.email) : "";
+  if ($("authRequestForm")) $("authRequestForm").hidden = signedIn || Boolean(authPendingEmail);
+  if ($("authVerifyForm")) $("authVerifyForm").hidden = signedIn || !authPendingEmail;
+  if ($("authNameField")) $("authNameField").hidden = authMode !== "register" || signedIn || Boolean(authPendingEmail);
+  if ($("authFullName")) $("authFullName").required = authMode === "register" && !signedIn && !authPendingEmail;
+  if ($("authEmail") && authPendingEmail) $("authEmail").value = authPendingEmail;
+}
+function openAuthModal(nextTarget) {
+  authReturnTo = nextTarget || "paper-generator";
+  $("authModal").hidden = false; document.body.style.overflow = "hidden"; updateAuthUi();
+  if (authUser && authSession) showAuthStatus("ඔබ verified account එකකින් sign in වෙලා ඉන්නේ.", "good");
+  else if (!authConfig || !authConfig.enabled) showAuthStatus("Email OTP login enable කිරීමට Supabase public anon key එක Vercel එකට add කරන්න.", "error");
+  else if (authPendingEmail) showAuthStatus("OTP code එක " + authPendingEmail + " වෙත යවා ඇත. Inbox සහ Spam බලන්න.", "");
+  else showAuthStatus("Register හෝ Sign in තෝරලා email verification code එක ඉල්ලන්න.", "");
+  const focus = authPendingEmail ? $("authOtpCode") : $("authEmail");
+  if (focus && !(authUser && authSession)) setTimeout(() => focus.focus(), 60);
+}
+function closeAuthModal() { $("authModal").hidden = true; document.body.style.overflow = ""; }
+async function requestPaperGenerator() {
+  await ensureAuthInitialized();
+  if (!authUser || !authSession) { openAuthModal("paper-generator"); return; }
+  $("paper-generator").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function setAuthMode(mode) {
+  authMode = mode === "signin" ? "signin" : "register";
+  authPendingEmail = ""; $("authOtpCode").value = "";
+  $("authRegisterTab").classList.toggle("active", authMode === "register");
+  $("authSignInTab").classList.toggle("active", authMode === "signin");
+  $("authRegisterTab").setAttribute("aria-pressed", String(authMode === "register"));
+  $("authSignInTab").setAttribute("aria-pressed", String(authMode === "signin"));
+  updateAuthUi();
+  showAuthStatus(authMode === "register" ? "අලුත් account එකක් හදන්න නම සහ email ඇතුළත් කරන්න." : "Registered email එකට OTP code එකක් එවන්න.", "");
+}
+function startAuthResendCooldown() {
+  if (authResendTimer) clearInterval(authResendTimer);
+  authResendSeconds = 60; const button = $("authResendOtpButton"); button.disabled = true;
+  const tick = () => {
+    authResendSeconds = Math.max(0, authResendSeconds - 1);
+    button.textContent = authResendSeconds > 0 ? "Resend code (" + authResendSeconds + "s)" : "Resend code";
+    if (authResendSeconds === 0) { button.disabled = false; clearInterval(authResendTimer); authResendTimer = null; }
+  };
+  button.textContent = "Resend code (60s)"; authResendTimer = setInterval(tick, 1000);
+}
+async function sendAuthOtp(emailValue) {
+  await ensureAuthInitialized();
+  if (!authConfig || !authConfig.enabled) {
+    showAuthStatus("Email OTP setup ready නැහැ. Vercel Settings → Environment Variables හි SUPABASE_URL සහ SUPABASE_ANON_KEY configure කරන්න.", "error"); return;
+  }
+  const email = String(emailValue || "").trim().toLowerCase();
+  const fullName = String($("authFullName").value || "").trim().slice(0, 100);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) { showAuthStatus("Valid email address එකක් ඇතුළත් කරන්න.", "error"); return; }
+  if (authMode === "register" && !fullName) { showAuthStatus("Register කරන්න ඔබේ නම ඇතුළත් කරන්න.", "error"); $("authFullName").focus(); return; }
+  const button = $("authSendOtpButton"); button.disabled = true; button.textContent = "OTP යවමින්…";
+  try {
+    const payload = { email: email, create_user: authMode === "register" };
+    if (authMode === "register") payload.data = { full_name: fullName };
+    await authProviderRequest("otp", payload);
+    authPendingEmail = email; $("authEmail").value = email; $("authOtpCode").value = "";
+    $("authRequestForm").hidden = true; updateAuthUi(); startAuthResendCooldown();
+    showAuthStatus("Verification code එක " + email + " වෙත යවා ඇත. Email Inbox / Spam බලලා digits 6 code එක ඇතුළත් කරන්න.", "good");
+    $("authOtpCode").focus();
+  } catch (error) {
+    const status = Number(error.status || 0);
+    let message = "OTP එක යවන්න බැරි වුණා. Email address එක සහ Supabase Email Auth settings පරීක්ෂා කරන්න.";
+    if (status === 429) message = "OTP requests වැඩියි. ටික වෙලාවක් ඉඳලා නැවත උත්සාහ කරන්න.";
+    else if (status === 400 && authMode === "signin") message = "මෙම email එකට account එකක් නැත්නම් Register tab එක තෝරන්න. Email Auth settings එකත් බලන්න.";
+    else if (status === 400 && authMode === "register") message = "මෙම email එක දැනටමත් registered නම් Sign in තෝරන්න. එසේ නැත්නම් Supabase OTP settings පරීක්ෂා කරන්න.";
+    showAuthStatus(message, "error");
+  } finally { button.disabled = false; button.textContent = "Email OTP code එක එවන්න"; }
+}
+async function verifyAuthOtp(event) {
+  event.preventDefault();
+  const code = String($("authOtpCode").value || "").trim();
+  if (!/^[0-9]{6}$/.test(code)) { showAuthStatus("Email එකට ලැබුණු digits 6 OTP code එක ඇතුළත් කරන්න.", "error"); return; }
+  const button = $("authVerifyOtpButton"); button.disabled = true; button.textContent = "Email verify කරමින්…";
+  try {
+    const result = await authProviderRequest("verify", { email: authPendingEmail, token: code, type: "email" });
+    saveAuthSession(result);
+    if (!authUser || !authUser.id || !authUser.email) {
+      authUser = await authProviderRequest("user", null, authSession.access_token);
+      authSession.user = authUser;
+      try { localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(authSession)); } catch (_) {}
+    }
+    authPendingEmail = ""; updateAuthUi(); closeAuthModal(); prefillAuthenticatedTeacher();
+    notify("Email verify වුණා. දැන් question paper එකක් හදන්න පුළුවන්.");
+    if (authReturnTo === "paper-generator") $("paper-generator").scrollIntoView({ behavior: "smooth", block: "start" });
+    showAuthStatus("", "");
+  } catch (error) {
+    const status = Number(error.status || 0);
+    let message = "OTP code එක verify කරන්න බැරි වුණා. Code එක check කරලා නැවත try කරන්න.";
+    if (status === 400 || status === 401) message = "OTP code එක වැරදියි හෝ expire වෙලා. අලුත් code එකක් ඉල්ලන්න.";
+    if (status === 429) message = "Attempts වැඩියි. ටික වෙලාවක් ඉඳලා නැවත try කරන්න.";
+    showAuthStatus(message, "error");
+  } finally { button.disabled = false; button.textContent = "Confirm OTP & Continue"; }
+}
+function prefillAuthenticatedTeacher() {
+  if (!authUser) return;
+  const email = String(authUser.email || "");
+  const metadata = authUser.user_metadata || {};
+  const fullName = String(metadata.full_name || metadata.name || "").trim();
+  if ($("paperCustomerEmail") && !$("paperCustomerEmail").value.trim()) $("paperCustomerEmail").value = email;
+  if ($("paperSourceTeacher") && !$("paperSourceTeacher").value.trim() && fullName) $("paperSourceTeacher").value = fullName;
+  if (fullName) {
+    const parts = fullName.split(/\s+/);
+    if ($("paperCustomerFirst") && !$("paperCustomerFirst").value.trim()) $("paperCustomerFirst").value = parts.shift() || "";
+    if ($("paperCustomerLast") && !$("paperCustomerLast").value.trim()) $("paperCustomerLast").value = parts.join(" ");
+  }
+}
+async function signOutGuruPaper() {
+  const token = authSession && authSession.access_token;
+  if (token && authConfig && authConfig.enabled) { try { await authProviderRequest("logout", {}, token); } catch (_) {} }
+  clearAuthSession(); authPendingEmail = ""; $("authOtpCode").value = ""; setAuthMode("register");
+  showAuthStatus("ඔබ sign out වී ඇත.", "good");
+}
+async function openAccountModal() { await ensureAuthInitialized(); openAuthModal("paper-generator"); updateAuthUi(); }
+function initAuthUi() {
+  $("authAccountButton").addEventListener("click", openAccountModal);
+  $("authCloseButton").addEventListener("click", closeAuthModal);
+  document.querySelectorAll("[data-auth-close]").forEach(el => el.addEventListener("click", closeAuthModal));
+  $("authRegisterTab").addEventListener("click", () => setAuthMode("register"));
+  $("authSignInTab").addEventListener("click", () => setAuthMode("signin"));
+  $("authRequestForm").addEventListener("submit", event => { event.preventDefault(); sendAuthOtp($("authEmail").value); });
+  $("authVerifyForm").addEventListener("submit", verifyAuthOtp);
+  $("authResendOtpButton").addEventListener("click", () => {
+    if (authResendSeconds > 0) { showAuthStatus("Resend කිරීමට තව " + authResendSeconds + " seconds ඉන්න.", ""); return; }
+    sendAuthOtp(authPendingEmail);
+  });
+  $("authChangeEmailButton").addEventListener("click", () => {
+    authPendingEmail = ""; $("authOtpCode").value = ""; updateAuthUi();
+    showAuthStatus("Email address එක වෙනස් කරලා නැවත OTP එක ඉල්ලන්න.", ""); $("authEmail").focus();
+  });
+  $("authSignOutButton").addEventListener("click", signOutGuruPaper);
+  document.addEventListener("keydown", event => { if (event.key === "Escape" && !$("authModal").hidden) closeAuthModal(); });
+  ensureAuthInitialized();
+}
+
 let paperServiceReady = false;
 let activePaperOrder = null;
 const PAPER_ACTIVE_ORDER_KEY = "gurupaper-active-paper-order-v1";
@@ -403,6 +700,8 @@ function getStoredPaperOrder(orderId) {
 }
 async function startPaperOrder(event) {
   event.preventDefault();
+  const authToken = await getAuthAccessToken();
+  if (!authToken || !authUser) { openAuthModal("paper-generator"); return; }
   const form = $("aiPaperForm");
   if (!form.reportValidity()) return;
   if (!paperServiceReady) {
@@ -425,7 +724,7 @@ async function startPaperOrder(event) {
   let createdOrder = null;
   try {
     const createResponse = await fetch("/api/create-paper-order", {
-      method: "POST", headers: { "Content-Type": "application/json" },
+      method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + authToken },
       body: JSON.stringify(options)
     });
     const createData = await readApiJson(createResponse);
@@ -440,8 +739,10 @@ async function startPaperOrder(event) {
     });
     if (!uploadResponse.ok) throw new Error("File upload failed. Check file type / size and try again. Payment එකක් තවම ගත්තේ නැහැ.");
     setGeneratorStatus("paperOrderStatus", "3/3 — Checkout request එක initialize කරනවා…", "waiting");
+    const checkoutAuthToken = await getAuthAccessToken();
+    if (!checkoutAuthToken || !authUser) { openAuthModal("paper-generator"); throw new Error("Please sign in again to continue checkout."); }
     const checkoutResponse = await fetch("/api/create-paper-checkout", {
-      method: "POST", headers: { "Content-Type": "application/json" },
+      method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + checkoutAuthToken },
       body: JSON.stringify({
         orderId: createdOrder.orderId, accessToken: createdOrder.accessToken,
         customer: {
@@ -471,8 +772,10 @@ async function startPaperOrder(event) {
   }
 }
 async function getPaperOrderStatus(order, silent) {
+  const authToken = await getAuthAccessToken();
+  if (!authToken || !authUser) { openAuthModal("paper-generator"); throw new Error("Sign in to the account that created this paper order."); }
   const response = await fetch("/api/paper-order-status", {
-    method: "POST", headers: { "Content-Type": "application/json" },
+    method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + authToken },
     body: JSON.stringify(order)
   });
   const data = await readApiJson(response);
@@ -558,12 +861,14 @@ async function pollForPaperPayment() {
 }
 async function generatePaidPaper() {
   if (!activePaperOrder) return;
+  const authToken = await getAuthAccessToken();
+  if (!authToken || !authUser) { openAuthModal("paper-generator"); return; }
   const button = $("paperGenerateButton");
   button.disabled = true;
   setGeneratorStatus("paperOrderStatus", "Verified order එකෙන් lesson analysis සහ question paper generate කරනවා…", "waiting");
   try {
     const response = await fetch("/api/generate-paper", {
-      method: "POST", headers: { "Content-Type": "application/json" },
+      method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + authToken },
       body: JSON.stringify(activePaperOrder)
     });
     const data = await readApiJson(response);
@@ -613,7 +918,9 @@ function init(){
  $('questionList').addEventListener('click',e=>{const del=e.target.closest('[data-delete]');if(del){paper.questions=paper.questions.filter(q=>String(q.id)!==del.dataset.delete);renderQuestions();autosave();return}const move=e.target.closest('[data-move]');if(move){const i=paper.questions.findIndex(q=>String(q.id)===move.dataset.move);const j=i+Number(move.dataset.direction);if(i>=0&&j>=0&&j<paper.questions.length){[paper.questions[i],paper.questions[j]]=[paper.questions[j],paper.questions[i]];renderQuestions();autosave()}}});
  $('addQuestion').addEventListener('click',()=>addQuestion());$('saveDraft').addEventListener('click',saveNow);$('clearPaper').addEventListener('click',clearPaper);$('loadDemo').addEventListener('click',loadDemo);$('includeAnswers').addEventListener('change',renderPreview);$('printPaper').addEventListener('click',printPaper);$('downloadWord').addEventListener('click',exportWord);
  initPaperGenerator();
- document.querySelectorAll('[data-scroll-builder]').forEach(btn=>btn.addEventListener('click',()=>$('paper-generator').scrollIntoView({behavior:'smooth'})));
+ initAuthUi();
+ document.querySelectorAll('[data-scroll-builder]').forEach(btn=>btn.addEventListener('click',requestPaperGenerator));
+ document.querySelectorAll('a[href="#paper-generator"]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();requestPaperGenerator()}));
  document.querySelectorAll('[data-plan-info]').forEach(btn=>btn.addEventListener('click',()=>notify(btn.dataset.planInfo+' proposed plan ekak witharai; payment setup thama active naha.')));
 }
 init();

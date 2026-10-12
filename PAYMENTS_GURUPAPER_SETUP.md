@@ -18,7 +18,7 @@ The free/manual paper editor remains a separate tool. It does not generate quest
 
 1. Create a Supabase project at https://supabase.com/dashboard.
 2. Open SQL Editor, paste/run supabase/gurupaper-paper-orders.sql.
-3. In Project Settings → API (or API Keys), copy the Project URL and service_role key. The service_role key is server-only; never place it in HTML or share it.
+3. In Project Settings → API (or API Keys), copy the Project URL, the public anon/publishable key, and the service_role key. Add both keys to Vercel: `SUPABASE_ANON_KEY` is safe for browser authentication, while `SUPABASE_SERVICE_ROLE_KEY` is server-only and must never be placed in HTML or shared.
 4. The SQL creates a private bucket named guru-paper-uploads, restricted to PDF/PNG/JPEG and 15 MB. No public read or anonymous storage policies are created.
 
 ## 2. Configure PayHere (sandbox first)
@@ -42,6 +42,7 @@ In Vercel → project → Settings → Environment Variables, add these for the 
 | --- | --- |
 | APP_URL | Exact HTTPS origin serving GuruPaper (no path/trailing slash); must match the stable deployment hostname |
 | SUPABASE_URL | Supabase project URL |
+| SUPABASE_ANON_KEY | Public anon/publishable key used for email OTP login; never use the service-role key here |
 | SUPABASE_SERVICE_ROLE_KEY | Supabase server-only service role key |
 | SUPABASE_STORAGE_BUCKET | Optional; defaults to guru-paper-uploads |
 | PAYHERE_MODE | sandbox while testing; live only after approval |
@@ -59,7 +60,15 @@ Open /api/paper-config on the GuruPaper deployment. It should report databaseRea
 
 If any check is false, the UI disables the payment flow. The `GURUPAPER_ENABLE_CHECKOUT` switch is an explicit operator gate. Leave it false/omitted until you are ready to test. Set it to true for sandbox testing while `PAYHERE_MODE=sandbox`; after the end-to-end tests pass and PayHere approves your merchant/domain, deliberately switch `PAYHERE_MODE=live` to accept real payments. The readiness endpoint verifies credential presence and table/bucket reachability but cannot validate a successful charge or AI quota.
 
-## 5. Expected customer journey
+## 5. Email registration and OTP sign-in
+
+1. Add `SUPABASE_URL` and `SUPABASE_ANON_KEY` (public anon/publishable key) to the Vercel project. Do not set the service-role key as the public key.
+2. In Supabase Authentication, enable the Email provider and keep email confirmation enabled.
+3. In Authentication → Email Templates, edit the Magic Link template so it displays the one-time code using `{{ .Token }}`. Example: `<h2>GuruPaper verification code</h2><p>Enter this code on GuruPaper to confirm your email and sign in:</p><h1>{{ .Token }}</h1>`. The app verifies the six-digit code with email OTP; a template that only sends a magic link will not match the screen.
+4. Configure a trusted site URL for `https://gurupaper.vercel.app`. For production, configure a custom SMTP provider and review Supabase email rate limits before inviting teachers.
+5. Deploy the app and test both Register and Sign in, OTP confirmation, expired/incorrect codes, sign-out and order creation. Unauthenticated order creation, checkout, status and generation calls should return 401.
+
+## 6. Expected customer journey
 
 - Select PDF/PNG/JPG notes and set grade, subject, medium, question count, difficulty, marks and paper title.
 - Fill the customer details PayHere requires.
@@ -75,6 +84,6 @@ If any check is false, the UI disables the payment flow. The `GURUPAPER_ENABLE_C
 - The upload is private. The source is deleted from Supabase after successful generation. On generation errors, the source stays private so a paid order can retry; abandoned and failed records/files need a future scheduled cleanup job.
 - The provider's temporary OpenAI file is deleted after the generation call.
 - Generated answers are suggested marking guidance and must be teacher-reviewed for correctness and syllabus fit.
-- This is not a login/account system; order access relies on a random 256-bit browser-held token. Losing the browser session may mean support is needed to recover access.
+- Orders are tied to a confirmed Supabase Auth user ID as well as a random 256-bit order access token. Users must sign in to the same account to check status or generate a paper. Losing the order token may still require support to recover access.
 - No live merchant or AI credentials are provided by this code; no payments or AI generation run until you configure them. Live acceptance requires current PayHere approval and sandbox tests.
 - Add actual Terms, Privacy, Refund/Return policy and business contact details before requesting PayHere activation. Do not use placeholder identity or contact information.
