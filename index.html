@@ -125,10 +125,10 @@ button:disabled{opacity:.48;cursor:not-allowed;transform:none!important}
         <div class="teacher-circle-tag"><b>✓</b><span>Teachersලා එකට දියුණු වෙමු</span></div>
       </div>
       <div class="teacher-circle-actions">
-        <button id="copyTeacherInvite" class="btn primary" type="button">ගුරුවරයෙක්ට Invite කරන්න</button>
+        <button id="copyTeacherInvite" class="btn primary" type="button">💬 WhatsApp එකෙන් Invite කරන්න</button>
         <a class="btn" href="#paper-generator">Paper එකක් try කරන්න</a>
       </div>
-      <p class="teacher-circle-note">Community pilot එක සූදානම් කරමින් පවතී. නිල WhatsApp / Telegram group link එකක් තවම සකස් කරලා නැහැ; link එක ලැබුණු පසු මෙතැනට එකතු කළ හැකියි. Invite button එක share කරන්න පුළුවන් message එකක් copy කරයි.</p>
+      <p class="teacher-circle-note">ගුරුවරයෙක්ට invite කරන්න button එක click කරන්න. WhatsApp open වෙලා invitation message එක සහ GuruPaper link එක පිරී එයි. එතැනින් ගුරුවරයා තෝරලා Send කරන්න.</p>
     </div>
   </div>
 </section>
@@ -575,32 +575,15 @@ async function generatePaidPaper() {
   }
 }
 
-async function copyTeacherInvite() {
-  const message = "ගුරු Paper Teacher Circle එකට එකතු වෙමු! 🇱🇰\nLesson notes වලින් question papers හදන, teaching ideas share කරන සහ ගුරුවරුන්ට useful features යෝජනා කරන community එකක් අපි සූදානම් කරනවා.\n\nGuruPaper: " + window.location.origin;
-  try {
-    if (navigator.clipboard && window.isSecureContext) {
-      await navigator.clipboard.writeText(message);
-    } else {
-      const temp = document.createElement("textarea");
-      temp.value = message;
-      temp.setAttribute("readonly", "");
-      temp.style.position = "fixed";
-      temp.style.opacity = "0";
-      document.body.appendChild(temp);
-      temp.select();
-      const copied = document.execCommand("copy");
-      temp.remove();
-      if (!copied) throw new Error("clipboard_unavailable");
-    }
-    notify("Teacher invite message එක copy වුණා. WhatsApp එකට paste කරලා share කරන්න.");
-  } catch (_) {
-    notify("Invite message එක copy කරන්න බැරි වුණා. Browser permissions check කරන්න.");
-  }
+function inviteTeacherOnWhatsApp() {
+  const message = "ගුරු Paper Teacher Circle එකට එකතු වෙමු! 🇱🇰\n\nLesson notes වලින් question papers හදන්න, teaching ideas share කරන්න, සහ ගුරුවරුන්ට useful features යෝජනා කරන්න එකතු වෙමු.\n\nGuruPaper: https://gurupaper.vercel.app/";
+  const whatsappUrl = "https://wa.me/?text=" + encodeURIComponent(message);
+  window.open(whatsappUrl, "_blank", "noopener,noreferrer");
 }
 
 function initPaperGenerator() {
   $("aiPaperForm").addEventListener("submit", startPaperOrder);
-  $("copyTeacherInvite").addEventListener("click", copyTeacherInvite);
+  $("copyTeacherInvite").addEventListener("click", inviteTeacherOnWhatsApp);
   $("paperGenerateButton").addEventListener("click", generatePaidPaper);
   $("paperCheckStatus").addEventListener("click", () => refreshPaperOrderStatus(true));
   const query = new URLSearchParams(window.location.search);
