@@ -5,6 +5,7 @@ GuruPaper is a Sinhala-first question-paper studio for Sri Lankan teachers. This
 ## What is included
 
 - A browser-based paper builder with question types, marks, preview, local draft saving, and print/export support.
+- Email registration and sign-in with six-digit OTP verification, backed by Supabase Auth.
 - A lesson-upload flow for PDF, PNG, and JPEG files.
 - A one-time Rs. 100 paper-order flow designed for server-verified PayHere payment.
 - Server-side paper generation through OpenAI after successful payment verification.
@@ -20,8 +21,8 @@ The \`vercel.json\` rewrites continue to expose \`/sitemap.xml\` and \`/robots.t
 
 ## Setup before enabling payments
 
-1. Connect this branch to a dedicated Vercel project for GuruPaper. Set the project's production branch to \`feature/teacher-paper-studio-mvp\` unless you intentionally move the GuruPaper-only code to another branch.
-2. Create a Supabase project and run [\`supabase/gurupaper-paper-orders.sql\`](./supabase/gurupaper-paper-orders.sql). Create the private storage bucket named \`guru-paper-uploads\` (or set \`SUPABASE_STORAGE_BUCKET\` to your bucket name).
+1. Connect this branch to the dedicated Vercel project for GuruPaper. Set the project's production branch to \`feature/teacher-paper-studio-mvp\` unless you intentionally move the GuruPaper-only code to another branch.
+2. Create a Supabase project, configure email OTP as described in [`PAYMENTS_GURUPAPER_SETUP.md`](./PAYMENTS_GURUPAPER_SETUP.md), and run [\`supabase/gurupaper-paper-orders.sql\`](./supabase/gurupaper-paper-orders.sql). Create the private storage bucket named \`guru-paper-uploads\` (or set \`SUPABASE_STORAGE_BUCKET\` to your bucket name).
 3. Add the server-side environment variables from [\`.env.example\`](./.env.example) in Vercel. Never expose the Supabase service-role key, PayHere merchant secret, or OpenAI key to browser code.
 4. Read [\`PAYMENTS_GURUPAPER_SETUP.md\`](./PAYMENTS_GURUPAPER_SETUP.md). Keep \`GURUPAPER_ENABLE_CHECKOUT=false\` until the database, private storage, PayHere sandbox credentials, OpenAI key and \`APP_URL\` have been checked. Test the full sandbox callback and generation flow before enabling live payments.
 5. Replace placeholder business/support details in the Privacy Policy and Terms before public launch. These pages are starting points, not legal advice.

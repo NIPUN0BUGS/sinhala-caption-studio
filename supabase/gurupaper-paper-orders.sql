@@ -6,6 +6,7 @@ create extension if not exists pgcrypto;
 
 create table if not exists public.paper_orders (
   order_id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete set null,
   access_token_hash text not null,
   status text not null default 'created'
     check (status in ('created','pending_payment','paid','generating','ready','failed','cancelled','chargeback','expired')),
@@ -29,8 +30,12 @@ create table if not exists public.paper_orders (
   source_deleted_at timestamptz
 );
 
+alter table public.paper_orders add column if not exists user_id uuid references auth.users(id) on delete set null;
 alter table public.paper_orders add column if not exists source_consent_at timestamptz;
 alter table public.paper_orders add column if not exists source_consent_version text not null default '2026-10-v1';
+
+create index if not exists paper_orders_user_id_created_idx
+  on public.paper_orders(user_id, created_at desc);
 
 create index if not exists paper_orders_status_created_idx
   on public.paper_orders(status, created_at);
