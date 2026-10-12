@@ -1,6 +1,6 @@
 # GuruPaper — Sri Lankan Teacher Paper Studio (MVP prototype)
 
-This experiment lives on the `feature/teacher-paper-studio-mvp` branch so the existing Sinhala Caption Studio `main` branch remains unchanged.
+GuruPaper is developed on the `feature/teacher-paper-studio-mvp` branch and is intended to deploy as its own standalone app.
 
 ## What works in the current front-end prototype
 

@@ -51,7 +51,7 @@ In Vercel → project → Settings → Environment Variables, add these for the 
 | GURUPAPER_ENABLE_CHECKOUT | Keep `false` or omitted until credentials and services are configured and you are ready to test. Set to `true` while deliberately running sandbox tests; leave `PAYHERE_MODE=sandbox` during those tests. Only switch to `live` after sandbox checkout, callback verification, AI output and PayHere merchant/domain approval are confirmed. |
 | OPENAI_MODEL | Optional; defaults to gpt-4.1-mini |
 
-After changing environment variables, redeploy. Do not commit real credentials or put any secret in index.html. Do not use the original Caption Studio production URL as APP_URL for GuruPaper. Use the stable feature-branch preview alias while testing, or a dedicated GuruPaper production domain later. The configured hostname must be the one teachers visit; otherwise same-origin checks keep the flow disabled.
+After changing environment variables, redeploy. Do not commit real credentials or put any secret in index.html. Do not use an unrelated project URL as APP_URL for GuruPaper. Use the stable feature-branch preview alias while testing, or a dedicated GuruPaper production domain later. The configured hostname must be the one teachers visit; otherwise same-origin checks keep the flow disabled.
 
 ## 4. Configuration status and activation gate
 
