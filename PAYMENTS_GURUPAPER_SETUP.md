@@ -49,12 +49,12 @@ In Vercel → project → Settings → Environment Variables, add these for the 
 | PAYHERE_MERCHANT_ID | PayHere merchant ID |
 | PAYHERE_MERCHANT_SECRET | Merchant Secret for the exact domain |
 | GEMINI_API_KEY | Recommended: server-side Gemini API key. Free-tier access may be available under quota; free-tier data may be used to improve Google products. Do not upload sensitive student/private records. |
-| GEMINI_MODEL | Optional; defaults to `gemini-2.5-flash` |
+| GEMINI_MODEL | Optional; defaults to `gemini-3.8-flash` |
 | OPENAI_API_KEY | Optional OpenAI fallback; can incur usage charges |
 | GURUPAPER_ENABLE_CHECKOUT | Keep `false` or omitted until credentials and services are configured and you are ready to test. Set to `true` while deliberately running sandbox tests; leave `PAYHERE_MODE=sandbox` during those tests. Only switch to `live` after sandbox checkout, callback verification, AI output and PayHere merchant/domain approval are confirmed. |
 | OPENAI_MODEL | Optional; defaults to gpt-4.1-mini |
 
-After changing environment variables, redeploy. Do not commit real credentials or put any secret in index.html. Do not use an unrelated project URL as APP_URL for GuruPaper. Use the stable feature-branch preview alias while testing, or a dedicated GuruPaper production domain later. The configured hostname must be the one teachers visit; otherwise same-origin checks keep the flow disabled.
+After changing environment variables, redeploy. Do not commit real credentials or put any secret in index.html. Do not use an unrelated project URL as APP_URL for GuruPaper. Use https://gurupaper.vercel.app as the production origin, or the exact stable HTTPS domain you configure. The configured hostname must be the one teachers visit; otherwise same-origin checks keep the flow disabled.
 
 ## 4. Configuration status and activation gate
 
@@ -73,7 +73,7 @@ If any check is false, the UI disables the payment flow. The `GURUPAPER_ENABLE_C
 
 ## 6. Free-tier LLM and RAG choice
 
-GuruPaper prefers Google Gemini Flash (GEMINI_API_KEY, default model gemini-2.5-flash) for PDF/photo understanding and structured question-paper generation. A Gemini free tier may be available subject to project/model quota and rate limits. Google notes free-tier content may be used to improve its products; avoid uploading student personal records, confidential documents or other sensitive information. Keep the API key server-side.
+GuruPaper prefers Google Gemini Flash (GEMINI_API_KEY, default model gemini-3.8-flash) for PDF/photo understanding and structured question-paper generation. A Gemini free tier may be available subject to project/model quota and rate limits. Google notes free-tier content may be used to improve its products; avoid uploading student personal records, confidential documents or other sensitive information. Keep the API key server-side.
 
 RAG/vector search is intentionally not enabled in the first version: each generation request contains one source lesson, so direct source-grounded processing is simpler and avoids extra embedding/vector-database dependencies. Add RAG if teachers later need to search across many lesson files, shared syllabuses or past papers.
 
