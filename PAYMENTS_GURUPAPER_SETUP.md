@@ -36,7 +36,7 @@ Official references:
 
 ## 3. Configure Vercel environment variables
 
-In Vercel → project → Settings → Environment Variables, add these for the correct preview or production environment:
+In Vercel → project → Settings → Environment Variables, add these for the correct preview or production environment. Google Client ID/Secret are configured in Supabase Auth Providers, not as Vercel browser variables:
 
 | Variable | Purpose |
 | --- | --- |
@@ -63,7 +63,28 @@ Open /api/paper-config on the GuruPaper deployment. It should report databaseRea
 If any check is false, the UI disables the payment flow. The `GURUPAPER_ENABLE_CHECKOUT` switch is an explicit operator gate. Leave it false/omitted until you are ready to test. Set it to true for sandbox testing while `PAYHERE_MODE=sandbox`; after the end-to-end tests pass and PayHere approves your merchant/domain, deliberately switch `PAYHERE_MODE=live` to accept real payments. The readiness endpoint verifies credential presence and table/bucket reachability but cannot validate a successful charge or AI quota.
 
 
-## 5. Mobile registration and OTP authentication
+## 5. Google Sign-in (recommended, no SMS fee) and optional mobile OTP
+
+Google login requires a one-time OAuth setup. Google OAuth sign-in itself does not send an SMS, so no SMS-provider fee is charged for login.
+
+1. Open [Google Cloud Console](https://console.cloud.google.com/), create or select a project, then configure the OAuth consent screen.
+2. Under APIs & Services → Credentials, create an OAuth Client ID with application type **Web application**.
+3. In **Authorized redirect URIs**, add exactly:
+   \`https://dwowqscbfyemewgvimzs.supabase.co/auth/v1/callback\`
+4. Open [Supabase Authentication Providers](https://supabase.com/dashboard/project/dwowqscbfyemewgvimzs/auth/providers), enable **Google**, and enter the Google Client ID and Client Secret. Keep the secret only in Supabase—never add it to frontend code or GitHub.
+5. In [Supabase URL Configuration](https://supabase.com/dashboard/project/dwowqscbfyemewgvimzs/auth/url-configuration), set the Site URL to \`https://gurupaper.vercel.app\` and add \`https://gurupaper.vercel.app/**\` to Additional Redirect URLs. This covers the homepage, \`/paper/\`, and \`/admin/\`.
+6. Save settings and test **Continue with Google** from both the main site and \`/admin/\`. If testing on localhost, separately allow your exact localhost URL.
+7. To grant admin access, sign in with Google once, get that Google user's UUID from Supabase Authentication → Users, then add the UUID to \`public.gurupaper_admins\`. Google sign-in may create a different Auth UUID from an older phone-only account; add the intended Google UUID explicitly.
+
+### Optional: keep using mobile OTP
+
+1. Add \`SUPABASE_URL\` and \`SUPABASE_ANON_KEY\` (public anon/publishable key) to Vercel. Do not place \`SUPABASE_SERVICE_ROLE_KEY\` in browser code.
+2. In Supabase Authentication → Sign In / Providers, enable Phone and configure a supported SMS provider such as Twilio, Vonage or MessageBird. Real SMS may incur provider charges.
+3. Test a Sri Lankan number in E.164 format (for example \`+94771234567\`). GuruPaper also normalizes a local \`077...\` number to \`+94...\`.
+4. Register with a mobile number, enter the SMS OTP, then sign in with the same verified number. Order creation, checkout, generation, order status and admin data verify the Supabase session on the server.
+5. Existing mobile-auth accounts may continue to use OTP if their SMS provider is configured. To migrate to Google, configure Google OAuth and sign in with the intended Google account.
+
+
 
 1. Add SUPABASE_URL and SUPABASE_ANON_KEY (the public anon/publishable key) to Vercel. Do not place SUPABASE_SERVICE_ROLE_KEY in browser code.
 2. In Supabase Authentication → Sign In / Providers, enable Phone and configure a supported SMS provider such as Twilio, Vonage or MessageBird. Real SMS is not guaranteed to be free; provider rates and delivery limits apply. Configure rate limits and CAPTCHA before public launch.

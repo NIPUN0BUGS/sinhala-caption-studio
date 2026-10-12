@@ -5,7 +5,7 @@ GuruPaper is a Sinhala-first question-paper studio for Sri Lankan teachers. This
 ## What is included
 
 - A browser-based paper builder with question types, marks, preview, local draft saving, and print/export support.
-- Mobile registration and sign-in using SMS OTP, backed by Supabase Auth.
+- Google sign-in backed by Supabase Auth (no SMS fee for login), with SMS OTP retained as an optional fallback for existing phone accounts.
 - A lesson-upload flow for PDF, PNG, and JPEG files.
 - A one-time Rs. 100 paper-order flow designed for server-verified PayHere payment.
 - Server-side lesson-grounded paper generation through Gemini Flash (free quota may be available) after successful payment verification; OpenAI remains an optional fallback.
@@ -29,7 +29,7 @@ The \`vercel.json\` rewrites continue to expose \`/sitemap.xml\` and \`/robots.t
 2. Create a Supabase project, enable Phone Auth/SMS as described in [`PAYMENTS_GURUPAPER_SETUP.md`](./PAYMENTS_GURUPAPER_SETUP.md), and run [\`supabase/gurupaper-paper-orders.sql\`](./supabase/gurupaper-paper-orders.sql). Create the private storage bucket named \`guru-paper-uploads\` (or set \`SUPABASE_STORAGE_BUCKET\` to your bucket name).
 3. Add the server-side environment variables from [\`.env.example\`](./.env.example) in Vercel. Never expose the Supabase service-role key, PayHere merchant secret, Gemini key, or OpenAI key to browser code.
 4. Read [\`PAYMENTS_GURUPAPER_SETUP.md\`](./PAYMENTS_GURUPAPER_SETUP.md). Keep \`GURUPAPER_ENABLE_CHECKOUT=false\` until the database, private storage, PayHere sandbox credentials, OpenAI key and \`APP_URL\` have been checked. Test the full sandbox callback and generation flow before enabling live payments.
-5. Add your verified Supabase user UUID to `public.gurupaper_admins` to grant yourself `/admin/` access. Production SMS may cost money depending on the provider.
+5. Configure Google OAuth in Supabase and allow `https://gurupaper.vercel.app/**` as an Auth redirect URL. Add your signed-in Google user's UUID to `public.gurupaper_admins` to grant yourself `/admin/` access. The Google OAuth setup steps are in `PAYMENTS_GURUPAPER_SETUP.md`.
 6. Replace placeholder business/support details in the Privacy Policy and Terms before public launch. These pages are starting points, not legal advice.
 
 **Important:** The current source is not proof that live checkout or AI generation is operational. They stay disabled until the required services and environment variables are correctly configured and tested. Review generated papers for factual accuracy, curriculum alignment and suitability before using them with students.

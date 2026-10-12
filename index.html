@@ -97,6 +97,11 @@ button:disabled{opacity:.48;cursor:not-allowed;transform:none!important}
 .auth-field input:focus{border-color:#72aabc;box-shadow:0 0 0 3px #176b8716}
 .auth-field input.otp-code{font-size:23px;letter-spacing:8px;text-align:center;font-weight:850}
 .auth-primary{width:100%;margin-top:4px;min-height:44px}
+.auth-google-button{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;min-height:46px;margin:0 0 12px;border-color:#cbd5dc;background:#fff;color:#23343e;font-size:12px}
+.auth-google-button:hover{border-color:#7f9aa8;background:#fdfefe}
+.auth-google-button svg{width:20px;height:20px;flex:none}
+.auth-divider{display:flex;align-items:center;gap:10px;margin:0 0 16px;color:var(--muted);font-size:10px}
+.auth-divider:before,.auth-divider:after{content:"";flex:1;height:1px;background:var(--line)}
 .auth-secondary-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .auth-secondary-actions button{flex:1}
 .auth-status{margin:14px 0 0;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:#f5f9fa;color:#526875;font-size:11px;line-height:1.7;overflow-wrap:anywhere}
@@ -164,7 +169,17 @@ body[data-page="pricing"] main.shell > section:not(#plans){display:none!importan
     <button id="authCloseButton" class="auth-close" type="button" aria-label="Close sign-in window">×</button>
     <div class="auth-brand"><img src="/assets/gurupaper-logo.svg" alt="" width="40" height="40"><span>GuruPaper Account</span></div>
     <h2 id="authTitle">Paper එකක් හදන්න sign in වෙන්න</h2>
-    <p class="auth-intro">Register කරන්න හෝ account එකට sign in වෙන්න. SMS එකට එන OTP code එක confirm කළාට පස්සේ paper generator එකට යන්න පුළුවන්.</p>
+    <p class="auth-intro">SMS ගාස්තුවක් නැතිව ඔබේ Google account එකෙන් sign in වෙන්න. දැනට තිබෙන mobile accounts සඳහා SMS OTP විකල්පයත් තිබෙනවා.</p>
+    <button id="authGoogleButton" class="btn auth-google-button" type="button">
+      <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+        <path fill="#4285F4" d="M43.6 24.5c0-1.4-.1-2.8-.4-4.1H24v7.8h11c-.5 2.5-1.9 4.6-4.1 6l6.6 5.1c3.9-3.6 6.1-8.9 6.1-14.8z"/>
+        <path fill="#34A853" d="M24 44c5.5 0 10.1-1.8 13.5-4.8l-6.6-5.1c-1.8 1.2-4.1 2-6.9 2-5.3 0-9.8-3.6-11.4-8.4l-6.8 5.2C7.2 39.5 15 44 24 44z"/>
+        <path fill="#FBBC05" d="M12.6 27.7a12 12 0 0 1 0-7.4l-6.8-5.2a20.2 20.2 0 0 0 0 17.8z"/>
+        <path fill="#EA4335" d="M24 12.1c3 0 5.7 1 7.8 3.1l5.8-5.8C34.1 6.1 29.5 4 24 4 15 4 7.2 8.5 3.8 15.1l6.8 5.2c1.6-4.8 6.1-8.2 13.4-8.2z"/>
+      </svg>
+      <span>Continue with Google</span>
+    </button>
+    <div class="auth-divider"><span>හෝ Mobile OTP (SMS ගාස්තු අදාළ විය හැකියි)</span></div>
     <div id="authModeTabs" class="auth-mode-tabs" role="tablist" aria-label="Account mode">
       <button id="authRegisterTab" type="button" class="active" aria-pressed="true">Register</button>
       <button id="authSignInTab" type="button" aria-pressed="false">Sign in</button>
@@ -445,6 +460,7 @@ const AUTH_SESSION_KEY = "gurupaper-auth-session-v1";
 let authConfig = null, authSession = null, authUser = null, authInitPromise = null;
 let authMode = "register", authPendingPhone = "", authReturnTo = "paper-generator";
 let authResendTimer = null, authResendSeconds = 0;
+let authOAuthCallbackMessage = "", authOAuthCallbackKind = "";
 
 function saveAuthSession(session) {
   if (!session || !session.access_token || !session.refresh_token) throw new Error("No active sign-in session was returned.");
@@ -463,8 +479,25 @@ function clearAuthSession() {
   try { localStorage.removeItem(AUTH_SESSION_KEY); } catch (_) {}
   updateAuthUi();
 }
+function isVerifiedGuruPaperUser(user) {
+  const id = String(user && user.id || "");
+  if (!/^[0-9a-f-]{36}$/i.test(id)) return false;
+  const phone = String(user.phone || "");
+  const phoneVerified = /^\+[1-9][0-9]{7,14}$/.test(phone) && Boolean(user.phone_confirmed_at);
+  const email = String(user.email || "").trim();
+  const emailVerified = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && Boolean(user.email_confirmed_at);
+  return phoneVerified || emailVerified;
+}
+function takeOAuthCallback() {
+  const hash = String(window.location.hash || "");
+  if (!hash || hash.length < 2) return null;
+  const params = new URLSearchParams(hash.slice(1));
+  if (!params.has("access_token") && !params.has("error") && !params.has("error_description")) return null;
+  window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+  return params;
+}
 async function authProviderRequest(path, payload, accessToken) {
-  if (!authConfig || !authConfig.enabled) throw new Error("Mobile OTP sign-in is not configured. Add SUPABASE_URL and SUPABASE_ANON_KEY in Vercel.");
+  if (!authConfig || !authConfig.enabled) throw new Error("Supabase authentication is not configured. Check SUPABASE_URL and SUPABASE_ANON_KEY in Vercel.");
   const headers = { apikey: authConfig.publicKey };
   const init = { method: payload == null ? "GET" : "POST", headers: headers };
   if (payload != null) { headers["Content-Type"] = "application/json"; init.body = JSON.stringify(payload); }
@@ -481,6 +514,7 @@ async function authProviderRequest(path, payload, accessToken) {
   return data;
 }
 async function initializeAuthentication() {
+  const oauthParams = takeOAuthCallback();
   try {
     const response = await fetch("/api/auth-config", { method: "GET", cache: "no-store" });
     const data = await readApiJson(response);
@@ -492,8 +526,54 @@ async function initializeAuthentication() {
   } catch (_) { authConfig = { enabled: false, supabaseUrl: "", publicKey: "" }; }
   if (!authConfig.enabled) {
     updateAuthUi();
-    if (!$("authModal").hidden) showAuthStatus("Mobile OTP setup සම්පූර්ණ නැහැ. Vercel එකට SUPABASE_URL සහ SUPABASE_ANON_KEY දාන්න.", "error");
+    if (oauthParams) {
+      authOAuthCallbackMessage = "Google Sign-in සකස් කර නැහැ. Supabase public settings පරීක්ෂා කරන්න.";
+      authOAuthCallbackKind = "error";
+    } else if (!$("authModal").hidden) {
+      showAuthStatus("Supabase login configuration එක පරීක්ෂා කරන්න.", "error");
+    }
     return false;
+  }
+  if (oauthParams) {
+    if (oauthParams.has("error") || oauthParams.has("error_description")) {
+      clearAuthSession();
+      authOAuthCallbackMessage = oauthParams.get("error") === "access_denied"
+        ? "Google sign-in අවලංගු කළා."
+        : "Google sign-in අසාර්ථකයි. Supabase Google provider සහ redirect URL settings පරීක්ෂා කරන්න.";
+      authOAuthCallbackKind = "error";
+      updateAuthUi();
+      return true;
+    }
+    const accessToken = oauthParams.get("access_token") || "";
+    const refreshToken = oauthParams.get("refresh_token") || "";
+    if (!accessToken || !refreshToken) {
+      clearAuthSession();
+      authOAuthCallbackMessage = "Google sign-in session එක ලැබුණේ නැහැ. නැවත උත්සාහ කරන්න.";
+      authOAuthCallbackKind = "error";
+      updateAuthUi();
+      return true;
+    }
+    try {
+      saveAuthSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+        token_type: oauthParams.get("token_type") || "bearer",
+        expires_in: Number(oauthParams.get("expires_in") || 3600)
+      });
+      const user = await authProviderRequest("user", null, authSession.access_token);
+      if (!isVerifiedGuruPaperUser(user)) throw new Error("Google account verification was not returned.");
+      authUser = user;
+      authSession.user = user;
+      try { localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(authSession)); } catch (_) {}
+      authOAuthCallbackMessage = "Google sign-in සාර්ථකයි. දැන් GuruPaper භාවිතා කරන්න පුළුවන්.";
+      authOAuthCallbackKind = "good";
+    } catch (_) {
+      clearAuthSession();
+      authOAuthCallbackMessage = "Google account එක verify කරන්න බැරි වුණා. Supabase Google provider credentials සහ redirect URLs පරීක්ෂා කරන්න.";
+      authOAuthCallbackKind = "error";
+    }
+    updateAuthUi();
+    return true;
   }
   let stored = null;
   try { stored = JSON.parse(localStorage.getItem(AUTH_SESSION_KEY) || "null"); } catch (_) {}
@@ -504,7 +584,7 @@ async function initializeAuthentication() {
       saveAuthSession(await authProviderRequest("token?grant_type=refresh_token", { refresh_token: authSession.refresh_token }));
     }
     const user = await authProviderRequest("user", null, authSession.access_token);
-    if (!user || !user.id || !user.phone || !user.phone_confirmed_at) throw new Error("Could not verify signed-in account.");
+    if (!isVerifiedGuruPaperUser(user)) throw new Error("Could not verify signed-in account.");
     authUser = user; authSession.user = user;
     try { localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(authSession)); } catch (_) {}
   } catch (error) {
@@ -532,11 +612,12 @@ function showAuthStatus(message, kind) {
   el.textContent = message || ""; el.className = "auth-status" + (kind ? " is-" + kind : "");
 }
 function updateAuthUi() {
-  const signedIn = Boolean(authUser && authUser.phone && authSession && authSession.access_token);
+  const signedIn = Boolean(authUser && authSession && authSession.access_token && isVerifiedGuruPaperUser(authUser));
   const button = $("authAccountButton"); if (button) button.textContent = signedIn ? "My account" : "Sign in / Register";
+  if ($("authGoogleButton")) $("authGoogleButton").hidden = signedIn;
   if ($("authModeTabs")) $("authModeTabs").hidden = signedIn || Boolean(authPendingPhone);
   if ($("authAccountPanel")) $("authAccountPanel").hidden = !signedIn;
-  if ($("authAccountPhone")) $("authAccountPhone").textContent = signedIn ? String(authUser.phone) : "";
+  if ($("authAccountPhone")) $("authAccountPhone").textContent = signedIn ? String(authUser.email || authUser.phone || "") : "";
   if ($("authRequestForm")) $("authRequestForm").hidden = signedIn || Boolean(authPendingPhone);
   if ($("authVerifyForm")) $("authVerifyForm").hidden = signedIn || !authPendingPhone;
   if ($("authNameField")) $("authNameField").hidden = authMode !== "register" || signedIn || Boolean(authPendingPhone);
@@ -547,10 +628,10 @@ function openAuthModal(nextTarget) {
   authReturnTo = nextTarget || "paper-generator";
   $("authModal").hidden = false; document.body.style.overflow = "hidden"; updateAuthUi();
   if (authUser && authSession) showAuthStatus("ඔබ verified account එකකින් sign in වෙලා ඉන්නේ.", "good");
-  else if (!authConfig || !authConfig.enabled) showAuthStatus("Mobile OTP login enable කිරීමට Supabase public anon key එක Vercel එකට add කරන්න.", "error");
+  else if (!authConfig || !authConfig.enabled) showAuthStatus("Supabase login configuration එක සකස් කර නැහැ. Vercel environment variables පරීක්ෂා කරන්න.", "error");
   else if (authPendingPhone) showAuthStatus("OTP code එක " + authPendingPhone + " වෙත යවා ඇත. SMS messages බලන්න.", "");
-  else showAuthStatus("Register හෝ Sign in තෝරලා mobile verification code එක ඉල්ලන්න.", "");
-  const focus = authPendingPhone ? $("authOtpCode") : $("authPhone");
+  else showAuthStatus("Google account එකෙන් sign in වෙන්න. Mobile OTP භාවිතා කළොත් SMS ගාස්තු අදාළ විය හැකියි.", "");
+  const focus = authPendingPhone ? $("authOtpCode") : $("authGoogleButton");
   if (focus && !(authUser && authSession)) setTimeout(() => focus.focus(), 60);
 }
 function closeAuthModal() {
@@ -596,6 +677,25 @@ function normalizeMobileNumber(value) {
   if (digits.length === 10 && digits.startsWith("0")) return "+94" + digits.slice(1);
   if (digits.length === 9) return "+94" + digits;
   return "+" + digits;
+}
+async function startGoogleSignIn() {
+  await ensureAuthInitialized();
+  if (!authConfig || !authConfig.enabled) {
+    showAuthStatus("Supabase login configuration එක සකස් කර නැහැ. SUPABASE_URL සහ SUPABASE_ANON_KEY පරීක්ෂා කරන්න.", "error");
+    return;
+  }
+  const button = $("authGoogleButton");
+  if (button) { button.disabled = true; button.innerHTML = '<span>Google වෙත යොමු කරමින්…</span>'; }
+  try {
+    const redirectTo = window.location.origin + window.location.pathname;
+    const authorizeUrl = new URL(authConfig.supabaseUrl + "/auth/v1/authorize");
+    authorizeUrl.searchParams.set("provider", "google");
+    authorizeUrl.searchParams.set("redirect_to", redirectTo);
+    window.location.assign(authorizeUrl.toString());
+  } catch (_) {
+    if (button) { button.disabled = false; button.innerHTML = '<span>Continue with Google</span>'; }
+    showAuthStatus("Google sign-in ආරම්භ කරන්න බැරි වුණා. නැවත උත්සාහ කරන්න.", "error");
+  }
 }
 async function sendAuthOtp(phoneValue) {
   await ensureAuthInitialized();
@@ -702,6 +802,7 @@ async function signOutGuruPaper() {
 async function openAccountModal() { await ensureAuthInitialized(); openAuthModal("paper-generator"); updateAuthUi(); }
 function initAuthUi() {
   if ($("authAccountButton").tagName === "BUTTON") $("authAccountButton").addEventListener("click", openAccountModal);
+  $("authGoogleButton").addEventListener("click", startGoogleSignIn);
   $("authCloseButton").addEventListener("click", closeAuthModal);
   document.querySelectorAll("[data-auth-close]").forEach(el => el.addEventListener("click", closeAuthModal));
   $("authRegisterTab").addEventListener("click", () => setAuthMode("register"));
@@ -721,7 +822,10 @@ function initAuthUi() {
   ensureAuthInitialized().then(() => {
     const accountRequested = new URLSearchParams(window.location.search).get("account") === "1";
     const mustRegisterForPaper = document.body.dataset.page === "paper" && (!authUser || !authSession);
-    if (accountRequested || mustRegisterForPaper) openAuthModal("paper-generator");
+    if (accountRequested || mustRegisterForPaper || authOAuthCallbackMessage) {
+      openAuthModal("paper-generator");
+      if (authOAuthCallbackMessage) showAuthStatus(authOAuthCallbackMessage, authOAuthCallbackKind);
+    }
   });
 }
 
