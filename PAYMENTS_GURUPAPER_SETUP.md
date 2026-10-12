@@ -42,13 +42,16 @@ In Vercel → project → Settings → Environment Variables, add these for the 
 | --- | --- |
 | APP_URL | Exact HTTPS origin serving GuruPaper (no path/trailing slash); must match the stable deployment hostname |
 | SUPABASE_URL | Supabase project URL |
+| SUPABASE_ANON_KEY | Public anon/publishable key for browser phone OTP authentication |
 | SUPABASE_ANON_KEY | Public anon/publishable key used for email OTP login; never use the service-role key here |
 | SUPABASE_SERVICE_ROLE_KEY | Supabase server-only service role key |
 | SUPABASE_STORAGE_BUCKET | Optional; defaults to guru-paper-uploads |
 | PAYHERE_MODE | sandbox while testing; live only after approval |
 | PAYHERE_MERCHANT_ID | PayHere merchant ID |
 | PAYHERE_MERCHANT_SECRET | Merchant Secret for the exact domain |
-| OPENAI_API_KEY | Server-side API key for lesson-to-paper generation |
+| GEMINI_API_KEY | Recommended: server-side Gemini API key. Free-tier access may be available under quota; free-tier data may be used to improve Google products. Do not upload sensitive student/private records. |
+| GEMINI_MODEL | Optional; defaults to `gemini-2.5-flash` |
+| OPENAI_API_KEY | Optional OpenAI fallback; can incur usage charges |
 | GURUPAPER_ENABLE_CHECKOUT | Keep `false` or omitted until credentials and services are configured and you are ready to test. Set to `true` while deliberately running sandbox tests; leave `PAYHERE_MODE=sandbox` during those tests. Only switch to `live` after sandbox checkout, callback verification, AI output and PayHere merchant/domain approval are confirmed. |
 | OPENAI_MODEL | Optional; defaults to gpt-4.1-mini |
 
@@ -77,6 +80,10 @@ If any check is false, the UI disables the payment flow. The `GURUPAPER_ENABLE_C
 - The interface polls order status using a random access token held only in the current browser tab's sessionStorage.
 - When the signed server notification confirms the Rs.100 LKR payment, the Generate full paper button appears.
 - Generated paper loads into the existing editor, where the teacher can review and print/save as PDF or download the Word-compatible export.
+
+## Admin dashboard
+
+Visit `/admin/` and sign in using the phone number already registered in Supabase Auth. If the dashboard returns 403, the account is not in the administrator allowlist. To bootstrap the first admin, run a query like `insert into public.gurupaper_admins (user_id) values ('YOUR-VERIFIED-SUPABASE-AUTH-UUID') on conflict do nothing;` using the verified user UUID found in Authentication → Users. Do not grant admin access based only on a submitted phone number.
 
 ## Privacy and limitations
 

@@ -58,3 +58,25 @@ on conflict (id) do update set
 
 -- No public or anonymous storage policies are added.
 -- Vercel API routes use the server-only service-role key for signing, reading and deleting.
+
+-- Aggregate all records for accurate admin cards; only service_role may execute it.
+create or replace function public.gurupaper_admin_stats()
+returns jsonb
+language sql
+stable
+security definer
+set search_path = public, auth
+as $$
+  select jsonb_build_object(
+    'totalOrders', (select count(*) from public.paper_orders),
+    'paidOrders', (select count(*) from public.paper_orders where paid_at is not null and status <> 'chargeback'),
+    'generatedPapers', (select count(*) from public.paper_orders where status = 'ready'),
+    'awaitingPayment', (select count(*) from public.paper_orders where status = 'pending_payment'),
+    'failedOrders', (select count(*) from public.paper_orders where status = 'failed'),
+    'revenueLkr', (select coalesce(sum(amount), 0) from public.paper_orders where paid_at is not null and status <> 'chargeback'),
+    'totalUsers', (select count(*) from auth.users),
+    'statusCounts', (select coalesce(jsonb_object_agg(status, order_count), '{}'::jsonb) from (select status, count(*) as order_count from public.paper_orders group by status) as grouped_statuses)
+  );
+$$;
+revoke all on function public.gurupaper_admin_stats() from public, anon, authenticated;
+grant execute on function public.gurupaper_admin_stats() to service_role;

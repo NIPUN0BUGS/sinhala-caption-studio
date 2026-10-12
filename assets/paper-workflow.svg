@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 360" role="img" aria-labelledby="title desc">
+<title id="title">From lesson photo to question paper</title>
+<desc id="desc">Three animated steps: take a photo of lesson notes, upload the notes, and generate and review a question paper.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2fbfc"/><stop offset="1" stop-color="#fff8e9"/></linearGradient>
+  <linearGradient id="note" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffdf4"/><stop offset="1" stop-color="#fff"/></linearGradient>
+  <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="7" stdDeviation="8" flood-color="#163e53" flood-opacity=".10"/></filter>
+  <style>
+    .card{fill:#fff;stroke:#d7e5eb;stroke-width:2;filter:url(#shadow)}
+    .s1{animation:focusOne 9s ease-in-out infinite}.s2{animation:focusTwo 9s ease-in-out infinite}.s3{animation:focusThree 9s ease-in-out infinite}
+    @keyframes focusOne{0%,27%{stroke:#1685a0;stroke-width:3;fill:#faffff}30%,100%{stroke:#d7e5eb;stroke-width:2;fill:#fff}}
+    @keyframes focusTwo{0%,29%{stroke:#d7e5eb;stroke-width:2;fill:#fff}32%,59%{stroke:#1685a0;stroke-width:3;fill:#faffff}62%,100%{stroke:#d7e5eb;stroke-width:2;fill:#fff}}
+    @keyframes focusThree{0%,61%{stroke:#d7e5eb;stroke-width:2;fill:#fff}64%,91%{stroke:#1685a0;stroke-width:3;fill:#faffff}94%,100%{stroke:#d7e5eb;stroke-width:2;fill:#fff}}
+    .scan{animation:scanMove 2.7s ease-in-out infinite}.uploadFill{animation:uploadWidth 3s ease-in-out infinite}.tick{transform-origin:928px 160px;animation:tickPop 2.2s ease-in-out infinite}
+    @keyframes scanMove{0%,100%{transform:translateY(0);opacity:.35}50%{transform:translateY(65px);opacity:1}}
+    @keyframes uploadWidth{0%{width:12px}65%,100%{width:104px}}
+    @keyframes tickPop{0%,15%{transform:scale(.65);opacity:.35}32%,100%{transform:scale(1);opacity:1}}
+    .flowline{fill:none;stroke:#82b5c5;stroke-width:3;stroke-linecap:round;stroke-dasharray:4 7;animation:dash 1.6s linear infinite}
+    @keyframes dash{to{stroke-dashoffset:-22}}
+    .num{font:800 12px system-ui,sans-serif;fill:#fff}.heading{font:800 17px system-ui,sans-serif;fill:#123d57}.sub{font:500 11px system-ui,sans-serif;fill:#65808d}.label{font:800 10px system-ui,sans-serif;fill:#176b87;letter-spacing:1px}
+    @media(prefers-reduced-motion:reduce){.s1,.s2,.s3,.scan,.uploadFill,.tick,.flowline{animation:none!important}}
+  </style>
+</defs>
+<rect x="1" y="1" width="1078" height="358" rx="25" fill="url(#bg)" stroke="#dcebef"/>
+<rect class="card s1" x="20" y="24" width="320" height="292" rx="22"/>
+<rect class="card s2" x="380" y="24" width="320" height="292" rx="22"/>
+<rect class="card s3" x="740" y="24" width="320" height="292" rx="22"/>
+<path class="flowline" d="M345 175 H368 M361 168 L368 175 L361 182"/>
+<path class="flowline" d="M705 175 H728 M721 168 L728 175 L721 182"/>
+<!-- Step 1: photograph the lesson -->
+<circle cx="54" cy="60" r="17" fill="#123d57"/><text class="num" x="54" y="64" text-anchor="middle">01</text>
+<text class="heading" x="80" y="58">Take a photo</text><text class="sub" x="80" y="76">Clear photo of your lesson notes</text>
+<g transform="rotate(-6 168 200)">
+  <rect x="102" y="111" width="143" height="163" rx="9" fill="url(#note)" stroke="#d6d9ce" stroke-width="1.5"/>
+  <path d="M118 138 H221 M118 157 H221 M118 176 H216 M118 195 H221 M118 214 H205 M118 233 H221 M118 252 H195" stroke="#b7d2d9" stroke-width="3" stroke-linecap="round"/>
+  <rect x="118" y="121" width="74" height="7" rx="3.5" fill="#e7bd66"/>
+  <path class="scan" d="M112 132 H234" stroke="#1f9e9b" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+</g>
+<g transform="translate(207 218)">
+  <rect x="0" y="0" width="78" height="61" rx="13" fill="#123d57" stroke="#fff" stroke-width="3" filter="url(#shadow)"/>
+  <rect x="12" y="-6" width="24" height="10" rx="4" fill="#123d57"/>
+  <circle cx="40" cy="30" r="18" fill="#edf9fb"/><circle cx="40" cy="30" r="12" fill="#1c819d"/><circle cx="40" cy="30" r="6" fill="#0f3d57"/>
+  <rect x="59" y="10" width="7" height="5" rx="2" fill="#f3bf63"/>
+</g>
+<text class="label" x="180" y="300" text-anchor="middle">CAMERA READY</text>
+<!-- Step 2: upload -->
+<circle cx="414" cy="60" r="17" fill="#123d57"/><text class="num" x="414" y="64" text-anchor="middle">02</text>
+<text class="heading" x="440" y="58">Upload your notes</text><text class="sub" x="440" y="76">PDF, PNG or JPG · Private upload</text>
+<rect x="465" y="109" width="150" height="149" rx="16" fill="#f3fafc" stroke="#afcfd9" stroke-width="2" stroke-dasharray="6 5"/>
+<path d="M540 194 V143 M521 162 L540 143 L559 162" fill="none" stroke="#197f9b" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M514 204 V214 Q514 221 521 221 H559 Q566 221 566 214 V204" fill="none" stroke="#197f9b" stroke-width="4" stroke-linecap="round"/>
+<rect x="485" y="239" width="110" height="7" rx="3.5" fill="#dae9ed"/>
+<rect class="uploadFill" x="485" y="239" width="12" height="7" rx="3.5" fill="#1f9e9b"/>
+<text class="label" x="540" y="284" text-anchor="middle">SECURE UPLOAD</text>
+<circle cx="584" cy="111" r="14" fill="#e2f6ef" stroke="#9ed7c4"/><path d="M577 111 L582 116 L591 106" fill="none" stroke="#18835f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- Step 3: paper -->
+<circle cx="774" cy="60" r="17" fill="#123d57"/><text class="num" x="774" y="64" text-anchor="middle">03</text>
+<text class="heading" x="800" y="58">Generate &amp; review</text><text class="sub" x="800" y="76">Questions, marks and answer guide</text>
+<rect x="805" y="110" width="126" height="165" rx="8" fill="#fff" stroke="#cbdde4" stroke-width="2" filter="url(#shadow)"/>
+<rect x="822" y="127" width="92" height="10" rx="3" fill="#dff2f4"/>
+<rect x="822" y="145" width="65" height="5" rx="2.5" fill="#89bac6"/>
+<circle cx="828" cy="169" r="6" fill="#1f829d"/><path d="M825 169 L827 171 L831 166" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M842 169 H908 M822 186 H906" stroke="#c4dbe2" stroke-width="4" stroke-linecap="round"/>
+<circle cx="828" cy="204" r="6" fill="#1f829d"/><path d="M825 204 L827 206 L831 201" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M842 204 H908 M822 221 H906 M822 239 H887" stroke="#c4dbe2" stroke-width="4" stroke-linecap="round"/>
+<circle cx="928" cy="160" r="22" fill="#e5f7ed" stroke="#a6ddc4" stroke-width="2"/>
+<path class="tick" d="M917 160 L925 168 L940 151" fill="none" stroke="#16835e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="832" y="285" width="72" height="22" rx="11" fill="#123d57"/><text x="868" y="300" text-anchor="middle" style="font:800 9px system-ui,sans-serif;fill:#fff;letter-spacing:1px">PAPER READY</text>
+</svg>
