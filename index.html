@@ -347,7 +347,7 @@ button:disabled{opacity:.48;cursor:not-allowed;transform:none!important}
   </div>
 </section>
 </main>
-<footer class="shell footer"><a class="brand" href="#" aria-label="ගුරු Paper home"><img class="brand-logo" src="/assets/gurupaper-logo.svg" alt="" width="46" height="46"><span lang="si">ගුරු Paper<small>TEACHERS-LATA PAPER HADANA TOOL EKA</small></span></a><span>Sri Lankan teachers-lata prototype · Classroom eke use karanna kalin questions review karanna</span><span>PayHere / AI setup required before paid generation is enabled</span><span><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span></footer>
+<footer class="shell footer"><a class="brand" href="#" aria-label="ගුරු Paper home"><img class="brand-logo" src="/assets/gurupaper-logo.svg" alt="" width="46" height="46"><span lang="si">ගුරු Paper<small>TEACHERS-LATA PAPER HADANA TOOL EKA</small></span></a><span>Sri Lankan teachers-lata prototype · Classroom eke use karanna kalin questions review karanna</span><span>PayHere / AI setup required before paid generation is enabled</span><span><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span> · <a href="/admin/">Admin</a></footer>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script>
 (function(){
@@ -715,7 +715,7 @@ async function loadPaperServiceConfig() {
       setGeneratorStatus("paperBackendStatus", "Required services are configured and checkout activation is enabled (" + String(data.paymentMode || "sandbox").toUpperCase() + "). Verify sandbox callbacks and generated outputs before accepting live payments.", "good");
       button.disabled = false;
     } else {
-      setGeneratorStatus("paperBackendStatus", data.message || "Backend setup තවම complete නැහැ. Database, private storage, PayHere, OpenAI සහ APP_URL configure කරන තුරු payments disable.", "offline");
+      setGeneratorStatus("paperBackendStatus", data.message || "Backend setup තවම complete නැහැ. Database, private storage, PayHere, Gemini or OpenAI සහ APP_URL configure කරන තුරු payments disable.", "offline");
       button.disabled = true;
     }
   } catch (_) {
