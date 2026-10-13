@@ -75,7 +75,7 @@ a{color:var(--blue);text-decoration:none}.shell{width:min(1180px,calc(100% - 32p
 "use strict";
 const SESSION_KEY="gurupaper-auth-session-v1";
 const $=id=>document.getElementById(id);
-let config=null,session=null,user=null,otpPhone="",orders=[],timer=null;
+let config=null,session=null,user=null,orders=[],timer=null;
 
 function esc(value){return String(value==null?"":value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));}
 function verifiedGuruPaperUser(u){
@@ -100,22 +100,12 @@ async function startGoogleLogin(){
   window.location.assign(url.toString());
  }catch(_){btn.disabled=false;btn.innerHTML="<span>Continue with Google</span>";setNotice("authNotice","Could not start Google sign-in. Try again.","error")}
 }
-function normalPhone(value){
- let raw=String(value||"").trim(),digits=raw.replace(/\D/g,"");
- if(!raw)return "";
- if(digits.startsWith("00"))digits=digits.slice(2);
- if(raw.startsWith("+"))return "+"+digits;
- if(digits.startsWith("94"))return "+"+digits;
- if(digits.length===10&&digits.startsWith("0"))return "+94"+digits.slice(1);
- if(digits.length===9)return "+94"+digits;
- return "+"+digits;
-}
 function setNotice(id,text,type){
  const el=$(id);el.textContent=text||"";el.className="notice"+(type?" "+type:"");
 }
 async function jsonResponse(response){try{return await response.json()}catch(_){return {}}}
 async function api(path,payload,token){
- if(!config||!config.supabaseUrl||!config.publicKey)throw new Error("Supabase Phone Auth is not configured. Ask the project owner to add public Supabase settings.");
+ if(!config||!config.supabaseUrl||!config.publicKey)throw new Error("Supabase Auth is not configured. Ask the project owner to add public Supabase settings.");
  const headers={apikey:config.publicKey};
  const init={method:payload==null?"GET":"POST",headers};
  if(payload!=null){headers["Content-Type"]="application/json";init.body=JSON.stringify(payload)}
@@ -149,35 +139,6 @@ async function confirmUser(token){
  const u=await api("user",null,token);
  if(!verifiedGuruPaperUser(u))throw new Error("Please sign in with a verified Google/email account or mobile number.");
  user=u;if(session){session.user=u;try{localStorage.setItem(SESSION_KEY,JSON.stringify(session))}catch(_){}}
-}
-async function requestCode(event){
- event.preventDefault();
- const phone=normalPhone($("adminPhone").value);
- if(!/^\+[1-9][0-9]{7,14}$/.test(phone)){setNotice("authNotice","Enter a valid mobile number with country code, e.g. +94771234567","error");return}
- const btn=$("adminSendCode");btn.disabled=true;btn.textContent="Sending SMS…";
- try{
-  await api("otp",{phone,create_user:false});
-  otpPhone=phone;$("adminPhone").value=phone;$("adminPhoneForm").hidden=true;$("adminOtpForm").hidden=false;
-  setNotice("authNotice","Code sent to "+phone+". Enter the six digits from the SMS.","good");$("adminOtp").focus();
- }catch(e){
-  let msg="Could not send SMS OTP. Confirm Phone Auth and SMS provider setup in Supabase.";
-  if(e.status===429)msg="Too many OTP requests. Wait before trying again.";
-  else if(e.status===400)msg="No verified account may exist for this number. Register on the GuruPaper home page first.";
-  setNotice("authNotice",msg,"error");
- }finally{btn.disabled=false;btn.textContent="Send SMS code"}
-}
-async function verifyCode(event){
- event.preventDefault();const code=String($("adminOtp").value||"").trim();
- if(!/^[0-9]{6}$/.test(code)){setNotice("authNotice","Enter the six-digit OTP code.","error");return}
- const btn=$("adminVerifyCode");btn.disabled=true;btn.textContent="Verifying…";
- try{
-  storeSession(await api("verify",{phone:otpPhone,token:code,type:"sms"}));
-  await confirmUser(session.access_token);
-  await loadDashboard();
- }catch(e){
-  const msg=e.status===403?"This account is verified but is not on the admin allowlist. Add its Supabase Auth UUID to public.gurupaper_admins after reviewing access.":e.status===401?"OTP is invalid/expired or the session was rejected. Request a new code.":(e.message||"Could not verify the code.");
-  setNotice("authNotice",msg,"error");
- }finally{btn.disabled=false;btn.textContent="Verify & open dashboard"}
 }
 function fmtDate(value){if(!value)return "—";const d=new Date(value);return isNaN(d.getTime())?"—":d.toLocaleString();}
 function statusClass(value){return ["ready","paid","failed","chargeback","pending_payment"].includes(String(value))?String(value):"";}

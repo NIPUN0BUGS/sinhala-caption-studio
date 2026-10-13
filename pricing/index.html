@@ -171,7 +171,7 @@ body[data-page="pricing"] main.shell > section:not(#plans){display:none!importan
     <button id="authCloseButton" class="auth-close" type="button" aria-label="Close sign-in window">×</button>
     <div class="auth-brand"><img src="/assets/gurupaper-logo.svg" alt="" width="40" height="40"><span>GuruPaper Account</span></div>
     <h2 id="authTitle">Google Sign-in</h2>
-    <p id="authIntro" class="auth-intro">ඔබේ Google account එකෙන් sign in වෙන්න. Mobile OTP අවශ්‍ය නැහැ.</p>
+    <p id="authIntro" class="auth-intro">ඔබේ Google account එකෙන් ආරක්ෂිතව sign in වෙන්න. SMS verification අවශ්‍ය නැහැ.</p>
     <button id="authGoogleButton" class="btn auth-google-button" type="button">
       <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
         <path fill="#4285F4" d="M43.6 24.5c0-1.4-.1-2.8-.4-4.1H24v7.8h11c-.5 2.5-1.9 4.6-4.1 6l6.6 5.1c3.9-3.6 6.1-8.9 6.1-14.8z"/>
@@ -196,7 +196,7 @@ body[data-page="pricing"] main.shell > section:not(#plans){display:none!importan
       <button id="authSignOutButton" class="btn" type="button">Sign out</button>
     </div>
     <p id="authModalStatus" class="auth-status" role="status" aria-live="polite"></p>
-    <p class="auth-privacy-note">Google is used only for sign-in. Your first name, last name and address are saved to your GuruPaper profile. Phone details on the payment form are for PayHere checkout only, not OTP login.</p>
+    <p class="auth-privacy-note">Google is used only for sign-in. Your first name, last name and address are saved to your GuruPaper profile. Phone details on the payment form are used only for PayHere checkout and are never used to sign in.</p>
   </section>
 </div>
 
@@ -652,7 +652,7 @@ function updateAuthUi() {
   if ($("authAccountPhone")) $("authAccountPhone").textContent = profileComplete ? String(authUser.email || authUser.phone || "") : "";
   if ($("authTitle")) $("authTitle").textContent = !signedIn ? "Google Sign-in" : profileComplete ? "GuruPaper Account" : "Complete your profile";
   if ($("authIntro")) $("authIntro").textContent = !signedIn
-    ? "ඔබේ Google account එකෙන් sign in වෙන්න. Mobile OTP අවශ්‍ය නැහැ."
+    ? "ඔබේ Google account එකෙන් ආරක්ෂිතව sign in වෙන්න. SMS verification අවශ්‍ය නැහැ."
     : profileComplete ? "Your profile is saved. You can create and manage question papers." : "First name, last name සහ address ඇතුළත් කරලා profile එක save කරන්න.";
   if (signedIn && !profileComplete) populateAuthProfileForm();
 }

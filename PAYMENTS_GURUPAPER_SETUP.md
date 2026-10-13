@@ -78,7 +78,7 @@ GuruPaper now uses Google OAuth for sign-in. The site no longer offers mobile OT
 
 ### PayHere contact details
 
-First name, last name, email, phone, address and city are collected for PayHere checkout. The phone field is a payment contact requirement and is **not used for SMS OTP sign-in**. Google profile first name, last name, email and address are auto-filled in the checkout form when available.
+First name, last name, email, phone, address and city are collected for PayHere checkout. The phone field is a payment contact requirement and is **not used for SMS verification sign-in**. Google profile first name, last name, email and address are auto-filled in the checkout form when available.
 
 
 ## 6. Free-tier LLM and RAG choice
