@@ -41,11 +41,9 @@ a{color:var(--blue);text-decoration:none}.shell{width:min(1180px,calc(100% - 32p
       <div class="auth-head"><img src="/assets/gurupaper-logo.svg" alt=""><div><div class="eyebrow">Secure admin access</div><h1>Admin sign in</h1></div></div>
       <p>Sign in using your Google account. Only accounts in the GuruPaper admin allowlist can open the dashboard.</p>
       <button id="adminGoogleButton" class="btn google-admin-btn" type="button"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path fill="#4285F4" d="M43.6 24.5c0-1.4-.1-2.8-.4-4.1H24v7.8h11c-.5 2.5-1.9 4.6-4.1 6l6.6 5.1c3.9-3.6 6.1-8.9 6.1-14.8z"/><path fill="#34A853" d="M24 44c5.5 0 10.1-1.8 13.5-4.8l-6.6-5.1c-1.8 1.2-4.1 2-6.9 2-5.3 0-9.8-3.6-11.4-8.4l-6.8 5.2C7.2 39.5 15 44 24 44z"/><path fill="#FBBC05" d="M12.6 27.7a12 12 0 0 1 0-7.4l-6.8-5.2a20.2 20.2 0 0 0 0 17.8z"/><path fill="#EA4335" d="M24 12.1c3 0 5.7 1 7.8 3.1l5.8-5.8C34.1 6.1 29.5 4 24 4 15 4 7.2 8.5 3.8 15.1l6.8 5.2c1.6-4.8 6.1-8.2 13.4-8.2z"/></svg><span>Continue with Google</span></button>
-      <div class="auth-divider"><span>Or use SMS mobile OTP (fees may apply)</span></div>
-      <button id="adminGoogleButton" class="btn primary google-admin-btn" type="button">Continue with Google</button>
       <p class="muted" style="margin-top:10px">Admin access remains restricted to accounts approved in the GuruPaper admin allowlist.</p>
       <div id="authNotice" class="notice" role="status" aria-live="polite"></div>
-      <p class="muted" style="margin-top:13px">First-time admins: register on the main site, verify your phone, then grant your Supabase Auth user UUID in <code>public.gurupaper_admins</code>.</p>
+      <p class="muted" style="margin-top:13px">First-time admins: sign in with Google on the main site and complete your profile. Then add that Google account's Supabase Auth UUID to <code>public.gurupaper_admins</code>.</p>
     </div>
   </section>
   <section id="dashboard" hidden>
@@ -132,12 +130,12 @@ async function getToken(){
 }
 async function loadConfig(){
  const r=await fetch("/api/auth-config",{cache:"no-store"});const d=await jsonResponse(r);
- if(!r.ok||!d.authEnabled||!d.supabaseUrl||!d.publicKey){config=null;throw new Error(d.message||"Supabase Phone Auth is not configured.");}
+ if(!r.ok||!d.authEnabled||!d.supabaseUrl||!d.publicKey){config=null;throw new Error(d.message||"Supabase Auth is not configured.");}
  config={supabaseUrl:String(d.supabaseUrl).replace(/\/+$/,""),publicKey:d.publicKey};
 }
 async function confirmUser(token){
  const u=await api("user",null,token);
- if(!verifiedGuruPaperUser(u))throw new Error("Please sign in with a verified Google/email account or mobile number.");
+ if(!verifiedGuruPaperUser(u))throw new Error("Please sign in with a verified Google account.");
  user=u;if(session){session.user=u;try{localStorage.setItem(SESSION_KEY,JSON.stringify(session))}catch(_){}}
 }
 function fmtDate(value){if(!value)return "—";const d=new Date(value);return isNaN(d.getTime())?"—":d.toLocaleString();}
@@ -179,7 +177,7 @@ function renderOrders(){
 function renderUsers(users){
  $("usersList").innerHTML=users.length?users.map(u=>{
   const name=u.name||"Teacher";
-  return '<div class="user"><div class="user-avatar">'+esc((name.trim()[0]||"T").toUpperCase())+'</div><div class="user-info"><strong>'+esc(name)+'</strong><small>'+esc(u.email||u.phone||"No email")+'</small><small>Joined '+esc(fmtDate(u.createdAt))+'</small></div><span class="user-badge">'+(u.phoneConfirmed?"verified":"unverified")+'</span></div>';
+  return '<div class="user"><div class="user-avatar">'+esc((name.trim()[0]||"T").toUpperCase())+'</div><div class="user-info"><strong>'+esc(name)+'</strong><small>'+esc(u.email||u.phone||"No email")+'</small><small>Joined '+esc(fmtDate(u.createdAt))+'</small></div><span class="user-badge">'+(u.emailConfirmed?"verified email":u.phoneConfirmed?"verified phone":"unverified")+'</span></div>';
  }).join(""):'<div class="empty">No account list returned. Check Supabase Auth admin access.</div>';
 }
 async function loadDashboard(){
@@ -201,7 +199,7 @@ async function logout(){
  const token=session&&session.access_token;
  if(token&&config){try{await api("logout",{},token)}catch(_){}}
  clearSession();$("dashboard").hidden=true;$("authWrap").hidden=false;$("headerSignOut").hidden=true;
- $("adminOtpForm").hidden=true;$("adminPhoneForm").hidden=false;$("adminOtp").value="";setNotice("authNotice","Signed out.","good");
+ setNotice("authNotice","Signed out.","good");
 }
 async function init(){
  $("adminGoogleButton").addEventListener("click",startGoogleLogin);
