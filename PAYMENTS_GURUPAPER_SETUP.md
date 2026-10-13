@@ -21,6 +21,10 @@ The free/manual paper editor remains a separate tool. It does not generate quest
 3. In Project Settings → API (or API Keys), copy the Project URL, the public anon/publishable key, and the service_role key. Add both keys to Vercel: `SUPABASE_ANON_KEY` is safe for browser authentication, while `SUPABASE_SERVICE_ROLE_KEY` is server-only and must never be placed in HTML or shared.
 4. The SQL creates a private bucket named guru-paper-uploads, restricted to PDF/PNG/JPEG and 15 MB. No public read or anonymous storage policies are created.
 
+### Admin dashboard server configuration
+
+The admin dashboard uses `SUPABASE_SERVICE_ROLE_KEY` for server-only database queries to `paper_orders` and `gurupaper_admins`. Add this variable to the GuruPaper Vercel project's Production environment alongside `SUPABASE_URL`. Copy it from the same Supabase project under Project Settings → API Keys. Never put this secret in HTML, browser JavaScript, or GitHub. Redeploy after changing Vercel environment variables. Then sign in with Google once and add the approved administrator's Auth UUID to `public.gurupaper_admins`.
+
 ## 2. Configure PayHere (sandbox first)
 
 1. Sign up/activate at https://www.payhere.lk/ and confirm that your business category and personal bank account are eligible with PayHere.
