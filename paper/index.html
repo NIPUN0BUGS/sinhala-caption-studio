@@ -97,6 +97,13 @@ button:disabled{opacity:.48;cursor:not-allowed;transform:none!important}
 .auth-field input:focus{border-color:#72aabc;box-shadow:0 0 0 3px #176b8716}
 .auth-field input.otp-code{font-size:23px;letter-spacing:8px;text-align:center;font-weight:850}
 .auth-primary{width:100%;margin-top:4px;min-height:44px}
+.auth-profile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.auth-profile-grid .full{grid-column:1/-1}
+.auth-profile-help{font-size:11px;color:var(--muted);line-height:1.6;margin:0 0 2px}
+.auth-google-button{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;min-height:46px;margin:0 0 12px;background:#fff;color:#23343e;border:1px solid var(--line);font-size:12px}
+.auth-google-button svg{width:20px;height:20px;flex:none}
+.auth-google-button:hover{background:#f5f9fb;border-color:#9ab0bc}
+@media(max-width:480px){.auth-profile-grid{grid-template-columns:1fr}.auth-profile-grid .full{grid-column:auto}}
 .auth-google-button{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;min-height:46px;margin:0 0 12px;border-color:#cbd5dc;background:#fff;color:#23343e;font-size:12px}
 .auth-google-button:hover{border-color:#7f9aa8;background:#fdfefe}
 .auth-google-button svg{width:20px;height:20px;flex:none}
@@ -168,8 +175,8 @@ body[data-page="pricing"] main.shell > section:not(#plans){display:none!importan
   <section class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="authTitle">
     <button id="authCloseButton" class="auth-close" type="button" aria-label="Close sign-in window">×</button>
     <div class="auth-brand"><img src="/assets/gurupaper-logo.svg" alt="" width="40" height="40"><span>GuruPaper Account</span></div>
-    <h2 id="authTitle">Paper එකක් හදන්න sign in වෙන්න</h2>
-    <p class="auth-intro">SMS ගාස්තුවක් නැතිව ඔබේ Google account එකෙන් sign in වෙන්න. දැනට තිබෙන mobile accounts සඳහා SMS OTP විකල්පයත් තිබෙනවා.</p>
+    <h2 id="authTitle">Google Sign-in</h2>
+    <p id="authIntro" class="auth-intro">ඔබේ Google account එකෙන් sign in වෙන්න. Mobile OTP අවශ්‍ය නැහැ.</p>
     <button id="authGoogleButton" class="btn auth-google-button" type="button">
       <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
         <path fill="#4285F4" d="M43.6 24.5c0-1.4-.1-2.8-.4-4.1H24v7.8h11c-.5 2.5-1.9 4.6-4.1 6l6.6 5.1c3.9-3.6 6.1-8.9 6.1-14.8z"/>
@@ -179,31 +186,25 @@ body[data-page="pricing"] main.shell > section:not(#plans){display:none!importan
       </svg>
       <span>Continue with Google</span>
     </button>
-    <div class="auth-divider"><span>හෝ Mobile OTP (SMS ගාස්තු අදාළ විය හැකියි)</span></div>
-    <div id="authModeTabs" class="auth-mode-tabs" role="tablist" aria-label="Account mode">
-      <button id="authRegisterTab" type="button" class="active" aria-pressed="true">Register</button>
-      <button id="authSignInTab" type="button" aria-pressed="false">Sign in</button>
-    </div>
+    <form id="authProfileForm" class="auth-fields auth-profile-form" hidden novalidate>
+      <p class="auth-profile-help">First time here? Complete your profile once so your details can be filled into the payment form automatically.</p>
+      <div class="auth-profile-grid">
+        <div class="auth-field"><label for="authFirstName">First name</label><input id="authFirstName" type="text" autocomplete="given-name" maxlength="80" required placeholder="First name"></div>
+        <div class="auth-field"><label for="authLastName">Last name</label><input id="authLastName" type="text" autocomplete="family-name" maxlength="80" required placeholder="Last name"></div>
+        <div class="auth-field full"><label for="authAddress">Address</label><input id="authAddress" type="text" autocomplete="street-address" maxlength="160" required placeholder="Street / home address"></div>
+      </div>
+      <button id="authProfileSaveButton" class="btn primary auth-primary" type="submit">Save details &amp; continue</button>
+    </form>
     <div id="authAccountPanel" class="auth-account-panel" hidden>
       <strong>ඔබ sign in වෙලා ඉන්නේ ✅</strong>
       <p id="authAccountPhone"></p>
       <button id="authSignOutButton" class="btn" type="button">Sign out</button>
     </div>
-    <form id="authRequestForm" class="auth-fields" novalidate>
-      <div id="authNameField" class="auth-field"><label for="authFullName">ඔබේ නම / Full name</label><input id="authFullName" type="text" maxlength="100" autocomplete="name" placeholder="e.g. Nipun Samarakoon" required></div>
-      <div class="auth-field"><label for="authPhone">Mobile number (country code සමඟ)</label><input id="authPhone" type="tel" inputmode="tel" maxlength="24" autocomplete="tel" placeholder="+94 77 123 4567 හෝ 077 123 4567" required></div>
-      <button id="authSendOtpButton" class="btn primary auth-primary" type="submit">Mobile OTP code එක එවන්න</button>
-    </form>
-    <form id="authVerifyForm" class="auth-fields" hidden novalidate>
-      <div class="auth-field"><label for="authOtpCode">SMS එකට ලැබුණු OTP code එක</label><input id="authOtpCode" class="otp-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" minlength="6" placeholder="000000" aria-describedby="authOtpHelp" required></div>
-      <p id="authOtpHelp" class="auth-privacy-note">SMS එකට ලැබෙන digits 6 code එක ඇතුළත් කරන්න. Code එක verify වුණාට පස්සේ account එකට sign in වෙනවා.</p>
-      <button id="authVerifyOtpButton" class="btn primary auth-primary" type="submit">Confirm OTP &amp; Continue</button>
-      <div class="auth-secondary-actions"><button id="authResendOtpButton" class="btn" type="button">Resend code</button><button id="authChangePhoneButton" class="btn" type="button">Change mobile number</button></div>
-    </form>
     <p id="authModalStatus" class="auth-status" role="status" aria-live="polite"></p>
-    <p class="auth-privacy-note">Paper orders ඔබේ verified mobile number account එකට බැඳෙනවා. Student personal data lesson notes වලට upload කරන්න එපා.</p>
+    <p class="auth-privacy-note">Google is used only for sign-in. Your first name, last name and address are saved to your GuruPaper profile. Phone details on the payment form are for PayHere checkout only, not OTP login.</p>
   </section>
 </div>
+
 <main class="shell">
 <section class="hero">
   <div class="hero-copy">
@@ -296,12 +297,12 @@ body[data-page="pricing"] main.shell > section:not(#plans){display:none!importan
             </div></div>
           </div>
           <div class="section-rule"></div>
-          <div class="panel-head" style="padding:0 0 13px;border:0"><div><h3>2. Payment contact details</h3><p>PayHere checkout form ekata</p></div></div>
+          <div class="panel-head" style="padding:0 0 13px;border:0"><div><h3>2. Payment contact details</h3><p>PayHere checkout සඳහා පමණයි; sign-in එක Google account එකෙන්.</p></div></div>
           <div class="fields">
             <div class="field"><label for="paperCustomerFirst">First name</label><input id="paperCustomerFirst" autocomplete="given-name" maxlength="80" required></div>
             <div class="field"><label for="paperCustomerLast">Last name</label><input id="paperCustomerLast" autocomplete="family-name" maxlength="80" required></div>
             <div class="field"><label for="paperCustomerEmail">Email</label><input id="paperCustomerEmail" type="email" autocomplete="email" maxlength="254" required></div>
-            <div class="field"><label for="paperCustomerPhone">Phone</label><input id="paperCustomerPhone" type="tel" autocomplete="tel" minlength="7" maxlength="30" placeholder="07X XXX XXXX" required></div>
+            <div class="field"><label for="paperCustomerPhone">Phone (for PayHere payment only)</label><input id="paperCustomerPhone" type="tel" autocomplete="tel" minlength="7" maxlength="30" placeholder="07X XXX XXXX" required></div>
             <div class="field full"><label for="paperCustomerAddress">Address</label><input id="paperCustomerAddress" autocomplete="street-address" maxlength="160" required></div>
             <div class="field"><label for="paperCustomerCity">City</label><input id="paperCustomerCity" autocomplete="address-level2" maxlength="80" required></div>
           </div>
@@ -458,21 +459,20 @@ function printPaper(){renderPreview();const old=$('answerPreview').classList.con
 
 const AUTH_SESSION_KEY = "gurupaper-auth-session-v1";
 let authConfig = null, authSession = null, authUser = null, authInitPromise = null;
-let authMode = "register", authPendingPhone = "", authReturnTo = "paper-generator";
-let authResendTimer = null, authResendSeconds = 0;
+let authReturnTo = "paper-generator";
 let authOAuthCallbackMessage = "", authOAuthCallbackKind = "";
 
 function saveAuthSession(session) {
   if (!session || !session.access_token || !session.refresh_token) throw new Error("No active sign-in session was returned.");
   authSession = {
-    access_token: String(session.access_token), refresh_token: String(session.refresh_token),
+    access_token: String(session.access_token),
+    refresh_token: String(session.refresh_token),
     token_type: String(session.token_type || "bearer"),
     expires_at: Number(session.expires_at || (Math.floor(Date.now()/1000) + Number(session.expires_in || 3600))),
     user: session.user || authUser || null
   };
   authUser = session.user || authUser || null;
   try { localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(authSession)); } catch (_) {}
-  updateAuthUi();
 }
 function clearAuthSession() {
   authSession = null; authUser = null;
@@ -487,6 +487,10 @@ function isVerifiedGuruPaperUser(user) {
   const email = String(user.email || "").trim();
   const emailVerified = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && Boolean(user.email_confirmed_at);
   return phoneVerified || emailVerified;
+}
+function isGuruPaperProfileComplete(user) {
+  const m = user && user.user_metadata || {};
+  return Boolean(String(m.first_name || "").trim() && String(m.last_name || "").trim() && String(m.address || "").trim());
 }
 function takeOAuthCallback() {
   const hash = String(window.location.hash || "");
@@ -510,6 +514,20 @@ async function authProviderRequest(path, payload, accessToken) {
   if (!response.ok) {
     const error = new Error(String(data.msg || data.message || data.error_description || data.error || "Authentication request failed."));
     error.status = response.status; error.providerCode = String(data.code || ""); throw error;
+  }
+  return data;
+}
+async function updateAuthUserMetadata(metadata, accessToken) {
+  const response = await fetch(authConfig.supabaseUrl + "/auth/v1/user", {
+    method: "PUT",
+    headers: { apikey: authConfig.publicKey, Authorization: "Bearer " + accessToken, "Content-Type": "application/json" },
+    body: JSON.stringify({ data: metadata })
+  });
+  let data = {};
+  try { data = await response.json(); } catch (_) {}
+  if (!response.ok) {
+    const error = new Error(String(data.msg || data.message || "Profile details could not be saved."));
+    error.status = response.status; throw error;
   }
   return data;
 }
@@ -565,7 +583,9 @@ async function initializeAuthentication() {
       authUser = user;
       authSession.user = user;
       try { localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(authSession)); } catch (_) {}
-      authOAuthCallbackMessage = "Google sign-in සාර්ථකයි. දැන් GuruPaper භාවිතා කරන්න පුළුවන්.";
+      authOAuthCallbackMessage = isGuruPaperProfileComplete(user)
+        ? "Google sign-in සාර්ථකයි. දැන් GuruPaper භාවිතා කරන්න පුළුවන්."
+        : "Google sign-in සාර්ථකයි. First name, last name සහ address ඇතුළත් කර profile එක සම්පූර්ණ කරන්න.";
       authOAuthCallbackKind = "good";
     } catch (_) {
       clearAuthSession();
@@ -573,6 +593,7 @@ async function initializeAuthentication() {
       authOAuthCallbackKind = "error";
     }
     updateAuthUi();
+    prefillAuthenticatedTeacher();
     return true;
   }
   let stored = null;
@@ -588,10 +609,11 @@ async function initializeAuthentication() {
     authUser = user; authSession.user = user;
     try { localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(authSession)); } catch (_) {}
   } catch (error) {
-    if (error.status === 400 || error.status === 401 || error.status === 403) clearAuthSession();
+    if ([400,401,403].includes(Number(error.status || 0))) clearAuthSession();
     else authUser = null;
   }
   updateAuthUi();
+  prefillAuthenticatedTeacher();
   return true;
 }
 function ensureAuthInitialized() {
@@ -600,7 +622,7 @@ function ensureAuthInitialized() {
 }
 async function getAuthAccessToken() {
   await ensureAuthInitialized();
-  if (!authSession || !authSession.access_token || !authUser) return "";
+  if (!authSession || !authSession.access_token || !authUser || !isVerifiedGuruPaperUser(authUser)) return "";
   if (Number(authSession.expires_at || 0) <= Math.floor(Date.now()/1000) + 60) {
     try { saveAuthSession(await authProviderRequest("token?grant_type=refresh_token", { refresh_token: authSession.refresh_token })); }
     catch (_) { clearAuthSession(); return ""; }
@@ -608,34 +630,57 @@ async function getAuthAccessToken() {
   return authSession && authSession.access_token ? authSession.access_token : "";
 }
 function showAuthStatus(message, kind) {
-  const el = $("authModalStatus"); if (!el) return;
-  el.textContent = message || ""; el.className = "auth-status" + (kind ? " is-" + kind : "");
+  const el = $("authModalStatus");
+  if (!el) return;
+  el.textContent = message || "";
+  el.className = "auth-status" + (kind ? " is-" + kind : "");
+}
+function populateAuthProfileForm() {
+  if (!authUser) return;
+  const m = authUser.user_metadata || {};
+  const fullName = String(m.full_name || m.name || "").trim();
+  const parts = fullName ? fullName.split(/\s+/) : [];
+  const first = String(m.first_name || parts.shift() || "");
+  const last = String(m.last_name || parts.join(" ") || "");
+  if ($("authFirstName") && !$("authFirstName").value.trim()) $("authFirstName").value = first;
+  if ($("authLastName") && !$("authLastName").value.trim()) $("authLastName").value = last;
+  if ($("authAddress") && !$("authAddress").value.trim()) $("authAddress").value = String(m.address || "");
 }
 function updateAuthUi() {
   const signedIn = Boolean(authUser && authSession && authSession.access_token && isVerifiedGuruPaperUser(authUser));
-  const button = $("authAccountButton"); if (button) button.textContent = signedIn ? "My account" : "Sign in / Register";
+  const profileComplete = signedIn && isGuruPaperProfileComplete(authUser);
+  const accountButton = $("authAccountButton");
+  if (accountButton) accountButton.textContent = signedIn ? "My account" : "Sign in / Register";
   if ($("authGoogleButton")) $("authGoogleButton").hidden = signedIn;
-  if ($("authModeTabs")) $("authModeTabs").hidden = signedIn || Boolean(authPendingPhone);
-  if ($("authAccountPanel")) $("authAccountPanel").hidden = !signedIn;
-  if ($("authAccountPhone")) $("authAccountPhone").textContent = signedIn ? String(authUser.email || authUser.phone || "") : "";
-  if ($("authRequestForm")) $("authRequestForm").hidden = signedIn || Boolean(authPendingPhone);
-  if ($("authVerifyForm")) $("authVerifyForm").hidden = signedIn || !authPendingPhone;
-  if ($("authNameField")) $("authNameField").hidden = authMode !== "register" || signedIn || Boolean(authPendingPhone);
-  if ($("authFullName")) $("authFullName").required = authMode === "register" && !signedIn && !authPendingPhone;
-  if ($("authPhone") && authPendingPhone) $("authPhone").value = authPendingPhone;
+  if ($("authProfileForm")) $("authProfileForm").hidden = !signedIn || profileComplete;
+  if ($("authAccountPanel")) $("authAccountPanel").hidden = !profileComplete;
+  if ($("authAccountPhone")) $("authAccountPhone").textContent = profileComplete ? String(authUser.email || authUser.phone || "") : "";
+  if ($("authTitle")) $("authTitle").textContent = !signedIn ? "Google Sign-in" : profileComplete ? "GuruPaper Account" : "Complete your profile";
+  if ($("authIntro")) $("authIntro").textContent = !signedIn
+    ? "ඔබේ Google account එකෙන් sign in වෙන්න. Mobile OTP අවශ්‍ය නැහැ."
+    : profileComplete ? "Your profile is saved. You can create and manage question papers." : "First name, last name සහ address ඇතුළත් කරලා profile එක save කරන්න.";
+  if (signedIn && !profileComplete) populateAuthProfileForm();
 }
 function openAuthModal(nextTarget) {
   authReturnTo = nextTarget || "paper-generator";
-  $("authModal").hidden = false; document.body.style.overflow = "hidden"; updateAuthUi();
-  if (authUser && authSession) showAuthStatus("ඔබ verified account එකකින් sign in වෙලා ඉන්නේ.", "good");
-  else if (!authConfig || !authConfig.enabled) showAuthStatus("Supabase login configuration එක සකස් කර නැහැ. Vercel environment variables පරීක්ෂා කරන්න.", "error");
-  else if (authPendingPhone) showAuthStatus("OTP code එක " + authPendingPhone + " වෙත යවා ඇත. SMS messages බලන්න.", "");
-  else showAuthStatus("Google account එකෙන් sign in වෙන්න. Mobile OTP භාවිතා කළොත් SMS ගාස්තු අදාළ විය හැකියි.", "");
-  const focus = authPendingPhone ? $("authOtpCode") : $("authGoogleButton");
-  if (focus && !(authUser && authSession)) setTimeout(() => focus.focus(), 60);
+  $("authModal").hidden = false;
+  document.body.style.overflow = "hidden";
+  updateAuthUi();
+  if (authUser && authSession && !isGuruPaperProfileComplete(authUser)) {
+    showAuthStatus("Google sign-in සාර්ථකයි. Profile details සම්පූර්ණ කරන්න.", "good");
+  } else if (authUser && authSession) {
+    showAuthStatus("ඔබ verified Google account එකකින් sign in වෙලා ඉන්නේ.", "good");
+  } else if (!authConfig || !authConfig.enabled) {
+    showAuthStatus("Supabase login configuration එක සකස් කර නැහැ. Vercel environment variables පරීක්ෂා කරන්න.", "error");
+  } else {
+    showAuthStatus("Continue with Google ඔබලා sign in වෙන්න.", "");
+  }
+  const focus = authUser && authSession && !isGuruPaperProfileComplete(authUser) ? $("authFirstName") : $("authGoogleButton");
+  if (focus) setTimeout(() => focus.focus(), 60);
 }
 function closeAuthModal() {
-  if (document.body.dataset.page === "paper" && (!authUser || !authSession)) {
+  if (document.body.dataset.page === "paper" &&
+      (!authUser || !authSession || !isGuruPaperProfileComplete(authUser))) {
     window.location.assign("/");
     return;
   }
@@ -644,39 +689,65 @@ function closeAuthModal() {
 }
 async function requestPaperGenerator() {
   await ensureAuthInitialized();
-  if (!authUser || !authSession) { openAuthModal("paper-generator"); return; }
-  $("paper-generator").scrollIntoView({ behavior: "smooth", block: "start" });
+  if (!authUser || !authSession || !isGuruPaperProfileComplete(authUser)) {
+    openAuthModal("paper-generator");
+    return;
+  }
+  const generator = $("paper-generator");
+  if (generator) generator.scrollIntoView({ behavior: "smooth", block: "start" });
 }
-function setAuthMode(mode) {
-  authMode = mode === "signin" ? "signin" : "register";
-  authPendingPhone = ""; $("authOtpCode").value = "";
-  $("authRegisterTab").classList.toggle("active", authMode === "register");
-  $("authSignInTab").classList.toggle("active", authMode === "signin");
-  $("authRegisterTab").setAttribute("aria-pressed", String(authMode === "register"));
-  $("authSignInTab").setAttribute("aria-pressed", String(authMode === "signin"));
-  updateAuthUi();
-  showAuthStatus(authMode === "register" ? "අලුත් account එකක් හදන්න නම සහ mobile number එක ඇතුළත් කරන්න." : "Registered mobile number එකට OTP code එකක් එවන්න.", "");
+function prefillAuthenticatedTeacher() {
+  if (!authUser) return;
+  const metadata = authUser.user_metadata || {};
+  const fullName = String(metadata.full_name || metadata.name || "").trim();
+  const parts = fullName ? fullName.split(/\s+/) : [];
+  const first = String(metadata.first_name || parts.shift() || "");
+  const last = String(metadata.last_name || parts.join(" ") || "");
+  if ($("paperCustomerFirst") && !$("paperCustomerFirst").value.trim()) $("paperCustomerFirst").value = first;
+  if ($("paperCustomerLast") && !$("paperCustomerLast").value.trim()) $("paperCustomerLast").value = last;
+  if ($("paperCustomerEmail") && !$("paperCustomerEmail").value.trim()) $("paperCustomerEmail").value = String(authUser.email || "");
+  if ($("paperCustomerAddress") && !$("paperCustomerAddress").value.trim()) $("paperCustomerAddress").value = String(metadata.address || "");
+  if ($("paperCustomerPhone") && !$("paperCustomerPhone").value.trim() && authUser.phone) $("paperCustomerPhone").value = String(authUser.phone);
+  if ($("paperSourceTeacher") && !$("paperSourceTeacher").value.trim() && fullName) $("paperSourceTeacher").value = fullName;
 }
-function startAuthResendCooldown() {
-  if (authResendTimer) clearInterval(authResendTimer);
-  authResendSeconds = 60; const button = $("authResendOtpButton"); button.disabled = true;
-  const tick = () => {
-    authResendSeconds = Math.max(0, authResendSeconds - 1);
-    button.textContent = authResendSeconds > 0 ? "Resend code (" + authResendSeconds + "s)" : "Resend code";
-    if (authResendSeconds === 0) { button.disabled = false; clearInterval(authResendTimer); authResendTimer = null; }
-  };
-  button.textContent = "Resend code (60s)"; authResendTimer = setInterval(tick, 1000);
-}
-function normalizeMobileNumber(value) {
-  const raw = String(value || "").trim();
-  if (!raw) return "";
-  let digits = raw.replace(/\D/g, "");
-  if (digits.startsWith("00")) digits = digits.slice(2);
-  if (raw.startsWith("+")) return "+" + digits;
-  if (digits.startsWith("94")) return "+" + digits;
-  if (digits.length === 10 && digits.startsWith("0")) return "+94" + digits.slice(1);
-  if (digits.length === 9) return "+94" + digits;
-  return "+" + digits;
+async function saveAuthProfile(event) {
+  event.preventDefault();
+  await ensureAuthInitialized();
+  const first = String($("authFirstName").value || "").trim().slice(0,80);
+  const last = String($("authLastName").value || "").trim().slice(0,80);
+  const address = String($("authAddress").value || "").trim().slice(0,160);
+  if (!first || !last || !address) {
+    showAuthStatus("First name, last name සහ address තුනම ඇතුළත් කරන්න.", "error");
+    return;
+  }
+  const button = $("authProfileSaveButton");
+  if (button) { button.disabled = true; button.textContent = "Saving profile…"; }
+  try {
+    const token = await getAuthAccessToken();
+    if (!token) throw new Error("Your sign-in session expired. Please sign in with Google again.");
+    const previous = authUser && authUser.user_metadata || {};
+    const fullName = [first,last].join(" ");
+    const updated = await updateAuthUserMetadata({
+      ...previous, first_name:first, last_name:last, address:address,
+      full_name:fullName, name:fullName
+    }, token);
+    if (!isVerifiedGuruPaperUser(updated)) throw new Error("Could not verify your account after profile update.");
+    authUser = updated;
+    authSession.user = updated;
+    try { localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(authSession)); } catch (_) {}
+    updateAuthUi();
+    prefillAuthenticatedTeacher();
+    notify("Profile saved. You can now create a question paper.");
+    closeAuthModal();
+    if (authReturnTo === "paper-generator" && document.body.dataset.page !== "pricing") {
+      const generator = $("paper-generator");
+      if (generator) generator.scrollIntoView({behavior:"smooth",block:"start"});
+    }
+  } catch (error) {
+    showAuthStatus(error.message || "Profile details save කරන්න බැරි වුණා.", "error");
+  } finally {
+    if (button) { button.disabled = false; button.textContent = "Save details & continue"; }
+  }
 }
 async function startGoogleSignIn() {
   await ensureAuthInitialized();
@@ -691,145 +762,45 @@ async function startGoogleSignIn() {
     const authorizeUrl = new URL(authConfig.supabaseUrl + "/auth/v1/authorize");
     authorizeUrl.searchParams.set("provider", "google");
     authorizeUrl.searchParams.set("redirect_to", redirectTo);
+    authorizeUrl.searchParams.set("prompt", "select_account");
     window.location.assign(authorizeUrl.toString());
   } catch (_) {
     if (button) { button.disabled = false; button.innerHTML = '<span>Continue with Google</span>'; }
     showAuthStatus("Google sign-in ආරම්භ කරන්න බැරි වුණා. නැවත උත්සාහ කරන්න.", "error");
   }
 }
-async function sendAuthOtp(phoneValue) {
-  await ensureAuthInitialized();
-  if (!authConfig || !authConfig.enabled) {
-    showAuthStatus("Mobile OTP setup සම්පූර්ණ නැහැ. Vercel එකට SUPABASE_URL සහ SUPABASE_ANON_KEY configure කරන්න.", "error");
-    return;
-  }
-  const phone = normalizeMobileNumber(phoneValue);
-  const fullName = String($("authFullName").value || "").trim().slice(0, 100);
-  if (!/^\+[1-9][0-9]{7,14}$/.test(phone)) {
-    showAuthStatus("Valid mobile number එකක් country code එක්ක ඇතුළත් කරන්න. උදා: +94771234567", "error");
-    return;
-  }
-  if (authMode === "register" && !fullName) {
-    showAuthStatus("Register කරන්න ඔබේ නම ඇතුළත් කරන්න.", "error");
-    $("authFullName").focus();
-    return;
-  }
-  const button = $("authSendOtpButton");
-  button.disabled = true;
-  button.textContent = "OTP යවමින්…";
-  try {
-    const payload = { phone: phone, create_user: authMode === "register" };
-    if (authMode === "register") payload.data = { full_name: fullName };
-    await authProviderRequest("otp", payload);
-    authPendingPhone = phone;
-    $("authPhone").value = phone;
-    $("authOtpCode").value = "";
-    $("authRequestForm").hidden = true;
-    updateAuthUi();
-    startAuthResendCooldown();
-    showAuthStatus("Verification code එක " + phone + " වෙත SMS මගින් යවා ඇත. Code එක ඇතුළත් කරන්න.", "good");
-    $("authOtpCode").focus();
-  } catch (error) {
-    const status = Number(error.status || 0);
-    let message = "SMS OTP එක යවන්න බැරි වුණා. Supabase Phone Auth සහ SMS provider settings පරීක්ෂා කරන්න.";
-    if (status === 429) message = "OTP requests වැඩියි. ටික වෙලාවක් ඉඳලා නැවත උත්සාහ කරන්න.";
-    else if (status === 400 && authMode === "signin") message = "මෙම mobile number එකට account එකක් නැත්නම් Register tab එක තෝරන්න. Supabase SMS provider settings එකත් බලන්න.";
-    else if (status === 400 && authMode === "register") message = "මෙම number එක දැනටමත් registered නම් Sign in තෝරන්න. එසේ නැත්නම් Supabase Phone Auth settings පරීක්ෂා කරන්න.";
-    showAuthStatus(message, "error");
-  } finally {
-    button.disabled = false;
-    button.textContent = "Mobile OTP code එක එවන්න";
-  }
-}
-async function verifyAuthOtp(event) {
-  event.preventDefault();
-  const code = String($("authOtpCode").value || "").trim();
-  if (!/^[0-9]{6}$/.test(code)) {
-    showAuthStatus("SMS එකට ලැබුණු digits 6 OTP code එක ඇතුළත් කරන්න.", "error");
-    return;
-  }
-  const button = $("authVerifyOtpButton");
-  button.disabled = true;
-  button.textContent = "Mobile number verify කරමින්…";
-  try {
-    const result = await authProviderRequest("verify", { phone: authPendingPhone, token: code, type: "sms" });
-    saveAuthSession(result);
-    if (!authUser || !authUser.id || !authUser.phone || !authUser.phone_confirmed_at) {
-      authUser = await authProviderRequest("user", null, authSession.access_token);
-      authSession.user = authUser;
-      try { localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(authSession)); } catch (_) {}
-    }
-    if (!authUser || !authUser.id || !authUser.phone || !authUser.phone_confirmed_at) {
-      throw new Error("Verified phone user could not be confirmed.");
-    }
-    authPendingPhone = "";
-    updateAuthUi();
-    closeAuthModal();
-    prefillAuthenticatedTeacher();
-    notify("Mobile number verify වුණා. දැන් question paper එකක් හදන්න පුළුවන්.");
-    if (authReturnTo === "paper-generator") $("paper-generator").scrollIntoView({ behavior: "smooth", block: "start" });
-    showAuthStatus("", "");
-  } catch (error) {
-    const status = Number(error.status || 0);
-    let message = "OTP code එක verify කරන්න බැරි වුණා. Code එක check කරලා නැවත try කරන්න.";
-    if (status === 400 || status === 401) message = "OTP code එක වැරදියි හෝ expire වෙලා. අලුත් code එකක් ඉල්ලන්න.";
-    if (status === 429) message = "Attempts වැඩියි. ටික වෙලාවක් ඉඳලා නැවත try කරන්න.";
-    showAuthStatus(message, "error");
-  } finally {
-    button.disabled = false;
-    button.textContent = "Confirm OTP & Continue";
-  }
-}
-function prefillAuthenticatedTeacher() {
-  if (!authUser) return;
-  const phone = String(authUser.phone || "");
-  const metadata = authUser.user_metadata || {};
-  const fullName = String(metadata.full_name || metadata.name || "").trim();
-  if ($("paperCustomerPhone") && !$("paperCustomerPhone").value.trim()) $("paperCustomerPhone").value = phone;
-  if ($("paperSourceTeacher") && !$("paperSourceTeacher").value.trim() && fullName) $("paperSourceTeacher").value = fullName;
-  if (fullName) {
-    const parts = fullName.split(/\s+/);
-    if ($("paperCustomerFirst") && !$("paperCustomerFirst").value.trim()) $("paperCustomerFirst").value = parts.shift() || "";
-    if ($("paperCustomerLast") && !$("paperCustomerLast").value.trim()) $("paperCustomerLast").value = parts.join(" ");
-  }
-}
 async function signOutGuruPaper() {
   const token = authSession && authSession.access_token;
-  if (token && authConfig && authConfig.enabled) { try { await authProviderRequest("logout", {}, token); } catch (_) {} }
-  clearAuthSession(); authPendingPhone = ""; $("authOtpCode").value = ""; setAuthMode("register");
+  if (token && authConfig && authConfig.enabled) {
+    try { await authProviderRequest("logout", {}, token); } catch (_) {}
+  }
+  clearAuthSession();
+  updateAuthUi();
   showAuthStatus("ඔබ sign out වී ඇත.", "good");
 }
-async function openAccountModal() { await ensureAuthInitialized(); openAuthModal("paper-generator"); updateAuthUi(); }
+async function openAccountModal() {
+  await ensureAuthInitialized();
+  openAuthModal("paper-generator");
+  updateAuthUi();
+}
 function initAuthUi() {
-  if ($("authAccountButton").tagName === "BUTTON") $("authAccountButton").addEventListener("click", openAccountModal);
-  $("authGoogleButton").addEventListener("click", startGoogleSignIn);
-  $("authCloseButton").addEventListener("click", closeAuthModal);
+  if ($("authAccountButton")) $("authAccountButton").addEventListener("click", openAccountModal);
+  if ($("authGoogleButton")) $("authGoogleButton").addEventListener("click", startGoogleSignIn);
+  if ($("authProfileForm")) $("authProfileForm").addEventListener("submit", saveAuthProfile);
+  if ($("authCloseButton")) $("authCloseButton").addEventListener("click", closeAuthModal);
   document.querySelectorAll("[data-auth-close]").forEach(el => el.addEventListener("click", closeAuthModal));
-  $("authRegisterTab").addEventListener("click", () => setAuthMode("register"));
-  $("authSignInTab").addEventListener("click", () => setAuthMode("signin"));
-  $("authRequestForm").addEventListener("submit", event => { event.preventDefault(); sendAuthOtp($("authPhone").value); });
-  $("authVerifyForm").addEventListener("submit", verifyAuthOtp);
-  $("authResendOtpButton").addEventListener("click", () => {
-    if (authResendSeconds > 0) { showAuthStatus("Resend කිරීමට තව " + authResendSeconds + " seconds ඉන්න.", ""); return; }
-    sendAuthOtp(authPendingPhone);
-  });
-  $("authChangePhoneButton").addEventListener("click", () => {
-    authPendingPhone = ""; $("authOtpCode").value = ""; updateAuthUi();
-    showAuthStatus("Mobile number එක වෙනස් කරලා නැවත OTP එක ඉල්ලන්න.", ""); $("authPhone").focus();
-  });
-  $("authSignOutButton").addEventListener("click", signOutGuruPaper);
+  if ($("authSignOutButton")) $("authSignOutButton").addEventListener("click", signOutGuruPaper);
   document.addEventListener("keydown", event => { if (event.key === "Escape" && !$("authModal").hidden) closeAuthModal(); });
   ensureAuthInitialized().then(() => {
     const accountRequested = new URLSearchParams(window.location.search).get("account") === "1";
-    const mustRegisterForPaper = document.body.dataset.page === "paper" && (!authUser || !authSession);
+    const mustRegisterForPaper = document.body.dataset.page === "paper" &&
+      (!authUser || !authSession || !isGuruPaperProfileComplete(authUser));
     if (accountRequested || mustRegisterForPaper || authOAuthCallbackMessage) {
       openAuthModal("paper-generator");
       if (authOAuthCallbackMessage) showAuthStatus(authOAuthCallbackMessage, authOAuthCallbackKind);
     }
   });
-}
-
-let paperServiceReady = false;
+}let paperServiceReady = false;
 let activePaperOrder = null;
 const PAPER_ACTIVE_ORDER_KEY = "gurupaper-active-paper-order-v1";
 function setGeneratorStatus(id, message, kind) {

@@ -15,6 +15,7 @@ a{color:var(--blue);text-decoration:none}.shell{width:min(1180px,calc(100% - 32p
 .main{padding:16px 0 50px}.eyebrow{font-size:10px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue)}h1{font-size:clamp(25px,4vw,36px);line-height:1.2;letter-spacing:-.8px;color:var(--navy);margin:5px 0 6px}h2{font-size:17px;color:var(--navy);margin:0}.muted{font-size:12px;color:var(--muted);margin:0}
 .card{border:1px solid var(--line);background:var(--paper);border-radius:18px;box-shadow:var(--shadow);padding:20px;min-width:0}
 .auth-wrap{display:grid;place-items:center;min-height:calc(100vh - 120px);padding:20px 0}.auth-card{width:min(470px,100%)}.google-admin-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;min-height:44px;margin:0 0 12px;background:#fff;color:#263743;border-color:#ccd7dd}.google-admin-btn svg{width:20px;height:20px;flex:none}.auth-divider{display:flex;align-items:center;gap:10px;margin:0 0 14px;color:#657985;font-size:10px}.auth-divider:before,.auth-divider:after{content:"";flex:1;height:1px;background:#dce6eb}
+.google-admin-btn{width:100%;min-height:44px;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#263743;border-color:#ccd7dd}
 .auth-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}.auth-head img{width:45px;height:45px}.auth-card h1{font-size:25px;margin:0 0 7px}.auth-card>p{color:var(--muted);font-size:12px;margin:0 0 18px}
 .form{display:grid;gap:12px}.field{display:grid;gap:5px}.field label{font-size:11px;font-weight:850;color:#344f5e}.field input{min-width:0;width:100%;border:1px solid var(--line);border-radius:11px;padding:12px;background:#fbfdfe;font:inherit;outline:0}.field input:focus{border-color:#72aabc;box-shadow:0 0 0 3px #176b8716}.otp{font-size:22px!important;letter-spacing:8px;text-align:center;font-weight:900}
 .notice{margin-top:13px;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:#f5f9fa;color:#526875;font-size:11px;line-height:1.7;overflow-wrap:anywhere}.notice:empty{display:none}.notice.error{background:#fff0ef;border-color:#efc6c2;color:#8a2b24}.notice.good{background:#e8f8f1;border-color:#b4e1cd;color:#145943}
@@ -38,18 +39,11 @@ a{color:var(--blue);text-decoration:none}.shell{width:min(1180px,calc(100% - 32p
   <section id="authWrap" class="auth-wrap">
     <div class="card auth-card">
       <div class="auth-head"><img src="/assets/gurupaper-logo.svg" alt=""><div><div class="eyebrow">Secure admin access</div><h1>Admin sign in</h1></div></div>
-      <p>Sign in using Google without SMS charges. Existing mobile accounts may still use SMS OTP (provider fees may apply). Only accounts in the admin allowlist can open the dashboard.</p>
+      <p>Sign in using your Google account. Only accounts in the GuruPaper admin allowlist can open the dashboard.</p>
       <button id="adminGoogleButton" class="btn google-admin-btn" type="button"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path fill="#4285F4" d="M43.6 24.5c0-1.4-.1-2.8-.4-4.1H24v7.8h11c-.5 2.5-1.9 4.6-4.1 6l6.6 5.1c3.9-3.6 6.1-8.9 6.1-14.8z"/><path fill="#34A853" d="M24 44c5.5 0 10.1-1.8 13.5-4.8l-6.6-5.1c-1.8 1.2-4.1 2-6.9 2-5.3 0-9.8-3.6-11.4-8.4l-6.8 5.2C7.2 39.5 15 44 24 44z"/><path fill="#FBBC05" d="M12.6 27.7a12 12 0 0 1 0-7.4l-6.8-5.2a20.2 20.2 0 0 0 0 17.8z"/><path fill="#EA4335" d="M24 12.1c3 0 5.7 1 7.8 3.1l5.8-5.8C34.1 6.1 29.5 4 24 4 15 4 7.2 8.5 3.8 15.1l6.8 5.2c1.6-4.8 6.1-8.2 13.4-8.2z"/></svg><span>Continue with Google</span></button>
       <div class="auth-divider"><span>Or use SMS mobile OTP (fees may apply)</span></div>
-      <form id="adminPhoneForm" class="form" novalidate>
-        <div class="field"><label for="adminPhone">Mobile number (country code සමඟ)</label><input id="adminPhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="24" placeholder="+94 77 123 4567" required></div>
-        <button id="adminSendCode" class="btn primary" type="submit">Send SMS code</button>
-      </form>
-      <form id="adminOtpForm" class="form" hidden novalidate>
-        <div class="field"><label for="adminOtp">6-digit SMS OTP</label><input id="adminOtp" class="otp" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" placeholder="000000" required></div>
-        <button id="adminVerifyCode" class="btn primary" type="submit">Verify &amp; open dashboard</button>
-        <button id="adminChangePhone" class="btn" type="button">Change phone number</button>
-      </form>
+      <button id="adminGoogleButton" class="btn primary google-admin-btn" type="button">Continue with Google</button>
+      <p class="muted" style="margin-top:10px">Admin access remains restricted to accounts approved in the GuruPaper admin allowlist.</p>
       <div id="authNotice" class="notice" role="status" aria-live="polite"></div>
       <p class="muted" style="margin-top:13px">First-time admins: register on the main site, verify your phone, then grant your Supabase Auth user UUID in <code>public.gurupaper_admins</code>.</p>
     </div>
@@ -250,9 +244,6 @@ async function logout(){
 }
 async function init(){
  $("adminGoogleButton").addEventListener("click",startGoogleLogin);
- $("adminPhoneForm").addEventListener("submit",requestCode);
- $("adminOtpForm").addEventListener("submit",verifyCode);
- $("adminChangePhone").addEventListener("click",()=>{$("adminPhoneForm").hidden=false;$("adminOtpForm").hidden=true;$("adminOtp").value="";otpPhone="";setNotice("authNotice","Enter the mobile number again.","")});
  $("refreshDashboard").addEventListener("click",()=>loadDashboard().catch(e=>setNotice("dashboardNotice",e.message,"error")));
  $("dashboardSignOut").addEventListener("click",logout);$("headerSignOut").addEventListener("click",logout);
  $("orderSearch").addEventListener("input",renderOrders);$("orderStatus").addEventListener("change",renderOrders);
@@ -278,7 +269,7 @@ async function init(){
    }catch(e){if(e.status===403){setNotice("authNotice",e.message,"error")}clearSession()}
   }
   $("authWrap").hidden=false;
-  setNotice("authNotice",oauthMessage||"Continue with Google, or use mobile OTP if you already have a verified phone account.",oauthMessage?"error":"");
+  setNotice("authNotice",oauthMessage||"Continue with Google to sign in.",oauthMessage?"error":"");
  }catch(e){setNotice("authNotice",oauthMessage||e.message,"error")}
 }
 init();
