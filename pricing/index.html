@@ -180,6 +180,17 @@ input,select,textarea{min-width:0;max-width:100%}
   html{scroll-behavior:auto}
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+.site-footer{margin:44px auto 0;padding:22px 0 18px;border-top:1px solid var(--line);color:var(--muted);font-size:11px}
+.site-footer-main{display:flex;align-items:center;justify-content:space-between;gap:22px}
+.site-footer-brand{display:inline-flex;align-items:center;gap:10px;color:var(--navy);font-size:15px;font-weight:850;line-height:1.3;text-decoration:none}
+.site-footer-brand img{display:block;width:34px;height:34px;object-fit:contain}
+.site-footer-brand small{display:block;margin-top:3px;color:var(--muted);font-size:10px;font-weight:600;letter-spacing:0}
+.site-footer-links{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.site-footer-links a{color:var(--muted);font-size:11px;font-weight:750}
+.site-footer-links a:hover{color:var(--blue)}
+.site-footer-bottom{display:flex;justify-content:space-between;gap:16px;margin-top:16px;padding-top:13px;border-top:1px solid var(--line);font-size:10px;line-height:1.6}
+@media(max-width:640px){.site-footer{margin-top:32px;padding-top:18px}.site-footer-main{align-items:flex-start;flex-direction:column;gap:15px}.site-footer-links{gap:18px}.site-footer-bottom{align-items:flex-start;flex-direction:column;gap:4px}}
 </style>
 </head>
 <body data-page="pricing">
@@ -457,7 +468,23 @@ input,select,textarea{min-width:0;max-width:100%}
   </div>
 </section>
 </main>
-<footer class="shell footer"><a class="brand" href="#" aria-label="ගුරු Paper home"><img class="brand-logo" src="/assets/gurupaper-logo.svg" alt="" width="46" height="46"><span lang="si">ගුරු Paper<small>TEACHERS-LATA PAPER HADANA TOOL EKA</small></span></a><span>Sri Lankan teachers-lata prototype · Classroom eke use karanna kalin questions review karanna</span><span>PayHere / AI setup required before paid generation is enabled</span><span><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span></footer>
+<footer class="shell site-footer">
+  <div class="site-footer-main">
+    <a class="site-footer-brand" href="/" aria-label="GuruPaper home">
+      <img src="/assets/gurupaper-logo.svg" alt="" width="34" height="34">
+      <span lang="si">ගුරු Paper<small>Question paper studio for teachers</small></span>
+    </a>
+    <nav class="site-footer-links" aria-label="Footer navigation">
+      <a href="/pricing/#plans">Pricing</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/terms/">Terms</a>
+    </nav>
+  </div>
+  <div class="site-footer-bottom">
+    <span>© 2026 GuruPaper · Made for Sri Lankan teachers</span>
+    <span>Review AI-generated papers before classroom use.</span>
+  </div>
+</footer>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script>
 (function(){
