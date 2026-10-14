@@ -44,6 +44,17 @@ a{color:var(--blue);text-decoration:none}.shell{width:min(1180px,calc(100% - 32p
 @media(max-width:1050px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.content-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.shell{width:calc(100% - 22px)}.topbar{min-height:66px}.brand{font-size:15px}.brand img{width:37px;height:37px}.card{padding:15px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metric{padding:12px}.metric strong{font-size:22px}.order-details{gap:8px}.dashboard-head{align-items:flex-start}.filters{display:grid;grid-template-columns:1fr}.filters input,.filters select{width:100%}}
 </style>
+<style id="ui-stability-guardrails">
+html{scroll-padding-top:14px}
+img,svg,video,canvas{max-width:100%}
+input,select,textarea{min-width:0;max-width:100%}
+:focus-visible{outline:3px solid #2786a3;outline-offset:3px}
+.user-modal{overflow-x:hidden;overflow-y:auto;padding-top:max(12px,env(safe-area-inset-top));padding-bottom:max(12px,env(safe-area-inset-bottom))}
+.user-modal-card{max-height:calc(100vh - 24px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain}
+@supports(height:100dvh){.user-modal{min-height:100dvh}.user-modal-card{max-height:calc(100dvh - 24px)}}
+@media(max-width:400px){.user-modal-card{padding:14px!important}.user-modal-actions .btn{flex:1}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
 <header class="topbar shell">

@@ -158,6 +158,29 @@ body[data-page="pricing"] main.shell > section:not(#plans){display:none!importan
 }
 
 </style>
+<style id="ui-stability-guardrails">
+/* Prevent long forms and modal content from being clipped on phones and short screens. */
+html{scroll-padding-top:14px}
+img,svg,video,canvas{max-width:100%}
+input,select,textarea{min-width:0;max-width:100%}
+:focus-visible{outline:3px solid #2786a3;outline-offset:3px}
+.auth-modal{overflow-x:hidden;overflow-y:auto;padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
+.auth-dialog{max-height:calc(100vh - 24px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+@supports (height:100dvh){
+  .auth-modal{min-height:100dvh}
+  .auth-dialog{max-height:calc(100dvh - 24px)}
+}
+@media(max-width:400px){
+  .auth-dialog{padding:18px!important;border-radius:18px}
+  .hero h1{font-size:clamp(28px,8vw,34px);letter-spacing:-.7px;overflow-wrap:anywhere}
+  .section-heading h2{overflow-wrap:anywhere}
+  .plan{padding:16px}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
 </head>
 <body data-page="pricing">
 <header class="topbar shell">
