@@ -8,7 +8,7 @@ const handlers = Object.freeze({
   "paper-config": require("../lib/gurupaper-handlers/paper-config"),
   "auth-config": require("../lib/gurupaper-handlers/auth-config"),
   "admin-dashboard": require("../lib/gurupaper-handlers/admin-dashboard"),
-  "admin-dashboard": require("../lib/gurupaper-handlers/admin-dashboard"),
+  "admin-users": require("../lib/gurupaper-handlers/admin-users"),
   "paper-order-status": require("../lib/gurupaper-handlers/paper-order-status"),
   "payhere-paper-notify": require("../lib/gurupaper-handlers/payhere-paper-notify"),
   "robots": require("../lib/gurupaper-handlers/robots"),

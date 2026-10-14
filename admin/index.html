@@ -24,7 +24,22 @@ a{color:var(--blue);text-decoration:none}.shell{width:min(1180px,calc(100% - 32p
 .content-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr);gap:16px;align-items:start}.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:13px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.filters input,.filters select{min-width:0;max-width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fbfdfe;color:var(--ink);font:inherit;font-size:12px}
 .orders,.users{display:grid;gap:10px}.order{border:1px solid var(--line);border-radius:13px;padding:13px;background:#fff;min-width:0}.order-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}.order-id{font:800 11px ui-monospace,monospace;color:var(--blue);overflow-wrap:anywhere}.status{display:inline-flex;padding:4px 8px;border-radius:8px;font-size:9px;text-transform:uppercase;letter-spacing:.4px;font-weight:900;background:#eef3f5;color:#526875}.status.ready,.status.paid{background:#e8f8f1;color:#145943}.status.failed,.status.chargeback{background:#fff0ef;color:#8a2b24}.status.pending_payment{background:#fff5dc;color:#875d08}
 .order-title{font-size:13px;font-weight:850;color:var(--navy);margin:9px 0 2px;overflow-wrap:anywhere}.order-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 12px;margin-top:10px}.detail{min-width:0}.detail label{display:block;font-size:9px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.5px}.detail span{display:block;font-size:11px;overflow-wrap:anywhere}
-.user{display:flex;align-items:flex-start;gap:10px;padding:11px;border:1px solid var(--line);border-radius:12px;min-width:0}.user-avatar{flex:0 0 34px;width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#e2f4f5;color:var(--blue);font-weight:900}.user-info{min-width:0;flex:1}.user-info strong{font-size:12px;display:block;overflow-wrap:anywhere}.user-info small{font-size:10px;color:var(--muted);display:block;overflow-wrap:anywhere}.user-badge{font-size:9px;font-weight:900;text-transform:uppercase;color:#16835e}.empty{border:1px dashed var(--line);border-radius:12px;text-align:center;color:var(--muted);font-size:12px;padding:24px 12px}.footer{padding:25px 0;border-top:1px solid var(--line);color:var(--muted);font-size:10px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.user{display:flex;align-items:flex-start;gap:10px;padding:11px;border:1px solid var(--line);border-radius:12px;min-width:0}.user-avatar{flex:0 0 34px;width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#e2f4f5;color:var(--blue);font-weight:900}.user-info{min-width:0;flex:1}.user-info strong{font-size:12px;display:block;overflow-wrap:anywhere}.user-info small{font-size:10px;color:var(--muted);display:block;overflow-wrap:anywhere}.user-badge{font-size:9px;font-weight:900;text-transform:uppercase;color:#16835e}
+.user-row-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.user-row-actions .btn{padding:6px 9px;font-size:10px}
+.btn.danger{border-color:#efc6c2;background:#fff0ef;color:#8a2b24}
+.user-detail-line{font-size:10px;color:var(--muted);display:block;overflow-wrap:anywhere;margin-top:2px}
+.user-modal{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:16px}
+.user-modal-backdrop{position:absolute;inset:0;background:#0c2230a8;backdrop-filter:blur(3px)}
+.user-modal-card{position:relative;z-index:1;width:min(520px,100%);max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 22px 65px #081b2b35;padding:22px}
+.user-modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:15px}
+.user-modal-head p{font-size:12px;color:var(--muted);margin:4px 0 0}
+.user-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.user-form-grid .wide{grid-column:1/-1}
+.user-modal-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:16px}
+.user-modal .notice{margin-top:10px}
+@media(max-width:520px){.user-modal-card{padding:16px}.user-form-grid{grid-template-columns:1fr}.user-form-grid .wide{grid-column:auto}}
+.empty{border:1px dashed var(--line);border-radius:12px;text-align:center;color:var(--muted);font-size:12px;padding:24px 12px}.footer{padding:25px 0;border-top:1px solid var(--line);color:var(--muted);font-size:10px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 [hidden]{display:none!important}
 @media(max-width:1050px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.content-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.shell{width:calc(100% - 22px)}.topbar{min-height:66px}.brand{font-size:15px}.brand img{width:37px;height:37px}.card{padding:15px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metric{padding:12px}.metric strong{font-size:22px}.order-details{gap:8px}.dashboard-head{align-items:flex-start}.filters{display:grid;grid-template-columns:1fr}.filters input,.filters select{width:100%}}
@@ -60,12 +75,35 @@ a{color:var(--blue);text-decoration:none}.shell{width:min(1180px,calc(100% - 32p
         <div id="ordersList" class="orders"><div class="empty">Loading orders…</div></div>
       </section>
       <section class="card">
-        <div class="section-head"><div><h2>Teachers / accounts</h2><p class="muted">Up to 100 Supabase Auth users</p></div></div>
+        <div class="section-head"><div><h2>Teachers / accounts</h2><p class="muted">Edit profiles, invite users or remove non-admin accounts</p></div><button id="addUserButton" class="btn primary" type="button">+ Invite user</button></div>
         <div id="usersList" class="users"><div class="empty">Loading users…</div></div>
         <p class="muted" style="margin-top:12px">Personal details are visible only to an administrator whose UUID is allowlisted.</p>
       </section>
     </div>
   </section>
+  <div id="userModal" class="user-modal" hidden>
+    <div class="user-modal-backdrop" data-user-modal-close></div>
+    <section class="user-modal-card" role="dialog" aria-modal="true" aria-labelledby="userModalTitle">
+      <div class="user-modal-head">
+        <div><div class="eyebrow">User management</div><h2 id="userModalTitle">Invite user</h2><p id="userModalIntro">Invite a teacher by email. Their profile details will be saved to GuruPaper.</p></div>
+        <button id="userModalClose" class="btn" type="button" aria-label="Close user form">×</button>
+      </div>
+      <form id="adminUserForm" class="form" novalidate>
+        <input id="adminUserId" type="hidden">
+        <div class="user-form-grid">
+          <div class="field"><label for="adminUserFirstName">First name</label><input id="adminUserFirstName" type="text" maxlength="80" autocomplete="given-name" required placeholder="First name"></div>
+          <div class="field"><label for="adminUserLastName">Last name</label><input id="adminUserLastName" type="text" maxlength="80" autocomplete="family-name" required placeholder="Last name"></div>
+          <div class="field wide"><label for="adminUserEmail">Email address</label><input id="adminUserEmail" type="email" maxlength="254" autocomplete="email" required placeholder="teacher@example.com"></div>
+          <div class="field wide"><label for="adminUserAddress">Address</label><input id="adminUserAddress" type="text" maxlength="160" autocomplete="street-address" required placeholder="Street / home address"></div>
+        </div>
+        <p id="userModalNotice" class="notice" role="status" aria-live="polite"></p>
+        <div class="user-modal-actions">
+          <button id="userModalCancel" class="btn" type="button">Cancel</button>
+          <button id="userModalSave" class="btn primary" type="submit">Send invitation</button>
+        </div>
+      </form>
+    </section>
+  </div>
 </main>
 <footer class="shell footer"><span>GuruPaper admin · Protected server-side by Supabase Auth + allowlist</span><span>Teacher-generated papers should be reviewed before use.</span></footer>
 <script>
@@ -73,7 +111,7 @@ a{color:var(--blue);text-decoration:none}.shell{width:min(1180px,calc(100% - 32p
 "use strict";
 const SESSION_KEY="gurupaper-auth-session-v1";
 const $=id=>document.getElementById(id);
-let config=null,session=null,user=null,orders=[],timer=null;
+let config=null,session=null,user=null,orders=[],users=[],editingUserId="",timer=null;
 
 function esc(value){return String(value==null?"":value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));}
 function verifiedGuruPaperUser(u){
@@ -174,12 +212,122 @@ function renderOrders(){
    '</div></article>';
  }).join(""):'<div class="empty">No orders match this filter.</div>';
 }
-function renderUsers(users){
- $("usersList").innerHTML=users.length?users.map(u=>{
+function renderUsers(list){
+ $("usersList").innerHTML=list.length?list.map(u=>{
   const name=u.name||"Teacher";
-  return '<div class="user"><div class="user-avatar">'+esc((name.trim()[0]||"T").toUpperCase())+'</div><div class="user-info"><strong>'+esc(name)+'</strong><small>'+esc(u.email||u.phone||"No email")+'</small><small>Joined '+esc(fmtDate(u.createdAt))+'</small></div><span class="user-badge">'+(u.emailConfirmed?"verified email":u.phoneConfirmed?"verified phone":"unverified")+'</span></div>';
- }).join(""):'<div class="empty">No account list returned. Check Supabase Auth admin access.</div>';
+  const id=esc(u.id);
+  const badge=u.emailConfirmed?"verified email":u.phoneConfirmed?"verified phone":"unverified";
+  const address=u.address?'<small class="user-detail-line">'+esc(u.address)+'</small>':'';
+  const actions='<div class="user-row-actions"><button class="btn" type="button" data-user-edit="'+id+'">Edit details</button>'+
+    (u.isAdmin?'<span class="user-badge">admin account</span>':'<button class="btn danger" type="button" data-user-delete="'+id+'">Delete account</button>')+
+    '</div>';
+  return '<article class="user"><div class="user-avatar">'+esc((name.trim()[0]||"T").toUpperCase())+'</div><div class="user-info"><strong>'+esc(name)+'</strong><small>'+esc(u.email||u.phone||"No email")+'</small>'+address+'<small>Joined '+esc(fmtDate(u.createdAt))+'</small>'+actions+'</div><span class="user-badge">'+badge+'</span></article>';
+ }).join(""):'<div class="empty">No Supabase Auth users found.</div>';
 }
+
+function openUserModal(id){
+ editingUserId=String(id||"");
+ const editing=Boolean(editingUserId);
+ const target=users.find(item=>item.id===editingUserId)||null;
+ if(editing&&!target){setNotice("dashboardNotice","That user is no longer in the latest user list. Refresh and try again.","error");return}
+ $("adminUserForm").reset();
+ $("adminUserId").value=editing?editingUserId:"";
+ $("adminUserFirstName").value=editing?String(target.firstName||""):"";
+ $("adminUserLastName").value=editing?String(target.lastName||""):"";
+ $("adminUserEmail").value=editing?String(target.email||""):"";
+ $("adminUserAddress").value=editing?String(target.address||""):"";
+ $("adminUserEmail").readOnly=editing;
+ $("userModalTitle").textContent=editing?"Edit user details":"Invite user";
+ $("userModalIntro").textContent=editing
+  ?"Update this user’s first name, last name and address. Email changes are not made here."
+  :"Send an invitation to a teacher. This creates a pending account; the user must use the invitation email to activate it.";
+ $("userModalSave").textContent=editing?"Save changes":"Send invitation";
+ $("userModalNotice").textContent="";
+ $("userModalNotice").className="notice";
+ $("userModal").hidden=false;
+ document.body.style.overflow="hidden";
+ (editing?$("adminUserFirstName"):$("adminUserEmail")).focus();
+}
+function closeUserModal(){
+ $("userModal").hidden=true;
+ document.body.style.overflow="";
+ editingUserId="";
+}
+async function submitAdminUser(event){
+ event.preventDefault();
+ const editing=Boolean(editingUserId);
+ const firstName=String($("adminUserFirstName").value||"").trim();
+ const lastName=String($("adminUserLastName").value||"").trim();
+ const address=String($("adminUserAddress").value||"").trim();
+ const email=String($("adminUserEmail").value||"").trim().toLowerCase();
+ if(!firstName||!lastName||!address||(!editing&&!email)){
+  setNotice("userModalNotice","Please fill in all required fields.","error");return;
+ }
+ if(firstName.length>80||lastName.length>80||address.length>160||email.length>254){
+  setNotice("userModalNotice","One or more fields is too long.","error");return;
+ }
+ const button=$("userModalSave");
+ button.disabled=true;button.textContent=editing?"Saving…":"Sending invitation…";
+ try{
+  const token=await getToken();
+  if(!token)throw new Error("Your admin session expired. Sign in again.");
+  const payload=editing?{id:editingUserId,firstName,lastName,address}:{email,firstName,lastName,address};
+  const response=await fetch("/api/admin-users",{
+   method:editing?"PATCH":"POST",
+   headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+   body:JSON.stringify(payload),cache:"no-store"
+  });
+  const data=await jsonResponse(response);
+  if(!response.ok)throw new Error(data.message||"Could not save user details.");
+  closeUserModal();
+  setNotice("dashboardNotice",data.message||(editing?"User details updated.":"Invitation sent."),"good");
+  await loadDashboard();
+ }catch(error){
+  setNotice("userModalNotice",error.message||"Could not save user details.","error");
+ }finally{
+  button.disabled=false;
+  button.textContent=editing?"Save changes":"Send invitation";
+ }
+}
+async function deleteAdminUser(id){
+ const target=users.find(item=>item.id===String(id));
+ if(!target)return;
+ if(target.isAdmin){setNotice("dashboardNotice","Administrator accounts cannot be deleted from this screen.","error");return}
+ const email=target.email||"this account";
+ if(!window.confirm("Delete "+email+" from GuruPaper? This permanently removes the sign-in account. Historical paper orders are retained, but detached from the deleted account."))return;
+ try{
+  const token=await getToken();
+  if(!token)throw new Error("Your admin session expired. Sign in again.");
+  const response=await fetch("/api/admin-users",{
+   method:"DELETE",
+   headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+   body:JSON.stringify({id:String(id)}),cache:"no-store"
+  });
+  const data=await jsonResponse(response);
+  if(!response.ok)throw new Error(data.message||"Could not delete the user.");
+  setNotice("dashboardNotice",data.message||"User account deleted. Historical orders were retained.","good");
+  await loadDashboard();
+ }catch(error){
+  setNotice("dashboardNotice",error.message||"Could not delete user.","error");
+}
+}
+function initUserManagement(){
+ $("addUserButton").addEventListener("click",()=>openUserModal(""));
+ $("adminUserForm").addEventListener("submit",submitAdminUser);
+ $("userModalClose").addEventListener("click",closeUserModal);
+ $("userModalCancel").addEventListener("click",closeUserModal);
+ document.querySelectorAll("[data-user-modal-close]").forEach(el=>el.addEventListener("click",closeUserModal));
+ $("usersList").addEventListener("click",event=>{
+  const edit=event.target.closest("[data-user-edit]");
+  if(edit){openUserModal(edit.getAttribute("data-user-edit"));return}
+  const remove=event.target.closest("[data-user-delete]");
+  if(remove)deleteAdminUser(remove.getAttribute("data-user-delete"));
+ });
+ document.addEventListener("keydown",event=>{
+  if(event.key==="Escape"&&$("userModal")&&!$("userModal").hidden)closeUserModal();
+ });
+}
+
 async function loadDashboard(){
  const token=await getToken();
  if(!token){$("authWrap").hidden=false;$("dashboard").hidden=true;setNotice("authNotice","Your session expired. Sign in again.","error");return}
@@ -193,7 +341,7 @@ async function loadDashboard(){
  $("welcomeText").textContent="Signed in as "+String(data.admin.email||data.admin.phone||"admin")+" · Only allowlisted admins can view this data.";
  $("dashboardNotice").hidden=false;$("dashboardNotice").className="notice good";
  $("dashboardNotice").textContent="AI provider: "+String(data.aiProvider||"Not configured")+". The recent orders list displays the latest 100 records.";
- renderMetrics(data.stats||{});orders=Array.isArray(data.recentOrders)?data.recentOrders:[];renderOrders();renderUsers(Array.isArray(data.users)?data.users:[]);
+ renderMetrics(data.stats||{});orders=Array.isArray(data.recentOrders)?data.recentOrders:[];renderOrders();users=Array.isArray(data.users)?data.users:[];renderUsers(users);
 }
 async function logout(){
  const token=session&&session.access_token;
@@ -202,6 +350,7 @@ async function logout(){
  setNotice("authNotice","Signed out.","good");
 }
 async function init(){
+ initUserManagement();
  $("adminGoogleButton").addEventListener("click",startGoogleLogin);
  $("refreshDashboard").addEventListener("click",()=>loadDashboard().catch(e=>setNotice("dashboardNotice",e.message,"error")));
  $("dashboardSignOut").addEventListener("click",logout);$("headerSignOut").addEventListener("click",logout);
