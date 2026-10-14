@@ -527,6 +527,7 @@ function printPaper(){renderPreview();const old=$('answerPreview').classList.con
 
 
 const AUTH_SESSION_KEY = "gurupaper-auth-session-v1";
+const PKCE_VERIFIER_KEY = "gurupaper-pkce-verifier-v1:" + window.location.pathname;
 let authConfig = null, authSession = null, authUser = null, authInitPromise = null;
 let authReturnTo = "paper-generator";
 let authOAuthCallbackMessage = "", authOAuthCallbackKind = "";
@@ -561,13 +562,38 @@ function isGuruPaperProfileComplete(user) {
   const m = user && user.user_metadata || {};
   return Boolean(String(m.first_name || "").trim() && String(m.last_name || "").trim() && String(m.address || "").trim());
 }
+function base64UrlFromBytes(bytes) {
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+async function createGuruPaperPkcePair() {
+  if (!window.crypto || !window.crypto.subtle) throw new Error("Secure Google sign-in requires an up-to-date browser over HTTPS.");
+  const bytes = new Uint8Array(32);
+  window.crypto.getRandomValues(bytes);
+  const verifier = base64UrlFromBytes(bytes);
+  const digest = await window.crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier));
+  return { verifier, challenge: base64UrlFromBytes(new Uint8Array(digest)) };
+}
 function takeOAuthCallback() {
+  const current = new URL(window.location.href);
+  const query = current.searchParams;
+  if (query.has("code") || query.has("error") || query.has("error_description")) {
+    const params = new URLSearchParams(query);
+    ["code", "state", "error", "error_description", "error_code"].forEach(key => query.delete(key));
+    const clean = current.pathname + (query.toString() ? "?" + query.toString() : "") + current.hash;
+    window.history.replaceState({}, document.title, clean);
+    return params;
+  }
   const hash = String(window.location.hash || "");
-  if (!hash || hash.length < 2) return null;
-  const params = new URLSearchParams(hash.slice(1));
-  if (!params.has("access_token") && !params.has("error") && !params.has("error_description")) return null;
-  window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
-  return params;
+  if (hash && hash.length > 1) {
+    const params = new URLSearchParams(hash.slice(1));
+    if (params.has("access_token") || params.has("refresh_token") || params.has("error") || params.has("error_description")) {
+      window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+      return new URLSearchParams("error=legacy_implicit_flow");
+    }
+  }
+  return null;
 }
 async function authProviderRequest(path, payload, accessToken) {
   if (!authConfig || !authConfig.enabled) throw new Error("Supabase authentication is not configured. Check SUPABASE_URL and SUPABASE_ANON_KEY in Vercel.");
@@ -624,30 +650,36 @@ async function initializeAuthentication() {
   if (oauthParams) {
     if (oauthParams.has("error") || oauthParams.has("error_description")) {
       clearAuthSession();
-      authOAuthCallbackMessage = oauthParams.get("error") === "access_denied"
+      try { sessionStorage.removeItem(PKCE_VERIFIER_KEY); } catch (_) {}
+      const callbackError = oauthParams.get("error") || "";
+      authOAuthCallbackMessage = callbackError === "access_denied"
         ? "Google sign-in අවලංගු කළා."
-        : "Google sign-in අසාර්ථකයි. Supabase Google provider සහ redirect URL settings පරීක්ෂා කරන්න.";
+        : callbackError === "legacy_implicit_flow"
+          ? "පරණ sign-in link එකක් භාවිතා වුණා. ආරක්ෂිත login එක නැවත ආරම්භ කරන්න."
+          : "Google sign-in අසාර්ථකයි. Supabase Google provider සහ redirect URL settings පරීක්ෂා කරන්න.";
       authOAuthCallbackKind = "error";
       updateAuthUi();
       return true;
     }
-    const accessToken = oauthParams.get("access_token") || "";
-    const refreshToken = oauthParams.get("refresh_token") || "";
-    if (!accessToken || !refreshToken) {
+    const code = oauthParams.get("code") || "";
+    let verifier = "";
+    try {
+      verifier = sessionStorage.getItem(PKCE_VERIFIER_KEY) || "";
+      sessionStorage.removeItem(PKCE_VERIFIER_KEY);
+    } catch (_) {}
+    if (!code || !verifier) {
       clearAuthSession();
-      authOAuthCallbackMessage = "Google sign-in session එක ලැබුණේ නැහැ. නැවත උත්සාහ කරන්න.";
+      authOAuthCallbackMessage = "Google sign-in security verifier එක නොලැබුණා. නැවත sign in කරන්න.";
       authOAuthCallbackKind = "error";
       updateAuthUi();
       return true;
     }
     try {
-      saveAuthSession({
-        access_token: accessToken,
-        refresh_token: refreshToken,
-        token_type: oauthParams.get("token_type") || "bearer",
-        expires_in: Number(oauthParams.get("expires_in") || 3600)
-      });
-      const user = await authProviderRequest("user", null, authSession.access_token);
+      saveAuthSession(await authProviderRequest("token?grant_type=pkce", {
+        auth_code: code,
+        code_verifier: verifier
+      }));
+      const user = authSession.user || await authProviderRequest("user", null, authSession.access_token);
       if (!isVerifiedGuruPaperUser(user)) throw new Error("Google account verification was not returned.");
       authUser = user;
       authSession.user = user;
@@ -658,7 +690,7 @@ async function initializeAuthentication() {
       authOAuthCallbackKind = "good";
     } catch (_) {
       clearAuthSession();
-      authOAuthCallbackMessage = "Google account එක verify කරන්න බැරි වුණා. Supabase Google provider credentials සහ redirect URLs පරීක්ෂා කරන්න.";
+      authOAuthCallbackMessage = "Google sign-in verify කරන්න බැරි වුණා හෝ authorization code එක කල් ඉකුත් වී ඇත. නැවත sign in කරන්න.";
       authOAuthCallbackKind = "error";
     }
     updateAuthUi();
@@ -827,15 +859,20 @@ async function startGoogleSignIn() {
   const button = $("authGoogleButton");
   if (button) { button.disabled = true; button.innerHTML = '<span>Google වෙත යොමු කරමින්…</span>'; }
   try {
-    const redirectTo = window.location.origin + window.location.pathname;
+    const pair = await createGuruPaperPkcePair();
+    sessionStorage.setItem(PKCE_VERIFIER_KEY, pair.verifier);
+    const redirectTo = window.location.origin + window.location.pathname + window.location.search;
     const authorizeUrl = new URL(authConfig.supabaseUrl + "/auth/v1/authorize");
     authorizeUrl.searchParams.set("provider", "google");
     authorizeUrl.searchParams.set("redirect_to", redirectTo);
     authorizeUrl.searchParams.set("prompt", "select_account");
+    authorizeUrl.searchParams.set("code_challenge", pair.challenge);
+    authorizeUrl.searchParams.set("code_challenge_method", "s256");
     window.location.assign(authorizeUrl.toString());
-  } catch (_) {
+  } catch (error) {
+    try { sessionStorage.removeItem(PKCE_VERIFIER_KEY); } catch (_) {}
     if (button) { button.disabled = false; button.innerHTML = '<span>Continue with Google</span>'; }
-    showAuthStatus("Google sign-in ආරම්භ කරන්න බැරි වුණා. නැවත උත්සාහ කරන්න.", "error");
+    showAuthStatus(error && error.message ? error.message : "Google sign-in ආරම්භ කරන්න බැරි වුණා. නැවත උත්සාහ කරන්න.", "error");
   }
 }
 async function signOutGuruPaper() {
