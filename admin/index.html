@@ -121,6 +121,7 @@ input,select,textarea{min-width:0;max-width:100%}
 (function(){
 "use strict";
 const SESSION_KEY="gurupaper-auth-session-v1";
+const PKCE_VERIFIER_KEY="gurupaper-pkce-verifier-v1:"+window.location.pathname;
 const $=id=>document.getElementById(id);
 let config=null,session=null,user=null,orders=[],users=[],editingUserId="",timer=null;
 
@@ -131,21 +132,52 @@ function verifiedGuruPaperUser(u){
   (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(u.email||"").trim())&&Boolean(u.email_confirmed_at))
  ));
 }
+function base64UrlFromBytes(bytes){
+ let binary="";for(let i=0;i<bytes.length;i++)binary+=String.fromCharCode(bytes[i]);
+ return btoa(binary).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"");
+}
+async function createAdminPkcePair(){
+ if(!window.crypto||!window.crypto.subtle)throw new Error("Secure sign-in requires an up-to-date browser over HTTPS.");
+ const bytes=new Uint8Array(32);window.crypto.getRandomValues(bytes);
+ const verifier=base64UrlFromBytes(bytes);
+ const digest=await window.crypto.subtle.digest("SHA-256",new TextEncoder().encode(verifier));
+ return {verifier,challenge:base64UrlFromBytes(new Uint8Array(digest))};
+}
 function takeOAuthResponse(){
- const hash=String(window.location.hash||"");if(!hash||hash.length<2)return null;
- const params=new URLSearchParams(hash.slice(1));
- if(!params.has("access_token")&&!params.has("error")&&!params.has("error_description"))return null;
- window.history.replaceState({},document.title,window.location.pathname+window.location.search);return params;
+ const current=new URL(window.location.href),query=current.searchParams;
+ if(query.has("code")||query.has("error")||query.has("error_description")){
+  const params=new URLSearchParams(query);
+  ["code","state","error","error_description","error_code"].forEach(key=>query.delete(key));
+  window.history.replaceState({},document.title,current.pathname+(query.toString()?"?"+query.toString():"")+current.hash);
+  return params;
+ }
+ const hash=String(window.location.hash||"");
+ if(hash&&hash.length>1){
+  const params=new URLSearchParams(hash.slice(1));
+  if(params.has("access_token")||params.has("refresh_token")||params.has("error")||params.has("error_description")){
+   window.history.replaceState({},document.title,window.location.pathname+window.location.search);
+   return new URLSearchParams("error=legacy_implicit_flow");
+  }
+ }
+ return null;
 }
 async function startGoogleLogin(){
  if(!config){setNotice("authNotice","Supabase login settings are unavailable. Check the Auth configuration.","error");return}
  const btn=$("adminGoogleButton");btn.disabled=true;btn.textContent="Redirecting to Google…";
  try{
-  const redirectTo=window.location.origin+window.location.pathname;
+  const pair=await createAdminPkcePair();
+  sessionStorage.setItem(PKCE_VERIFIER_KEY,pair.verifier);
+  const redirectTo=window.location.origin+window.location.pathname+window.location.search;
   const url=new URL(config.supabaseUrl+"/auth/v1/authorize");
   url.searchParams.set("provider","google");url.searchParams.set("redirect_to",redirectTo);
+  url.searchParams.set("prompt","select_account");
+  url.searchParams.set("code_challenge",pair.challenge);url.searchParams.set("code_challenge_method","s256");
   window.location.assign(url.toString());
- }catch(_){btn.disabled=false;btn.innerHTML="<span>Continue with Google</span>";setNotice("authNotice","Could not start Google sign-in. Try again.","error")}
+ }catch(e){
+  try{sessionStorage.removeItem(PKCE_VERIFIER_KEY)}catch(_){}
+  btn.disabled=false;btn.innerHTML="<span>Continue with Google</span>";
+  setNotice("authNotice",e&&e.message?e.message:"Could not start secure Google sign-in. Try again.","error")
+ }
 }
 function setNotice(id,text,type){
  const el=$(id);el.textContent=text||"";el.className="notice"+(type?" "+type:"");
@@ -372,11 +404,13 @@ async function init(){
   await loadConfig();
   if(oauth){
    if(oauth.has("error")||oauth.has("error_description")){
-    oauthMessage=oauth.get("error")==="access_denied"?"Google sign-in was cancelled.":"Google sign-in failed. Check the Supabase Google provider and redirect URL settings.";
+    try{sessionStorage.removeItem(PKCE_VERIFIER_KEY)}catch(_){}
+    oauthMessage=oauth.get("error")==="access_denied"?"Google sign-in was cancelled.":oauth.get("error")==="legacy_implicit_flow"?"An older sign-in link was detected. Please start Google sign-in again.":"Google sign-in failed. Check the Supabase Google provider and redirect URL settings.";
    }else{
-    const accessToken=oauth.get("access_token")||"",refreshToken=oauth.get("refresh_token")||"";
-    if(!accessToken||!refreshToken)throw new Error("Google sign-in session was missing. Try again.");
-    storeSession({access_token:accessToken,refresh_token:refreshToken,token_type:oauth.get("token_type")||"bearer",expires_in:Number(oauth.get("expires_in")||3600)});
+    const code=oauth.get("code")||"";
+    let verifier="";try{verifier=sessionStorage.getItem(PKCE_VERIFIER_KEY)||"";sessionStorage.removeItem(PKCE_VERIFIER_KEY)}catch(_){}
+    if(!code||!verifier)throw new Error("Secure sign-in verifier is missing. Please start Google sign-in again.");
+    storeSession(await api("token?grant_type=pkce",{auth_code:code,code_verifier:verifier}));
     await confirmUser(session.access_token);await loadDashboard();return;
    }
   }
