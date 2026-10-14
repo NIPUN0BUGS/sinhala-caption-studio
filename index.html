@@ -1157,32 +1157,27 @@ init();
 (function(){
   "use strict";
   const SESSION_KEY = "gurupaper-auth-session-v1";
-  function hasCompleteGuruPaperSession(){
+  function hasSignedInGuruPaperSession(){
     try {
       const session=JSON.parse(localStorage.getItem(SESSION_KEY)||"null");
       const user=session&&session.user;
-      const metadata=user&&user.user_metadata||{};
       if(!session||!session.access_token||!session.refresh_token||!user) return false;
       if(!/^[0-9a-f-]{36}$/i.test(String(user.id||""))) return false;
       const email=String(user.email||"").trim();
       const emailVerified=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)&&Boolean(user.email_confirmed_at);
       const phone=String(user.phone||"");
       const phoneVerified=/^\+[1-9][0-9]{7,14}$/.test(phone)&&Boolean(user.phone_confirmed_at);
-      return (emailVerified||phoneVerified)&&Boolean(
-        String(metadata.first_name||"").trim() &&
-        String(metadata.last_name||"").trim() &&
-        String(metadata.address||"").trim()
-      );
+      return emailVerified||phoneVerified;
     } catch (_) { return false; }
   }
   function followPaperFlow(event){
     if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||event.button!==0) return;
     event.preventDefault();
-    const destination=hasCompleteGuruPaperSession()?"/pricing/#plans":"/paper/?flow=choose-plan";
+    const destination=hasSignedInGuruPaperSession()?"/pricing/#plans":"/paper/?flow=choose-plan";
     window.location.assign(destination);
   }
   document.querySelectorAll("[data-paper-flow]").forEach(link=>{
-    link.addEventListener("click",followPaperFlow);
+    link.addEventListener("click",followPaperFlow,true);
   });
 })();
 </script>
