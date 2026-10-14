@@ -5,6 +5,8 @@ const handlers = Object.freeze({
   "create-paper-checkout": require("../lib/gurupaper-handlers/create-paper-checkout"),
   "create-paper-order": require("../lib/gurupaper-handlers/create-paper-order"),
   "generate-paper": require("../lib/gurupaper-handlers/generate-paper"),
+  "free-generate-paper": require("../lib/gurupaper-handlers/free-generate-paper"),
+  "free-config": require("../lib/gurupaper-handlers/free-config"),
   "paper-config": require("../lib/gurupaper-handlers/paper-config"),
   "auth-config": require("../lib/gurupaper-handlers/auth-config"),
   "admin-dashboard": require("../lib/gurupaper-handlers/admin-dashboard"),
