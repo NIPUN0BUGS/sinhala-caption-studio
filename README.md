@@ -23,6 +23,16 @@ The public API paths remain separate, for example \`/api/create-paper-order\` an
 
 The \`vercel.json\` rewrites continue to expose \`/sitemap.xml\` and \`/robots.txt\`.
 
+## Free beta mode (no payment required)
+
+The teacher paper builder currently has a separate free-beta route so you can test generation before setting up paid checkout.
+
+- Google/Supabase sign-in is still required, but this mode does not need PayHere credentials, the paid order database table, private upload storage, or `APP_URL`.
+- It sends a PDF/image (maximum 2.5 MB) from the browser to `/api/free-generate-paper`, where it is processed through the Gemini API Free Tier model `gemini-3.1-flash-lite`. The original source file is not intentionally written to GuruPaper's database or private storage. The generated paper draft can be saved in the browser editor.
+- Add a key from [Google AI Studio](https://aistudio.google.com/app/apikey) as the server-side Vercel environment variable `GEMINI_API_KEY`. Never expose this key in browser code or commit it to Git.
+- Google's free-tier terms may allow submitted content to be used to improve Google products. Do not upload student personal data, confidential school records, or other sensitive material. Review generated questions and answers before use.
+- Free-tier quota/rate limits apply. Paid checkout stays locked with `GURUPAPER_ENABLE_CHECKOUT=false`; do not enable paid checkout until the merchant is approved and all sandbox checkout, callback, storage, and generation tests pass.
+
 ## Setup before enabling payments
 
 1. Connect this branch to the dedicated Vercel project for GuruPaper. Set the project's production branch to \`feature/teacher-paper-studio-mvp\` unless you intentionally move the GuruPaper-only code to another branch.
