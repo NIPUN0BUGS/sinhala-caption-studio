@@ -167,7 +167,7 @@ body[data-page="pricing"] main.shell > section:not(#plans){display:none!importan
 <body data-page="paper">
 <header class="topbar shell">
   <a class="brand" href="/" aria-label="ගුරු Paper home"><img class="brand-logo" src="/assets/gurupaper-logo.svg" alt="" width="46" height="46"><span lang="si">ගුරු Paper<small>TEACHERS-LATA PAPER HADANA TOOL EKA</small></span></a>
-  <nav class="nav" aria-label="Main navigation"><a class="nav-page-link active" aria-current="page" data-page-link="paper" href="/pricing/#plans">Paper හදමු</a><a class="nav-page-link" data-page-link="how-it-works" href="/how-it-works/">කොහොමද වැඩ කරන්නේ?</a><a class="nav-page-link" data-page-link="teacher-circle" href="/teacher-circle/">ගුරු එකමුතුව</a><a class="nav-page-link" data-page-link="pricing" href="/pricing/">Pricing / මිල ගණන්</a><button id="authAccountButton" class="btn auth-nav-button" type="button">Google Sign-in</button><a class="btn primary" href="/pricing/#plans">Paper එකක් හදමු</a></nav>
+  <nav class="nav" aria-label="Main navigation"><a class="nav-page-link active" aria-current="page" data-page-link="paper" href="/paper/?flow=choose-plan" data-paper-flow>Paper හදමු</a><a class="nav-page-link" data-page-link="how-it-works" href="/how-it-works/">කොහොමද වැඩ කරන්නේ?</a><a class="nav-page-link" data-page-link="teacher-circle" href="/teacher-circle/">ගුරු එකමුතුව</a><a class="nav-page-link" data-page-link="pricing" href="/pricing/">Pricing / මිල ගණන්</a><button id="authAccountButton" class="btn auth-nav-button" type="button">Google Sign-in</button><a class="btn primary" href="/paper/?flow=choose-plan" data-paper-flow>Paper එකක් හදමු</a></nav>
 </header>
 
 <div id="authModal" class="auth-modal" hidden>
@@ -211,7 +211,7 @@ body[data-page="pricing"] main.shell > section:not(#plans){display:none!importan
     <span class="kicker">ලංකාවේ ගුරුවරුන්ටමයි · Made for Sri Lankan Teachers 🇱🇰</span>
     <h1>ඔයාගේ next Question Paper එක <span>minutes වලින් හදමු!</span></h1>
     <p>Sinhala, Tamil හෝ English medium වලින් Term Tests සහ classroom papers ලේසියෙන් හදන්න. Questions edit කරන්න, total marks auto-check කරගන්න, PDF print කරන්න හෝ Word-compatible file එක download කරගන්න.</p>
-    <div class="hero-actions"><a class="btn primary" href="/pricing/#plans">✦ දැන් Paper එකක් හදමු</a><a class="btn" href="/pricing/">Plans &amp; Pricing බලන්න</a></div>
+    <div class="hero-actions"><a class="btn primary" href="/paper/?flow=choose-plan" data-paper-flow>✦ දැන් Paper එකක් හදමු</a><a class="btn" href="/pricing/">Plans &amp; Pricing බලන්න</a></div>
     <div class="trust-row"><span>PDF Print-ready Layout</span><span>Edit karanna puluwan Word File</span><span>Venama Answer Sheet</span></div>
   </div>
   <div class="hero-visual" aria-label="Teachers working together">
@@ -260,7 +260,7 @@ body[data-page="pricing"] main.shell > section:not(#plans){display:none!importan
       </div>
       <div class="teacher-circle-actions">
         <a id="copyTeacherInvite" class="btn primary" href="https://wa.me/?text=%E0%B6%9C%E0%B7%94%E0%B6%BB%E0%B7%94%20Paper%20Teacher%20Circle%20%E0%B6%91%E0%B6%9A%E0%B6%A7%20%E0%B6%91%E0%B6%9A%E0%B6%AD%E0%B7%94%20%E0%B7%80%E0%B7%99%E0%B6%B8%E0%B7%94!%20%F0%9F%87%B1%F0%9F%87%B0%0A%0ALesson%20notes%20%E0%B7%80%E0%B6%BD%E0%B7%92%E0%B6%B1%E0%B7%8A%20question%20papers%20%E0%B7%84%E0%B6%AF%E0%B6%B1%E0%B7%8A%E0%B6%B1%2C%20teaching%20ideas%20share%20%E0%B6%9A%E0%B6%BB%E0%B6%B1%E0%B7%8A%E0%B6%B1%2C%20%E0%B7%83%E0%B7%84%20%E0%B6%9C%E0%B7%94%E0%B6%BB%E0%B7%94%E0%B7%80%E0%B6%BB%E0%B7%94%E0%B6%B1%E0%B7%8A%E0%B6%A7%20useful%20features%20%E0%B6%BA%E0%B7%9D%E0%B6%A2%E0%B6%B1%E0%B7%8F%20%E0%B6%9A%E0%B6%BB%E0%B6%B1%E0%B7%8A%E0%B6%B1%20%E0%B6%91%E0%B6%9A%E0%B6%AD%E0%B7%94%20%E0%B7%80%E0%B7%99%E0%B6%B8%E0%B7%94.%0A%0AGuruPaper%3A%20https%3A%2F%2Fgurupaper.vercel.app%2F" target="_blank" rel="noopener noreferrer">💬 WhatsApp එකෙන් Invite කරන්න</a>
-        <a class="btn" href="/pricing/#plans">Paper එකක් try කරන්න</a>
+        <a class="btn" href="/paper/?flow=choose-plan" data-paper-flow>Paper එකක් try කරන්න</a>
       </div>
       <p class="teacher-circle-note">ගුරුවරයෙක්ට invite කරන්න button එක click කරන්න. WhatsApp open වෙලා invitation message එක සහ GuruPaper link එක පිරී එයි. එතැනින් ගුරුවරයා තෝරලා Send කරන්න.</p>
     </div>
@@ -783,6 +783,11 @@ async function saveAuthProfile(event) {
     try { localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(authSession)); } catch (_) {}
     updateAuthUi();
     prefillAuthenticatedTeacher();
+    const choosePlanFlow = new URLSearchParams(window.location.search).get("flow") === "choose-plan";
+    if (choosePlanFlow) {
+      window.location.replace("/pricing/#plans");
+      return;
+    }
     notify("Profile saved. You can now create a question paper.");
     closeAuthModal();
     if (authReturnTo === "paper-generator" && document.body.dataset.page !== "pricing") {
@@ -804,7 +809,7 @@ async function startGoogleSignIn() {
   const button = $("authGoogleButton");
   if (button) { button.disabled = true; button.innerHTML = '<span>Google වෙත යොමු කරමින්…</span>'; }
   try {
-    const redirectTo = window.location.origin + window.location.pathname;
+    const redirectTo = window.location.origin + window.location.pathname + window.location.search;
     const authorizeUrl = new URL(authConfig.supabaseUrl + "/auth/v1/authorize");
     authorizeUrl.searchParams.set("provider", "google");
     authorizeUrl.searchParams.set("redirect_to", redirectTo);
@@ -838,7 +843,14 @@ function initAuthUi() {
   if ($("authSignOutButton")) $("authSignOutButton").addEventListener("click", signOutGuruPaper);
   document.addEventListener("keydown", event => { if (event.key === "Escape" && !$("authModal").hidden) closeAuthModal(); });
   ensureAuthInitialized().then(() => {
-    const accountRequested = new URLSearchParams(window.location.search).get("account") === "1";
+    const params = new URLSearchParams(window.location.search);
+    const choosePlanFlow = params.get("flow") === "choose-plan";
+    const accountRequested = params.get("account") === "1";
+    const completeSession = Boolean(authUser && authSession && isGuruPaperProfileComplete(authUser));
+    if (choosePlanFlow && completeSession) {
+      window.location.replace("/pricing/#plans");
+      return;
+    }
     const mustRegisterForPaper = document.body.dataset.page === "paper" &&
       (!authUser || !authSession || !isGuruPaperProfileComplete(authUser));
     if (accountRequested || mustRegisterForPaper || authOAuthCallbackMessage) {
@@ -1151,6 +1163,39 @@ function init(){
  document.querySelectorAll('[data-plan-info]').forEach(btn=>btn.addEventListener('click',()=>notify(btn.dataset.planInfo+' proposed plan ekak witharai; payment setup thama active naha.')));
 }
 init();
+})();
+</script>
+<script>
+(function(){
+  "use strict";
+  const SESSION_KEY = "gurupaper-auth-session-v1";
+  function hasCompleteGuruPaperSession(){
+    try {
+      const session=JSON.parse(localStorage.getItem(SESSION_KEY)||"null");
+      const user=session&&session.user;
+      const metadata=user&&user.user_metadata||{};
+      if(!session||!session.access_token||!session.refresh_token||!user) return false;
+      if(!/^[0-9a-f-]{36}$/i.test(String(user.id||""))) return false;
+      const email=String(user.email||"").trim();
+      const emailVerified=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)&&Boolean(user.email_confirmed_at);
+      const phone=String(user.phone||"");
+      const phoneVerified=/^\+[1-9][0-9]{7,14}$/.test(phone)&&Boolean(user.phone_confirmed_at);
+      return (emailVerified||phoneVerified)&&Boolean(
+        String(metadata.first_name||"").trim() &&
+        String(metadata.last_name||"").trim() &&
+        String(metadata.address||"").trim()
+      );
+    } catch (_) { return false; }
+  }
+  function followPaperFlow(event){
+    if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||event.button!==0) return;
+    event.preventDefault();
+    const destination=hasCompleteGuruPaperSession()?"/pricing/#plans":"/paper/?flow=choose-plan";
+    window.location.assign(destination);
+  }
+  document.querySelectorAll("[data-paper-flow]").forEach(link=>{
+    link.addEventListener("click",followPaperFlow);
+  });
 })();
 </script>
 </body>
