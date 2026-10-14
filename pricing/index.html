@@ -167,6 +167,11 @@ body[data-page="pricing"] main.shell > section:not(#plans){display:none!importan
 #paperPayButton{min-height:46px;white-space:normal;line-height:1.4}
 @media(max-width:480px){.paper-consent{grid-template-columns:20px minmax(0,1fr);gap:10px;padding:12px;font-size:11px}}
 
+
+.free-beta-note{margin:10px 0 0;padding:10px 12px;border:1px solid #b4e1cd;border-radius:10px;background:#eef8f4;color:#145943;font-size:11px;line-height:1.6}
+.free-ai-help{margin:8px 0 12px;padding:11px 12px;background:#fff7e8;border:1px solid #f0d7a8;border-radius:10px;color:#725318;font-size:11px;line-height:1.65}
+.free-ai-help a{font-weight:800;text-decoration:underline}
+
 </style>
 <style id="ui-stability-guardrails">
 /* Prevent long forms and modal content from being clipped on phones and short screens. */
@@ -308,15 +313,15 @@ input,select,textarea{min-width:0;max-width:100%}
 
 
 <section id="paper-generator" class="section">
-  <div class="section-heading"><div><span class="mini-kicker">Upload → Pay → Generate</span><h2>පාඩම් Notes upload කරලා Question Paper එකක් හදමු</h2><p>PDF එකක් හෝ lesson photo එකක් upload කරන්න. Full paper එක generate වෙන්නේ Rs.100 payment එක server එකෙන් confirm කළාට පස්සෙයි.</p></div></div>
+  <div class="section-heading"><div><span class="mini-kicker">Free beta · Upload → Generate</span><h2>පාඩම් Notes upload කරලා Question Paper එකක් හදමු</h2><p>PDF එකක් හෝ lesson photo එකක් upload කරලා free beta එකෙන් draft paper generate කරන්න. දැන් payment එකක් ගන්නේ නැහැ.</p></div></div>
   <div class="generator-layout">
     <section class="panel">
-      <div class="panel-head"><div><h3>1. Lesson file &amp; paper settings</h3><p>PDF, PNG හෝ JPG/JPEG · Maximum 15 MB</p></div><span class="generator-price">Rs.100 <small>/ paper</small></span></div>
+      <div class="panel-head"><div><h3>1. Lesson file &amp; paper settings</h3><p>PDF, PNG හෝ JPG/JPEG · Maximum 2.5 MB</p></div><span class="generator-price">FREE <small>/ beta</small></span></div>
       <div class="panel-body">
-        <div id="paperBackendStatus" class="generator-status is-offline" role="status" aria-live="polite">Backend setup තවම complete කරලා නැහැ. PayHere සහ AI configuration verify කරන තුරු payments disable කරලා තියෙනවා.</div>
+        <div id="paperBackendStatus" class="generator-status is-offline" role="status" aria-live="polite">Free beta: Gemini API key එක configure කළාම generate කරන්න පුළුවන්. Payment, order database හෝ private storage අවශ්‍ය නැහැ.</div>
         <form id="aiPaperForm" novalidate>
           <div class="fields">
-            <div class="field full"><label for="paperSourceFile">Lesson Notes / පාඩමේ file එක</label><input id="paperSourceFile" type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" required><span class="generator-small">පැහැදිලි scans/photos upload කරන්න. පුද්ගලික student data තියෙන documents upload නොකරන්න.</span></div>
+            <div class="field full"><label for="paperSourceFile">Lesson Notes / පාඩමේ file එක</label><input id="paperSourceFile" type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" aria-describedby="freeUploadLimit" required><span id="freeUploadLimit" class="generator-small">පැහැදිලි scans/photos upload කරන්න. උපරිම 2.5 MB. Student personal data තියෙන documents upload නොකරන්න; source file එක Gemini වෙත යවනවා.</span></div>
             <div class="field full"><label for="paperSourceTitle">Question Paper title</label><input id="paperSourceTitle" maxlength="120" value="Lesson-based Question Paper" required></div>
             <div class="field"><label for="paperSourceSchool">School / Institute (optional)</label><input id="paperSourceSchool" maxlength="120" placeholder="School name"></div>
             <div class="field"><label for="paperSourceTeacher">Teacher name (optional)</label><input id="paperSourceTeacher" maxlength="100" placeholder="Teacher name"></div>
@@ -336,43 +341,32 @@ input,select,textarea{min-width:0;max-width:100%}
             </div></div>
           </div>
           <div class="section-rule"></div>
-          <div class="panel-head" style="padding:0 0 13px;border:0"><div><h3>2. Payment contact details</h3><p>PayHere checkout සඳහා පමණයි; sign-in එක Google account එකෙන්.</p></div></div>
-          <div class="fields">
-            <div class="field"><label for="paperCustomerFirst">First name</label><input id="paperCustomerFirst" autocomplete="given-name" maxlength="80" required></div>
-            <div class="field"><label for="paperCustomerLast">Last name</label><input id="paperCustomerLast" autocomplete="family-name" maxlength="80" required></div>
-            <div class="field"><label for="paperCustomerEmail">Email</label><input id="paperCustomerEmail" type="email" autocomplete="email" maxlength="254" required></div>
-            <div class="field"><label for="paperCustomerPhone">Phone (for PayHere payment only)</label><input id="paperCustomerPhone" type="tel" autocomplete="tel" minlength="7" maxlength="30" placeholder="07X XXX XXXX" required></div>
-            <div class="field full"><label for="paperCustomerAddress">Address</label><input id="paperCustomerAddress" autocomplete="street-address" maxlength="160" required></div>
-            <div class="field"><label for="paperCustomerCity">City</label><input id="paperCustomerCity" autocomplete="address-level2" maxlength="80" required></div>
-          </div>
+          <div class="panel-head" style="padding:0 0 13px;border:0"><div><h3>2. Free beta privacy check</h3><p>Payment details අවශ්‍ය නැහැ. File එක Google Gemini Free Tier වෙත process කිරීම සඳහා යවයි.</p></div></div>
           <label class="paper-consent">
             <input id="paperSourceConsent" type="checkbox" required aria-describedby="paperConsentDescription">
-            <span id="paperConsentDescription">මම මේ lesson notes භාවිත කිරීමට අවසර තියෙන බවත්, student personal data ඉවත් කර ඇති බවත් තහවුරු කරනවා. Payment verify වුණාට පස්සේ notes configured AI provider එකට process කිරීමට යවන බවත්, generation එකෙන් පසු source file එක delete කිරීමට GuruPaper උත්සාහ කරන බවත් මට තේරෙනවා.</span>
+            <span id="paperConsentDescription">මට මේ lesson notes භාවිත කිරීමට අවසර තියෙන බවත්, student personal data ඉවත් කර ඇති බවත් තහවුරු කරනවා. File එක Google Gemini Free Tier වෙත යවන බවත්, Googleගේ free-tier terms අනුව content product improvement සඳහා භාවිත විය හැකි බවත් මට තේරෙනවා. GuruPaper එක source file එක database/private storage එකේ save කරන්නේ නැහැ.</span>
           </label>
           <label style="display:flex;gap:9px;align-items:flex-start;font-size:11px;margin:12px 0"><input id="paperIncludeAnswers" type="checkbox" checked><span>Suggested answers / marking guide එකත් include කරන්න.</span></label>
-          <button id="paperPayButton" class="btn primary" type="submit" disabled aria-disabled="true">Payments තවම සූදානම් නැහැ</button>
-          <p class="generator-small">Payment කරන්නේ PayHere secure checkout page එකේ. Browser return එක පමණක් payment proof එකක් නෙවෙයි. Server confirmation නැතුව full paper generation unlock වෙන්නේ නැහැ.</p>
+          <button id="paperPayButton" class="btn primary" type="submit" disabled aria-disabled="true">Free beta setup අවශ්‍යයි</button>
+          <p class="free-beta-note">මෙය test/beta mode එකකි. GuruPaper payment එකක් charge කරන්නේ නැහැ. Gemini Free Tier quota එකට යටත් වන අතර generated paper එක browser editor එකේ review/print කළ හැක.</p>
+          <p id="freeAiSetupHelp" class="free-ai-help">Free Gemini API key එකක් <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">Google AI Studio</a> වෙතින් හදා, Vercel Project → Settings → Environment Variables යටතේ <strong>GEMINI_API_KEY</strong> ලෙස add කරන්න. Key එක chat එකේ හෝ browser code එකේ දාන්න එපා.</p>
         </form>
       </div>
     </section>
     <aside class="panel">
-      <div class="panel-head"><div><h3>Paper එක ලබාගන්නේ මෙහෙමයි</h3><p>Payment verified flow</p></div><span class="kicker">Rs.100 one-time</span></div>
+      <div class="panel-head"><div><h3>Free beta workflow</h3><p>Payment එකක් අවශ්‍ය නැහැ</p></div><span class="kicker">FREE</span></div>
       <div class="panel-body">
-        <div class="generator-price">Rs.100 <small>for one generated paper</small></div>
+        <div class="generator-price">FREE <small>for testing</small></div>
         <ol class="generator-flow-list">
-          <li><strong>Lesson file upload</strong><span>File එක private storage එකට යනවා.</span></li>
-          <li><strong>PayHere checkout</strong><span>One-time Rs.100 LKR payment එක.</span></li>
-          <li><strong>Server payment check</strong><span>Verified PayHere notification එකෙන් පස්සේ විතරයි unlock වෙන්නේ.</span></li>
-          <li><strong>AI paper generation</strong><span>Selected grade, medium, marks සහ question types අනුව questions + answer guide හදනවා.</span></li>
-          <li><strong>Review &amp; PDF</strong><span>Paper එක editor එකේ review කරලා print / Save as PDF කරන්න.</span></li>
+          <li><strong>Lesson file select කරන්න</strong><span>PDF, PNG හෝ JPG/JPEG · උපරිම 2.5 MB.</span></li>
+          <li><strong>Gemini Free Tier</strong><span>Source file එක AI processing සඳහා Google වෙත යවනවා. GuruPaper එකේ database/storage එකට save කරන්නේ නැහැ.</span></li>
+          <li><strong>Draft paper generate කරන්න</strong><span>Grade, medium, marks සහ question types අනුව questions සහ optional marking guide.</span></li>
+          <li><strong>Review &amp; PDF</strong><span>Generated paper එක browser editor එකේ edit කරලා print / Save as PDF කරන්න.</span></li>
         </ol>
-        <div id="paperOrderStatus" class="generator-status" role="status" aria-live="polite">Order එකක් තවම පටන් අරගෙන නැහැ.</div>
-        <div class="generator-action-stack">
-          <button id="paperCheckStatus" class="btn" type="button" hidden>Payment status check කරන්න</button>
-          <button id="paperGenerateButton" class="btn primary" type="button" hidden disabled>Payment verified — full paper generate කරන්න</button>
-        </div>
+        <div id="paperOrderStatus" class="generator-status" role="status" aria-live="polite">Generated paper එක editor එකට load වෙනවා. Original source file එක GuruPaper database/storage එකේ save කරන්නේ නැහැ.</div>
+        <div class="generator-action-stack"><button id="paperCheckStatus" class="btn" type="button" hidden>Order status check කරන්න</button><button id="paperGenerateButton" class="btn primary" type="button" hidden disabled>Generate paper</button></div>
         <div id="paperGeneratedNotice" class="generator-result" role="status"></div>
-        <p class="generator-disclaimer">Questions and suggested answers AI-generated. Teacher කෙනෙක් classroom use කිරීමට කලින් accuracy සහ syllabus alignment review කළ යුතුයි. මේ flow එක activate වෙන්නේ PayHere, Supabase සහ AI credentials configure/test කළාම පමණයි.</p>
+        <p class="generator-disclaimer">Gemini API Free Tier එකට යවන content Googleගේ free-tier terms යටතේ product improvement සඳහා භාවිත විය හැක. Student personal data හෝ confidential documents upload කරන්න එපා. AI-generated questions සහ answers classroom use කිරීමට කලින් teacher කෙනෙක් review කළ යුතුයි.</p>
       </div>
     </aside>
   </div>
@@ -932,21 +926,20 @@ function updatePaperPayButtonState() {
   const button = $("paperPayButton");
   const consent = $("paperSourceConsent");
   if (!button) return;
-  const hasConsent = Boolean(consent && consent.checked);
-  const canContinue = paperServiceReady && hasConsent && !paperOrderInProgress;
-  button.disabled = !canContinue;
-  button.setAttribute("aria-disabled", String(!canContinue));
+  const ready = paperServiceReady && Boolean(consent && consent.checked) && !paperOrderInProgress;
+  button.disabled = !ready;
+  button.setAttribute("aria-disabled", String(!ready));
   if (!paperServiceReady) {
-    button.textContent = "Payments තවම සූදානම් නැහැ";
-    button.title = "PayHere, database, private storage, AI සහ website configuration පරීක්ෂා කර enable කළ පසු checkout ලබාගත හැක.";
+    button.textContent = "Free beta setup අවශ්‍යයි";
+    button.title = "Gemini API Free Tier key එක Vercel හි GEMINI_API_KEY ලෙස add කරන්න.";
   } else if (paperOrderInProgress) {
-    button.textContent = "Secure checkout එක සකස් කරනවා…";
-    button.title = "Please wait while your secure order is prepared.";
-  } else if (!hasConsent) {
+    button.textContent = "Question paper එක හදනවා…";
+    button.title = "Please wait while Gemini generates the paper.";
+  } else if (!consent || !consent.checked) {
     button.textContent = "Consent එක confirm කරලා continue කරන්න";
-    button.title = "Confirm that you have permission to use the lesson notes and have removed student personal data.";
+    button.title = "Review the free-tier AI data notice and tick the checkbox.";
   } else {
-    button.textContent = "Rs.100 ගෙවා Question Paper එක හදමු";
+    button.textContent = "Free question paper එක generate කරන්න";
     button.title = "";
   }
 }
@@ -969,18 +962,25 @@ async function readApiJson(response) {
   return data;
 }
 async function loadPaperServiceConfig() {
+  const help = $("freeAiSetupHelp");
   try {
-    const response = await fetch("/api/paper-config", { method: "GET", cache: "no-store" });
+    const response = await fetch("/api/free-config", { method: "GET", cache: "no-store" });
     const data = await readApiJson(response);
-    paperServiceReady = Boolean(response.ok && data.readyToAcceptPayment === true);
+    paperServiceReady = Boolean(response.ok && data.aiReady === true && data.authReady === true);
     if (paperServiceReady) {
-      setGeneratorStatus("paperBackendStatus", "Required services are configured and checkout activation is enabled (" + String(data.paymentMode || "sandbox").toUpperCase() + "). Verify sandbox callbacks and generated outputs before accepting live payments.", "good");
+      setGeneratorStatus("paperBackendStatus", "Free beta ready — Gemini API Free Tier. Payment එකක් ගන්නේ නැහැ; database, private storage සහ APP_URL අවශ්‍ය නැහැ.", "good");
+      if (help) help.hidden = true;
     } else {
-      setGeneratorStatus("paperBackendStatus", data.message || "Payment එක තවම ලබාගන්න බැහැ. PayHere, database, private storage, AI provider සහ website URL configuration complete කර test කරන තුරු checkout lock කරලා තියෙනවා.", "offline");
+      const message = !data.authReady
+        ? "Supabase sign-in config එක complete නැහැ. SUPABASE_URL සහ SUPABASE_ANON_KEY check කරන්න."
+        : "Gemini API key එක තවම add කරලා නැහැ. Google AI Studio එකෙන් free API key එකක් හදා Vercel හි GEMINI_API_KEY ලෙස add කරන්න. PayHere, order database, private storage හෝ APP_URL මේ beta mode එකට අවශ්‍ය නැහැ.";
+      setGeneratorStatus("paperBackendStatus", data.message || message, "offline");
+      if (help) help.hidden = Boolean(data.aiReady);
     }
   } catch (_) {
     paperServiceReady = false;
-    setGeneratorStatus("paperBackendStatus", "Backend status check කරන්න බැරි වුණා. ආරක්ෂාව සඳහා payments සහ AI generation disable කරලා තියෙනවා.", "offline");
+    setGeneratorStatus("paperBackendStatus", "Free beta configuration එක check කරන්න බැරි වුණා. Gemini key එක සහ sign-in configuration පරීක්ෂා කරන්න.", "offline");
+    if (help) help.hidden = false;
   }
   updatePaperPayButtonState();
 }
@@ -990,7 +990,7 @@ function collectPaperOptions(file) {
   const marks = Number($("paperSourceMarks").value);
   if (!file) throw new Error("PDF එකක් හෝ image එකක් select කරන්න.");
   if (!fileTypeFor(file)) throw new Error("PDF, PNG හෝ JPG/JPEG file එකක් upload කරන්න.");
-  if (file.size < 1 || file.size > 15 * 1024 * 1024) throw new Error("File size එක 15 MB ට අඩු විය යුතුයි.");
+  if (file.size < 1 || file.size > 2.5 * 1024 * 1024) throw new Error("Free beta එකේ PDF/image file size එක 2.5 MB ට අඩු විය යුතුයි.");
   if (!types.length) throw new Error("අවම වශයෙන් එක question type එකක් select කරන්න.");
   if (!Number.isInteger(marks) || marks < count || marks > 1000) throw new Error("Total marks ගණන question count එකට වඩා වැඩිව, 1000ට අඩු විය යුතුයි.");
   return {
@@ -1022,6 +1022,56 @@ function getStoredPaperOrder(orderId) {
   let token = "";
   try { token = sessionStorage.getItem("gurupaper-access-" + orderId) || ""; } catch (_) {}
   return token ? { orderId, accessToken: token } : null;
+}
+async function generateFreePaper(event) {
+  event.preventDefault();
+  const authToken = await getAuthAccessToken();
+  if (!authToken || !authUser) { openAuthModal("paper-generator"); return; }
+  const form = $("aiPaperForm");
+  if (!form.reportValidity()) return;
+  if (!paperServiceReady) {
+    setGeneratorStatus("paperBackendStatus", "Free beta generate කරන්න කලින් Gemini API key එක Vercel හි GEMINI_API_KEY ලෙස add කරන්න.", "offline");
+    return;
+  }
+  const file = $("paperSourceFile").files[0];
+  let options;
+  try { options = collectPaperOptions(file); }
+  catch (e) { setGeneratorStatus("paperOrderStatus", e.message, "error"); return; }
+  if (!$("paperSourceConsent").checked) {
+    setGeneratorStatus("paperOrderStatus", "AI free-tier data notice එක කියවා consent confirm කරන්න.", "error");
+    return;
+  }
+  paperOrderInProgress = true;
+  updatePaperPayButtonState();
+  $("paperGeneratedNotice").classList.remove("show");
+  setGeneratorStatus("paperOrderStatus", "Lesson file එක Gemini Free Tier වෙත යවනවා. Payment එකක් හෝ GuruPaper storage එකක් භාවිත කරන්නේ නැහැ…", "waiting");
+  try {
+    const readerData = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error("File එක කියවන්න බැරි වුණා. නැවත select කරන්න."));
+      reader.onload = () => {
+        const result = String(reader.result || "");
+        const comma = result.indexOf(",");
+        if (comma < 0) reject(new Error("File data එක කියවන්න බැරි වුණා."));
+        else resolve(result.slice(comma + 1));
+      };
+      reader.readAsDataURL(file);
+    });
+    const response = await fetch("/api/free-generate-paper", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + authToken },
+      body: JSON.stringify({ ...options, sourceBase64: readerData })
+    });
+    const data = await readApiJson(response);
+    if (!response.ok) throw new Error(data.message || "Free beta paper එක generate කරන්න බැරි වුණා.");
+    loadGeneratedPaperIntoEditor(data.paper, data.options || options);
+    setGeneratorStatus("paperOrderStatus", "Free beta paper එක ready. Questions සහ answers review කරලා print / PDF save කරන්න.", "good");
+  } catch (e) {
+    setGeneratorStatus("paperOrderStatus", e.message || "Paper generation failed. Please try again.", "error");
+  } finally {
+    paperOrderInProgress = false;
+    updatePaperPayButtonState();
+  }
 }
 async function startPaperOrder(event) {
   event.preventDefault();
@@ -1137,11 +1187,11 @@ function loadGeneratedPaperIntoEditor(generated, options) {
   renderPreview();
   $("paperGeneratedNotice").textContent = "Paper එක generate වුණා. Question/answer accuracy සහ syllabus alignment review කරලා editor එකේ Print / PDF save කරන්න.";
   $("paperGeneratedNotice").classList.add("show");
-  setGeneratorStatus("paperOrderStatus", "Completed — full paper + selected marking guide එක editor එකට load කළා.", "good");
+  setGeneratorStatus("paperOrderStatus", "Free beta paper එක editor එකට load කළා. Print කිරීමට පෙර review කරන්න.", "good");
   $("paperGenerateButton").hidden = true;
   $("paperCheckStatus").hidden = true;
   $("builder").scrollIntoView({ behavior: "smooth", block: "start" });
-  notify("Paid question paper එක ready. Print කරන්න කලින් review කරන්න.");
+  notify("Free beta paper එක ready. Print කරන්න කලින් review කරන්න.");
 }
 async function applyPaperOrderStatus(data) {
   if (data.status === "paid") { showPaidPaperReady(); return "paid"; }
@@ -1209,29 +1259,7 @@ async function generatePaidPaper() {
 
 function initPaperGenerator() {
   $("paperSourceConsent").addEventListener("change", updatePaperPayButtonState);
-  $("aiPaperForm").addEventListener("submit", startPaperOrder);
-  $("paperGenerateButton").addEventListener("click", generatePaidPaper);
-  $("paperCheckStatus").addEventListener("click", () => refreshPaperOrderStatus(true));
-  const query = new URLSearchParams(window.location.search);
-  const returnState = query.get("payment");
-  const returnedOrderId = query.get("order_id");
-  if (returnedOrderId) {
-    activePaperOrder = getStoredPaperOrder(returnedOrderId);
-    if (activePaperOrder) {
-      try { sessionStorage.setItem(PAPER_ACTIVE_ORDER_KEY, JSON.stringify({ orderId: returnedOrderId })); } catch (_) {}
-      if (returnState === "cancelled") setGeneratorStatus("paperOrderStatus", "Checkout එක cancel වුණා. Server status එක check කරන්න පුළුවන්.", "error");
-      else if (returnState === "return") pollForPaperPayment();
-      window.history.replaceState({}, document.title, window.location.pathname + "#paper-generator");
-    } else {
-      setGeneratorStatus("paperOrderStatus", "Order access token එක මේ tab එකේ නැහැ. Security එක වෙනුවෙන් වෙනත් කෙනෙකුගේ token එක URL එකෙන් ගන්නෙ නැහැ.", "error");
-    }
-  } else {
-    try {
-      const stored = JSON.parse(sessionStorage.getItem(PAPER_ACTIVE_ORDER_KEY) || "null");
-      if (stored && stored.orderId) activePaperOrder = getStoredPaperOrder(stored.orderId);
-    } catch (_) {}
-    if (activePaperOrder) refreshPaperOrderStatus(false);
-  }
+  $("aiPaperForm").addEventListener("submit", generateFreePaper);
   loadPaperServiceConfig();
 }
 
