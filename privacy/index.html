@@ -2,19 +2,76 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#113a57">
-<title>Privacy Policy | GuruPaper</title><meta name="description" content="How GuruPaper handles lesson files, order information and generated question papers.">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700&display=swap" rel="stylesheet">
-<style>:root{--bg:#f2f6f8;--paper:#fff;--ink:#182c3a;--muted:#647986;--line:#dce6eb;--navy:#113a57;--blue:#176b87}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 system-ui,"Noto Sans Sinhala",sans-serif}.wrap{width:min(900px,calc(100% - 32px));margin:auto}.top,.foot{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:20px 0}.brand{display:flex;align-items:center;gap:10px;color:var(--navy);font-weight:800;text-decoration:none}.brand img{width:38px;height:38px}nav a,a{color:var(--blue);text-decoration:none}main{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:clamp(20px,5vw,44px);margin:12px 0 24px}h1{font-size:clamp(28px,5vw,40px);line-height:1.2;margin:0 0 14px}h2{font-size:21px;margin:30px 0 5px}.intro{background:#e9f4f7;border-radius:13px;padding:16px}.muted{color:var(--muted);font-size:13px}@media(max-width:560px){.top,.foot{align-items:flex-start;flex-direction:column}}</style>
+<title>Privacy Policy | GuruPaper</title>
+<meta name="description" content="Learn how GuruPaper handles teacher accounts, lesson uploads, question papers and payment-related information.">
+<meta name="robots" content="index,follow">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f6f8;--paper:#fff;--ink:#182c3a;--muted:#647986;--line:#dce6eb;--navy:#113a57;--blue:#176b87;--soft:#e9f4f7}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 system-ui,"Noto Sans Sinhala",sans-serif}
+.wrap{width:min(900px,calc(100% - 32px));margin:auto}.top,.foot{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:20px 0}
+.brand{display:flex;align-items:center;gap:10px;color:var(--navy);font-weight:800;text-decoration:none}.brand img{width:38px;height:38px}
+nav a,a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}main{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:clamp(20px,5vw,44px);margin:12px 0 24px}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.2;margin:0 0 12px}h2{font-size:21px;line-height:1.35;margin:30px 0 6px}p{margin:8px 0 12px}
+.intro{background:var(--soft);border-radius:13px;padding:16px}.notice{border:1px solid var(--line);border-radius:12px;padding:13px 15px;font-size:14px}
+.muted{color:var(--muted);font-size:13px}.foot{border-top:1px solid var(--line);margin-top:10px}
+@media(max-width:560px){.top,.foot{align-items:flex-start;flex-direction:column}}
+</style>
 </head>
-<body><div class="wrap"><header class="top"><a class="brand" href="/"><img src="/assets/gurupaper-logo.svg" alt="">GuruPaper</a><nav><a href="/">Home</a> · <a href="/terms/">Terms</a></nav></header>
-<main><h1>Privacy Policy</h1><p class="intro">This policy is a launch draft for GuruPaper. Review it against your actual business, providers and retention settings, and add a valid contact address before collecting real users' data.</p>
-<p><strong>Last updated: 12 October 2026</strong></p>
-<h2>Information you provide</h2><p>Depending on the features you use, GuruPaper may process lesson notes or images that you upload, paper settings, order identifiers, the contact information needed for checkout, payment status, generated question-paper content and messages you send for support. Do not upload confidential student records, sensitive personal data or material you do not have permission to use.</p>
-<h2>How information is used</h2><p>Information is used to create and track paper orders, verify payments, process the uploaded lesson, generate a draft question paper, prevent abuse, troubleshoot failures and provide support. GuruPaper should not ask you to put payment-card details directly into GuruPaper; payment is handled by the selected payment provider.</p>
-<h2>Service providers</h2><p>To provide the service, GuruPaper is designed to use Supabase for the order database, private file storage and phone OTP; PayHere for payment checkout and notification; and Google Gemini for lesson-to-paper AI processing when configured, with OpenAI as an optional alternative. Those providers may process relevant information under their own terms and privacy policies. Configure only the providers you actually use and confirm their current data-handling terms before launch. If you use Gemini's free tier, Google states that submitted content may be used to improve its products; do not upload sensitive student records or other confidential personal data, and review current provider terms before production use.</p>
-<h2>Uploaded files and generated papers</h2><p>Uploaded source files are intended to be stored in a private bucket and are deleted by the generation flow after successful processing when storage cleanup succeeds. Failed orders or cleanup errors can require additional operational cleanup. Order records and generated paper content may remain available to let you retrieve the result and support the transaction. Set and publish a definite retention period before the public launch.</p>
-<h2>Security and access</h2><p>Server-only keys must stay in Vercel environment variables and must never be published in browser code. The application is designed to restrict direct database access and protect order status with an access token. No internet service can promise absolute security, so avoid uploading material that you cannot safely share with the configured processors.</p>
-<h2>Your choices and requests</h2><p>For a request to access, correct or delete information, or for any privacy question, contact the service operator using the support contact published on the GuruPaper website. Add and verify that contact information before launch. Applicable rights depend on the law that applies to you.</p>
-<h2>Changes</h2><p>This policy may be updated as the service changes. Publish the date and nature of material updates and review the policy whenever a provider, processing purpose or retention practice changes.</p>
-<p class="muted">This page is a practical draft, not legal advice. Customize it for the actual business and applicable Sri Lankan and other relevant privacy requirements.</p></main>
-<footer class="foot"><a href="/">GuruPaper home</a><span class="muted">Questions created by AI should be reviewed by a teacher before classroom use.</span></footer></div></body></html>
+<body><div class="wrap">
+<header class="top"><a class="brand" href="/"><img src="/assets/gurupaper-logo.svg" alt="">GuruPaper</a><nav aria-label="Legal navigation"><a href="/">Home</a> · <a href="/terms/">Terms of Use</a></nav></header>
+<main>
+<h1>Privacy Policy</h1>
+<p class="intro">This policy explains how GuruPaper handles information when teachers use the question-paper builder, sign in, upload lesson material, or use payment features when those features are enabled.</p>
+<p><strong>Last updated: 14 October 2026</strong></p>
+<p class="notice"><strong>Service status:</strong> GuruPaper is still being configured. Live paid paper generation is not available until the operator enables it after testing. Some processing described below applies only when the related feature or provider is enabled.</p>
+
+<h2>1. Who operates GuruPaper</h2>
+<p>GuruPaper is an educational tool being developed for teachers, particularly in Sri Lanka. The operator's formal business details and a monitored support email have not yet been published. Those details must be added before the service accepts live payments. This page describes the current design and intended operation; it is not a claim that every planned feature is live.</p>
+
+<h2>2. Information we may process</h2>
+<p>Depending on the features you use, information may include:</p>
+<ul>
+<li><strong>Account and profile details:</strong> Google sign-in identifiers and the email, name and profile details made available through sign-in, plus first name, last name and address that you enter in your GuruPaper profile.</li>
+<li><strong>Paper details:</strong> subject, grade, medium, assessment settings, school or institute name, optional teacher name, paper title and other settings you enter.</li>
+<li><strong>Uploads and results:</strong> PDF or image lesson notes you choose to upload, generated questions and answers, and the status and identifier of an order.</li>
+<li><strong>Payment information:</strong> checkout contact details (including a phone number when requested by the payment form), payment status and transaction references if checkout is enabled. Payment-card data should be entered only on the payment provider's secure checkout, not into GuruPaper.</li>
+<li><strong>Technical and security information:</strong> basic request metadata used to protect the service, troubleshoot errors and apply rate limits. Security rate-limit identifiers are designed to use keyed hashes rather than store a plain IP address as the rate-limit key.</li>
+</ul>
+<p>Please do not upload student names, student contact details, marks linked to an identifiable student, medical or other sensitive records, or confidential school documents. Remove identifying information from lesson files before uploading them.</p>
+
+<h2>3. How we use information</h2>
+<p>We use information to create and manage your account, operate the paper builder, process the lesson you submit, generate and return a draft question paper, manage an order, verify a payment when enabled, provide support, maintain security, prevent abuse and comply with applicable legal obligations. We do not sell personal information.</p>
+
+<h2>4. Lesson files and AI processing</h2>
+<p>When you request AI-assisted generation, the uploaded lesson file and relevant paper settings are sent to the AI provider configured for the service (currently designed to support Google Gemini and an optional OpenAI fallback). That provider processes the material to return the requested draft. The provider's own terms and privacy practices also apply to its processing; review them before uploading material. Do not upload confidential, sensitive or personally identifying information about students.</p>
+<p>Uploads are stored in private Supabase storage for processing. The generation flow attempts to delete the source file after successful generation; a storage or cleanup failure can delay deletion and may require operational follow-up. If an OpenAI file upload is used for PDF processing, the application attempts to delete that provider-side file after processing. No online system can guarantee that every cleanup operation succeeds immediately.</p>
+<p>Generated papers and order status may be stored in the service database so that the result can be returned, an order can be checked, and payment or support issues can be investigated. A fixed calendar retention period for all account and order records has not yet been published. The operator should set and document that period before live paid launch.</p>
+
+<h2>5. Providers and disclosures</h2>
+<p>Depending on which features are active, GuruPaper is designed to use Supabase for authentication, database and private file storage; Google for sign-in; Google Gemini or OpenAI for AI processing; Vercel for hosting and server execution; and PayHere for checkout and payment notifications when payments are enabled. These providers receive only the information needed for the relevant feature and may process it in countries outside Sri Lanka under their own terms and safeguards. We do not control a third-party provider's independent privacy practices.</p>
+
+<h2>6. Browser storage</h2>
+<p>The website may use your browser's local or session storage to keep a paper draft or sign-in/session state working. Clearing site data in your browser may remove locally saved drafts or sign you out. Do not rely on a browser-local draft as your only copy of important work.</p>
+
+<h2>7. Security</h2>
+<p>GuruPaper uses measures such as server-side payment verification, access controls for private order data, request throttling and security headers. No website, database or transmission method can be guaranteed completely secure. Please use a secure device, protect your Google account and do not share order or access links.</p>
+
+<h2>8. Your requests and choices</h2>
+<p>You may request access to, correction of, or deletion of account or personal information by contacting the service operator once a monitored support contact is published. Some order or payment records may need to be retained for security, dispute resolution or legal/accounting requirements. There is no self-service account deletion control in the current prototype. Requests will be handled subject to applicable law and reasonable verification of your identity.</p>
+
+<h2>9. Children and student information</h2>
+<p>GuruPaper is designed for teachers and adult users, not for students to create accounts. Teachers must avoid uploading identifiable student information unless they have a lawful basis and all required permissions; the recommended practice is to remove such information before upload.</p>
+
+<h2>10. Changes to this policy</h2>
+<p>We may update this policy when the service, providers or data practices change. The latest revision date will be shown at the top. Material changes should be published before they apply to newly introduced processing.</p>
+
+<h2>11. Applicable privacy rules</h2>
+<p>We intend to handle personal information in line with applicable law, including applicable Sri Lankan data-protection requirements as amended and brought into operation. This policy does not replace legal advice or any rights that cannot lawfully be limited. For information about Sri Lanka's data-protection regulator, visit the <a href="https://www.dpa.gov.lk/" target="_blank" rel="noopener noreferrer">Data Protection Authority of Sri Lanka</a>.</p>
+
+<h2>12. Contact</h2>
+<p>A public, monitored support email has not yet been configured for this prototype. The operator must publish a working contact method and formal operator details before enabling live payments. Do not rely on this draft as the sole way to deliver a time-critical complaint or payment dispute.</p>
+</main>
+<footer class="foot"><a href="/">GuruPaper home</a><span class="muted">AI-generated questions and answers should be reviewed by a teacher before classroom use.</span></footer>
+</div></body></html>
