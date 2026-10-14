@@ -37,3 +37,10 @@ The \`vercel.json\` rewrites continue to expose \`/sitemap.xml\` and \`/robots.t
 ## Local checks
 
 There is no build step for the static HTML. API modules use Node.js built-ins and the platform-provided \`fetch\`. You can syntax-check JavaScript with \`node --check\` and test routing with a mocked request/response locally.
+
+
+## Security hardening
+
+- Google sign-in uses Supabase Auth PKCE authorization codes. The app exchanges a short-lived code using a browser-local verifier instead of accepting access tokens from the URL fragment.
+- Server API rate limits are stored in Supabase and apply across serverless instances. Only HMACs of user and client-IP identifiers are stored; the rate-limit table and function are restricted to the service role.
+- To reproduce rate-limit setup in another environment, run [`supabase/gurupaper-rate-limits.sql`](./supabase/gurupaper-rate-limits.sql) after the base GuruPaper schema. Keep the service-role key server-only.
