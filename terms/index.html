@@ -25,7 +25,7 @@ h1{font-size:clamp(28px,5vw,40px);line-height:1.2;margin:0 0 12px}h2{font-size:2
 <h1>Terms of Use</h1>
 <p class="intro">These terms cover use of the GuruPaper question-paper builder and related teacher tools. By using the service, you agree to these terms. If you do not agree, do not use the service.</p>
 <p><strong>Last updated: 14 October 2026</strong></p>
-<p class="notice"><strong>Service status:</strong> GuruPaper is still being configured. Live paid paper generation is not available until the operator enables it after testing. Prices shown as proposed are not an invitation to pay while checkout is disabled.</p>
+<p class="notice"><strong>Current beta status:</strong> GuruPaper offers a free test mode that generates draft papers through Google Gemini API Free Tier. No payment is taken and PayHere checkout remains disabled. The beta accepts PDFs/images up to 2.5 MB and does not save the original upload to GuruPaper persistent database/private storage.</p>
 
 <h2>1. The service</h2>
 <p>GuruPaper is an educational tool for teachers. It helps users prepare, edit, format and, when enabled, generate draft question papers from lesson notes. Features may change as the service is developed. We do not guarantee uninterrupted access or that every planned feature will be available.</p>
@@ -42,14 +42,14 @@ h1{font-size:clamp(28px,5vw,40px);line-height:1.2;margin:0 0 12px}h2{font-size:2
 
 <h2>5. Your content and limited processing permission</h2>
 <p>You retain any rights you already have in materials you upload. To provide the service, you permit GuruPaper and its contracted technical providers to store, transmit, analyze and process those materials only as reasonably necessary to authenticate you, operate the requested features, generate the requested output, protect the service, troubleshoot issues and meet legal obligations. This permission ends for source files when they are deleted from the systems under the applicable retention and cleanup process, subject to backups or records that must lawfully be retained.</p>
-<p>AI processing may send the uploaded material and relevant paper settings to the AI provider configured for the service. Third-party provider terms also apply. Do not submit confidential or sensitive material unless you are authorized to do so and have checked the relevant provider's terms.</p>
+<p>In the current free beta, uploaded PDF/image files (maximum 2.5 MB) and paper settings are sent to Google Gemini API Free Tier to generate the draft. Google states that free-tier submitted content may be used to improve its products; do not upload student personal data, confidential school records, or other sensitive materials. The original source file is not intentionally saved by GuruPaper to persistent database/private storage in this mode, although the AI and hosting providers may process technical data under their own terms. The generated draft can be saved in this browser for editing.</p>
 
 <h2>6. AI-generated content and teacher review</h2>
 <p>AI may produce incorrect, incomplete, repetitive, misleading, biased or curriculum-inappropriate questions, answer keys or marking guidance. Output may not be unique and similar output may be generated for other users. You must check, edit and approve every paper, answer key and marking scheme before printing, sharing, teaching from it or using it to assess students. You remain responsible for the final material and its suitability for the grade, syllabus, language and purpose.</p>
 <p>GuruPaper does not guarantee that an output is factually correct, syllabus-complete, original, or suitable for a particular examination. Do not treat AI output as a replacement for professional teacher judgement.</p>
 
 <h2>7. Proposed prices and payment</h2>
-<p>The interface may show proposed prices, including Rs. 100 for one paper and planned bundle prices. The current backend is designed for a single-paper order; bundles and credit packs are not enabled. Checkout and paid generation remain disabled until the operator completes configuration and end-to-end testing. No payment should be made through GuruPaper while checkout is disabled.</p>
+<p>The interface may show proposed prices, including Rs. 100 for one paper and planned bundle prices. Those are not charges in the current beta: free beta generation does not require payment, and PayHere checkout is disabled. Bundles and credit packs are not enabled. Do not attempt payment through GuruPaper until the operator separately announces that a paid checkout is live and its final terms are shown before checkout.</p>
 <p>If paid checkout is enabled in the future, the final price and applicable payment conditions will be shown before you confirm. Payments will be treated as successful only after server-side verification of the payment provider's notification; a browser redirect or screenshot alone is not proof of payment. Card details should be entered only on the payment provider's checkout, not on GuruPaper.</p>
 
 <h2>8. Cancellations, failed generation and refunds</h2>
@@ -57,7 +57,7 @@ h1{font-size:clamp(28px,5vw,40px);line-height:1.2;margin:0 0 12px}h2{font-size:2
 <p>Refund requests for a paper successfully generated and delivered will be reviewed under applicable law and the circumstances of the request. Any more specific live refund conditions must be displayed before checkout is enabled.</p>
 
 <h2>9. Third-party services</h2>
-<p>The service is designed to rely on providers such as Google and Supabase for sign-in and infrastructure, Google Gemini or OpenAI for AI generation, Vercel for hosting, and PayHere for payment processing if enabled. Third-party services are governed by their own terms and may be unavailable or change. We are not responsible for independent third-party services except where applicable law says otherwise.</p>
+<p>The current free beta relies on Google and Supabase for sign-in, Google Gemini API Free Tier for AI generation, and Vercel for hosting. The planned paid workflow may also use Supabase storage/database and PayHere for payment processing if enabled later. Third-party services are governed by their own terms and may be unavailable or change. We are not responsible for independent third-party services except where applicable law says otherwise.</p>
 
 <h2>10. Availability, suspension and termination</h2>
 <p>We may temporarily suspend features to maintain security, investigate abuse, fix a fault or comply with law. We may restrict access for suspected fraud, unlawful use, attacks on the service or material breach of these terms. Users may stop using the service at any time. A self-service account deletion feature is not currently available; account or data requests should be sent to the operator when a monitored contact is published.</p>
