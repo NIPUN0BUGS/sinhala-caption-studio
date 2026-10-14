@@ -157,6 +157,16 @@ body[data-page="pricing"] main.shell > section:not(#plans){display:none!importan
   .nav .btn,.nav button{flex-shrink:0}
 }
 
+
+.paper-consent{display:grid;grid-template-columns:20px minmax(0,1fr);align-items:start;gap:11px;margin:18px 0 14px;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:#f8fbfc;color:var(--ink);font-size:12px;line-height:1.7;cursor:pointer;overflow-wrap:anywhere}
+.paper-consent:focus-within{outline:2px solid #8bb8ca;outline-offset:2px}
+.paper-consent input[type=checkbox]{display:block;width:18px;height:18px;min-width:18px;min-height:18px;margin:2px 0 0;padding:0;accent-color:var(--blue);cursor:pointer;flex:none}
+.paper-consent span{display:block;min-width:0}
+.paper-consent:has(input:checked){background:#eef8f4;border-color:#b4e1cd}
+#paperPayButton:disabled{opacity:.65;cursor:not-allowed;transform:none}
+#paperPayButton{min-height:46px;white-space:normal;line-height:1.4}
+@media(max-width:480px){.paper-consent{grid-template-columns:20px minmax(0,1fr);gap:10px;padding:12px;font-size:11px}}
+
 </style>
 <style id="ui-stability-guardrails">
 /* Prevent long forms and modal content from being clipped on phones and short screens. */
@@ -335,9 +345,12 @@ input,select,textarea{min-width:0;max-width:100%}
             <div class="field full"><label for="paperCustomerAddress">Address</label><input id="paperCustomerAddress" autocomplete="street-address" maxlength="160" required></div>
             <div class="field"><label for="paperCustomerCity">City</label><input id="paperCustomerCity" autocomplete="address-level2" maxlength="80" required></div>
           </div>
-          <label style="display:flex;gap:9px;align-items:flex-start;font-size:11px;margin:16px 0"><input id="paperSourceConsent" type="checkbox" required><span>මට මෙම lesson notes භාවිත කිරීමට අවසර තියෙනවා; student personal data ඉවත් කරලා තියෙනවා. Payment verify වුණාට පස්සේ notes AI service එකට process කිරීමට යවන බවත් successful generation එකෙන් පසු source file එක delete කරන බවත් මට තේරෙනවා.</span></label>
+          <label class="paper-consent">
+            <input id="paperSourceConsent" type="checkbox" required aria-describedby="paperConsentDescription">
+            <span id="paperConsentDescription">මම මේ lesson notes භාවිත කිරීමට අවසර තියෙන බවත්, student personal data ඉවත් කර ඇති බවත් තහවුරු කරනවා. Payment verify වුණාට පස්සේ notes configured AI provider එකට process කිරීමට යවන බවත්, generation එකෙන් පසු source file එක delete කිරීමට GuruPaper උත්සාහ කරන බවත් මට තේරෙනවා.</span>
+          </label>
           <label style="display:flex;gap:9px;align-items:flex-start;font-size:11px;margin:12px 0"><input id="paperIncludeAnswers" type="checkbox" checked><span>Suggested answers / marking guide එකත් include කරන්න.</span></label>
-          <button id="paperPayButton" class="btn primary" type="submit" disabled>Rs.100 ගෙවා Question Paper එක හදමු</button>
+          <button id="paperPayButton" class="btn primary" type="submit" disabled aria-disabled="true">Payments තවම සූදානම් නැහැ</button>
           <p class="generator-small">Payment කරන්නේ PayHere secure checkout page එකේ. Browser return එක පමණක් payment proof එකක් නෙවෙයි. Server confirmation නැතුව full paper generation unlock වෙන්නේ නැහැ.</p>
         </form>
       </div>
@@ -911,8 +924,32 @@ function initAuthUi() {
     }
   });
 }let paperServiceReady = false;
+let paperOrderInProgress = false;
 let activePaperOrder = null;
 const PAPER_ACTIVE_ORDER_KEY = "gurupaper-active-paper-order-v1";
+
+function updatePaperPayButtonState() {
+  const button = $("paperPayButton");
+  const consent = $("paperSourceConsent");
+  if (!button) return;
+  const hasConsent = Boolean(consent && consent.checked);
+  const canContinue = paperServiceReady && hasConsent && !paperOrderInProgress;
+  button.disabled = !canContinue;
+  button.setAttribute("aria-disabled", String(!canContinue));
+  if (!paperServiceReady) {
+    button.textContent = "Payments තවම සූදානම් නැහැ";
+    button.title = "PayHere, database, private storage, AI සහ website configuration පරීක්ෂා කර enable කළ පසු checkout ලබාගත හැක.";
+  } else if (paperOrderInProgress) {
+    button.textContent = "Secure checkout එක සකස් කරනවා…";
+    button.title = "Please wait while your secure order is prepared.";
+  } else if (!hasConsent) {
+    button.textContent = "Consent එක confirm කරලා continue කරන්න";
+    button.title = "Confirm that you have permission to use the lesson notes and have removed student personal data.";
+  } else {
+    button.textContent = "Rs.100 ගෙවා Question Paper එක හදමු";
+    button.title = "";
+  }
+}
 function setGeneratorStatus(id, message, kind) {
   const el = $(id); if (!el) return;
   el.textContent = message;
@@ -932,23 +969,20 @@ async function readApiJson(response) {
   return data;
 }
 async function loadPaperServiceConfig() {
-  const button = $("paperPayButton");
   try {
     const response = await fetch("/api/paper-config", { method: "GET", cache: "no-store" });
     const data = await readApiJson(response);
     paperServiceReady = Boolean(response.ok && data.readyToAcceptPayment === true);
     if (paperServiceReady) {
       setGeneratorStatus("paperBackendStatus", "Required services are configured and checkout activation is enabled (" + String(data.paymentMode || "sandbox").toUpperCase() + "). Verify sandbox callbacks and generated outputs before accepting live payments.", "good");
-      button.disabled = false;
     } else {
-      setGeneratorStatus("paperBackendStatus", data.message || "Backend setup තවම complete නැහැ. Database, private storage, PayHere, Gemini or OpenAI සහ APP_URL configure කරන තුරු payments disable.", "offline");
-      button.disabled = true;
+      setGeneratorStatus("paperBackendStatus", data.message || "Payment එක තවම ලබාගන්න බැහැ. PayHere, database, private storage, AI provider සහ website URL configuration complete කර test කරන තුරු checkout lock කරලා තියෙනවා.", "offline");
     }
   } catch (_) {
     paperServiceReady = false;
-    button.disabled = true;
-    setGeneratorStatus("paperBackendStatus", "Backend status check කරන්න බැරි වුණා. Payments සහ AI generation fail-closed කරලා තියෙනවා.", "offline");
+    setGeneratorStatus("paperBackendStatus", "Backend status check කරන්න බැරි වුණා. ආරක්ෂාව සඳහා payments සහ AI generation disable කරලා තියෙනවා.", "offline");
   }
+  updatePaperPayButtonState();
 }
 function collectPaperOptions(file) {
   const types = Array.from(document.querySelectorAll('input[name="paperQuestionType"]:checked')).map(el => el.value);
@@ -1007,7 +1041,8 @@ async function startPaperOrder(event) {
     setGeneratorStatus("paperOrderStatus", "Upload consent එක confirm කරන්න.", "error"); return;
   }
   const button = $("paperPayButton");
-  button.disabled = true;
+  paperOrderInProgress = true;
+  updatePaperPayButtonState();
   $("paperCheckStatus").hidden = true;
   $("paperGenerateButton").hidden = true;
   $("paperGeneratedNotice").classList.remove("show");
@@ -1059,7 +1094,8 @@ async function startPaperOrder(event) {
     payForm.submit();
   } catch (e) {
     setGeneratorStatus("paperOrderStatus", e.message || "Order එක initialize කරන්න බැරි වුණා. Payment එකක් ගත්තේ නැහැ.", "error");
-    button.disabled = !paperServiceReady;
+    paperOrderInProgress = false;
+    updatePaperPayButtonState();
   }
 }
 async function getPaperOrderStatus(order, silent) {
@@ -1172,6 +1208,7 @@ async function generatePaidPaper() {
 }
 
 function initPaperGenerator() {
+  $("paperSourceConsent").addEventListener("change", updatePaperPayButtonState);
   $("aiPaperForm").addEventListener("submit", startPaperOrder);
   $("paperGenerateButton").addEventListener("click", generatePaidPaper);
   $("paperCheckStatus").addEventListener("click", () => refreshPaperOrderStatus(true));
